@@ -1,7 +1,7 @@
 import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-export default class entityClass {
-    @PrimaryGeneratedColumn({ comment: "id", })
+export default class entityClass  {
+    @PrimaryGeneratedColumn({ comment: "id",type:'bigint' })
     id: number;
 
     @CreateDateColumn({

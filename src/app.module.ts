@@ -13,7 +13,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from 'config/configuration';
-import { User } from './users/entities/user.entity';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/JwtAuthGuard';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -30,7 +31,8 @@ import { User } from './users/entities/user.entity';
       username: 'root',
       password: '',
       database: 'nest',
-      entities: [Info, Photo, Course,User],
+      // entities: [Info, Photo, Course,User],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       dateStrings: true,
       logging: true,
@@ -45,6 +47,10 @@ import { User } from './users/entities/user.entity';
     UsersModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,  {
+    provide: APP_GUARD,
+    useClass: JwtAuthGuard,
+  },],
+  
 })
 export class AppModule { }

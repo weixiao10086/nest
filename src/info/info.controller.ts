@@ -25,7 +25,7 @@ export class InfoController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     // return R({data:this.infoService.findOne(+id)});
-    return R(this.infoService.findOne(+id));
+    return R(this.infoService.findOne(id));
   }
 
   @Patch(':id')

@@ -2,7 +2,7 @@
 # content-type: application/json
 # GET http://localhost:3000/profile
 GET http://localhost:3000/photo
-Authorization: Bearer  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTcwMDE4ODI4OCwiZXhwIjoxNzAwMTg4ODg4fQ.H4-JyPohViG6sbnxgX2Hzj840RJTdDH4xzsHCBZzcI4
+Authorization: Bearer  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOiIyIiwiaWF0IjoxNzAwMjAxNTM3LCJleHAiOjE3MDAyMDIxMzd9.7V36r74jV-B2ZkQTvNrAZXw5eg0NSnGjJ9G6H_vdhSY
 
 # {
 #     "username": "john",
