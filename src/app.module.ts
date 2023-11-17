@@ -8,9 +8,21 @@ import { PhotoModule } from './photo/photo.module';
 import { Photo } from './photo/entities/photo.entity';
 import { CourseModule } from './course/course.module';
 import { Course } from './course/entities/course.entity';
-
+import { TemplateModule } from './template/template.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import configuration from 'config/configuration';
+import { User } from './users/entities/user.entity';
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      //是否禁止加载环境变量
+      // ignoreEnvFile: true,
+      //是否加载为全局模块
+      isGlobal: true,
+      load: [configuration],
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -18,7 +30,7 @@ import { Course } from './course/entities/course.entity';
       username: 'root',
       password: '',
       database: 'nest',
-      entities: [Info, Photo,Course],
+      entities: [Info, Photo, Course,User],
       synchronize: true,
       dateStrings: true,
       logging: true,
@@ -28,6 +40,9 @@ import { Course } from './course/entities/course.entity';
     InfoModule,
     PhotoModule,
     CourseModule,
+    TemplateModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

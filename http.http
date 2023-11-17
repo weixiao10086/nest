@@ -1,0 +1,10 @@
+# POST http://localhost:3000/auth/login
+# content-type: application/json
+# GET http://localhost:3000/profile
+GET http://localhost:3000/photo
+Authorization: Bearer  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaG4iLCJzdWIiOjEsImlhdCI6MTcwMDE4ODI4OCwiZXhwIjoxNzAwMTg4ODg4fQ.H4-JyPohViG6sbnxgX2Hzj840RJTdDH4xzsHCBZzcI4
+
+# {
+#     "username": "john",
+#      "password": "changeme"
+# }
