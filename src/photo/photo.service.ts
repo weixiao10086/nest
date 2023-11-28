@@ -22,7 +22,7 @@ export class PhotoService {
   findList(params: Page) {
     return this.Repository.find({...page(params), relations: ["photos"]});
   }
-  findOne(id: number) {
+  findOne(id: string) {
     return this.Repository.findOne({ where: { id: id } });
   }
   update(id: number, updateInfoDto: UpdatePhotoDto) {

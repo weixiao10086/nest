@@ -20,7 +20,7 @@ export class PhotoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.photoService.findOne(+id);
+    return this.photoService.findOne(id);
   }
 
   @Patch(':id')

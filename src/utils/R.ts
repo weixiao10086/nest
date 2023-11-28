@@ -1,3 +1,26 @@
+import { Page } from "./page";
+
+/*
+ *                        .::::.
+ *                      .::::::::.
+ *                     :::::::::::
+ *                  ..:::::::::::'
+ *               '::::::::::::'
+ *                 .::::::::::
+ *            '::::::::::::::..
+ *                 ..::::::::::::.
+ *               ``::::::::::::::::
+ *                ::::``:::::::::'        .:::.
+ *               ::::'   ':::::'       .::::::::.
+ *             .::::'      ::::     .:::::::'::::.
+ *            .:::'       :::::  .:::::::::' ':::::.
+ *           .::'        :::::.:::::::::'      ':::::.
+ *          .::'         ::::::::::::::'         ``::::.
+ *      ...:::           ::::::::::::'              ``::.
+ *     ````':.          ':::::::::'                  ::::..
+ *                        '.:::::'                    ':'````..
+ *
+ */
 const dayjs = require('dayjs')
 export interface paramsType {
     success?: boolean;
@@ -6,16 +29,24 @@ export interface paramsType {
     time?: String;
     msg?: String;
 }
-const R = async (obj: paramsType | Promise<any>) => {
-    if (obj instanceof Promise) {
+const R = async (obj: paramsType | Promise<any>, params?: Page) => {
+    const { page = 1, size = 10 } = params||{};
+    if (obj instanceof Promise || obj instanceof String) {
         obj = { data: await obj }
     }
-    let { success = true, code = 200, data = {}, msg = '成功', time = dayjs().format('YYYY-MM-DD HH:mm:ss') } = obj
-    return {
-        success, code, msg, time, data: await data
+    let { success = true, code = 200, data = {}, msg = '成功', time = dayjs().format('YYYY-MM-DD HH:mm:ss') } = obj;
+    let Robj = {success, code, msg, time, data: await data }
+    if (params !== undefined) {
+        Robj.data = {
+            list: Robj.data[0],
+            count: Robj.data[1],
+            page: page,
+            size: size,
+        }
     }
+    return Robj
 }
-R.success = async (data = {}) => {
+R.success = async (data: Object | string = {}) => {
     return { success: true, code: 200, data: await data, msg: '成功', time: dayjs().format('YYYY-MM-DD HH:mm:ss') }
 }
 R.error = async (data = {}) => {

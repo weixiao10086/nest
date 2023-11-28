@@ -15,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from 'config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/JwtAuthGuard';
+import { RouterModule } from './router/router.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -45,6 +46,7 @@ import { JwtAuthGuard } from './auth/JwtAuthGuard';
     TemplateModule,
     AuthModule,
     UsersModule,
+    RouterModule,
   ],
   controllers: [AppController],
   providers: [AppService,  {

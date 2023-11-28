@@ -2,7 +2,7 @@ import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateC
 
 export default class entityClass  {
     @PrimaryGeneratedColumn({ comment: "id",type:'bigint' })
-    id: number;
+    id: string;
 
     @CreateDateColumn({
         name: 'create_time',
