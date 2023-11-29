@@ -1,13 +1,10 @@
-import { Global, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { InfoModule } from './info/info.module';
-import { Info } from './info/entities/info.entity';
 import { PhotoModule } from './photo/photo.module';
-import { Photo } from './photo/entities/photo.entity';
 import { CourseModule } from './course/course.module';
-import { Course } from './course/entities/course.entity';
 import { TemplateModule } from './template/template.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -15,6 +12,9 @@ import { ConfigModule } from '@nestjs/config';
 import configuration from 'config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/JwtAuthGuard';
+import { RouterModule } from './router/router.module';
+import { XxxModule } from './xxx/xxx.module';
+import { CrudModule } from './crud/crud.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -45,12 +45,17 @@ import { JwtAuthGuard } from './auth/JwtAuthGuard';
     TemplateModule,
     AuthModule,
     UsersModule,
+    RouterModule,
+    XxxModule,
+    CrudModule,
   ],
   controllers: [AppController],
-  providers: [AppService,  {
-    provide: APP_GUARD,
-    useClass: JwtAuthGuard,
-  },],
-  
+  providers: [AppService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // }
+  ],
+
 })
 export class AppModule { }

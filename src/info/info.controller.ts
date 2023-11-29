@@ -19,7 +19,7 @@ export class InfoController {
   @Get('list')
   findList(@Query()params) {
     // return R({data:this.infoService.findList(params)});
-    return R(this.infoService.findList(params));
+    return R(this.infoService.findList(params),params);
   }
 
   @Get(':id')

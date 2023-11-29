@@ -1,9 +1,10 @@
 import { Controller, Request, Get, Post, UseGuards, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { Strategy } from "passport-jwt";
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
 import { Public } from './auth/JwtAuthGuard';
+import { CreateUserDto } from './users/dto/create-user.dto';
+import R from './utils/R';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService,
@@ -17,12 +18,12 @@ export class AppController {
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')
   @Public()
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@Body() user:CreateUserDto) {
+    return R(this.authService.login(user));
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('profile')
+  @Get('auth/userInfo')
   getProfile(@Request() req) {
     return req.user;
   }

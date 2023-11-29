@@ -13,7 +13,7 @@ const faker = new Faker({
 export class InfoService {
   constructor(
     @InjectRepository(Info)
-    private infoRepository: Repository<Info>
+    private readonly infoRepository: Repository<Info>
   ) { }
   create(createInfoDto: CreateInfoDto) {
     return this.infoRepository.save({ ...createInfoDto, firstName: faker.person.fullName() });
@@ -22,19 +22,22 @@ export class InfoService {
   findAll() {
     return this.infoRepository.find();
   }
-  async findList (params: Page){
+  async findList(params: Page) {
     // return this.infoRepository.find({...page(params), relations: ["photos"]});
+    const { skip, take } = page(params)
     return await this.infoRepository.createQueryBuilder()
-    .leftJoinAndSelect("Info.photos", "photos")
-    .leftJoinAndSelect("Info.courses", "courses")
-    .getMany()
-
+      .leftJoinAndSelect("Info.photos", "photos")
+      .leftJoinAndSelect("Info.courses", "courses")
+      .skip(skip)
+      .take(take)
+      .getManyAndCount()
+      // .getMany()
   }
   findOne(id: string) {
     // return this.infoRepository.findOne({ where: { id: id } });
     console.log(id);
     console.log(typeof id);
-    return this.infoRepository.createQueryBuilder().where({id}).getOne()
+    return this.infoRepository.createQueryBuilder().where({ id }).getOne()
   }
   update(id: number, updateInfoDto: UpdateInfoDto) {
     return this.infoRepository.update(id, updateInfoDto);
