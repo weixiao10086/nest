@@ -28,62 +28,67 @@ const isfiles = (filepath: string) => {
 }
 // 读取文件
 //readfile
-const readfile = async (obj: isfilesParams) => {
-    let text = '';
-    let filenum = 0;
-    let map = new Map();
-    let arr = [];
-    const fun = async ({ filepath, isawait, recursion }: isfilesParams) => {
-        console.log(filepath, 'filepath');
-        let filetype = await isfiles(filepath)
-        if (filetype instanceof String) {
-            map.set(filepath, filetype)
-        } else if (filetype) {
-            arr.push(filepath)
-            fs.readFile(filepath, 'utf8', (err, data) => {
-                if (err) throw err;
-                text = data
-            });
-        } else {
-            let files = fs.readdirSync(filepath)
-            files.forEach(item => {
-                let itempath = path.join(filepath, item);
-                arr.push(itempath)
-                fun(itempath)
+const readfile = async (obj: isfilesParams): Promise<{ data: Map<string, string>, filenum: number }> => {
+    return new Promise((resolve, reject) => {
+        let filenum = 0;
+        let map = new Map();
+        let arr = [];
+        let finished = 1;
+        const fun = async ({ filepath, isawait, recursion }: isfilesParams, callback?: Function) => {
+            let filetype = await isfiles(filepath)
+            if (filetype instanceof String) {
+            } else if (filetype) {
+                let files = fs.readdirSync(filepath)
+                finished += files.length;
+                files.forEach(async item => {
+                    let itempath = path.join(filepath, item);
+                    await fun({ filepath: itempath }, callback)
+                })
+            } else {
+                arr.push(filepath)
+                filenum++
+            }
+            finished--;
+            if (finished === 0) {
+                return callback(arr)
+            }
+        }
+        fun(obj, arr => {
+            Promise.all(arr.map(item => {
+                return new Promise((resolve, reject) => {
+                    fs.readFile(item, 'utf8', (err, data) => {
+                        if (err) reject(err);
+                        resolve({ data, item })
+                        map.set(item.replace(process.cwd(), ''), data)
+                    });
+                })
+            })).then(res => {
+                resolve({
+                    data: map,
+                    filenum
+                })
             })
-        }
-    }
-    Promise.all(arr).then(res => {
-
+        })
     })
-    await fun(obj)
-    if (filenum) {
-        return {
-            data: text,
-        }
-    } else {
-        return {
-            data: map,
-            filenum
-        }
-    }
-
 }
 // 读取模板
 let template = fs.readdirSync(path.join(process.cwd(), 'xxx'))
-const templateMap = new Map()
-
-template.forEach(async element => {
-    await readfile(path.join(process.cwd(), 'xxx', './', element))
-});
-
+let templateMap;
 const generate = (filepath) => {
     return new Promise(async (resolve, reject) => {
-        //判断目标路径是否为文件夹
-        console.log(path.basename(filepath));
-        // statSync
-        console.log(await isfiles(filepath));
-        // resolve(true)
+        let obj = await readfile({ filepath: path.join(process.cwd(), 'xxx') })
+        //创建文件夹
+        // fs.mkdirSync(filepath, { recursive: true })
+        for (const key of obj.data.keys()) {
+            let keystr = key.replaceAll('xxx', 'crud')
+            let value = obj.data.get(key).toString().replaceAll('\n', '\r\n');
+            let valuestr = value.replaceAll(/xxx/gi, 'Crud')
+            fs.writeFile(path.join(process.cwd(), keystr), valuestr, function (err) {
+                if (!err) {
+                    console.log('文件生成成功，文件名为' + path.join(process.cwd(), keystr));
+                }
+            });
+        }
     })
 }
 function question() {
@@ -103,7 +108,8 @@ let args = process.argv.slice(2);
         question()
     } else {
         for (let i = 0; i < args.length; i++) {
-            let filepath = path.join(process.cwd(), args[i])
+            // let filepath = path.join(process.cwd(), args[i])
+            let filepath = args[i]
             await generate(filepath)
         }
         process.exit()

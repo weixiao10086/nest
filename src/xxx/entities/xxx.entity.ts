@@ -1,4 +1,3 @@
-// @ts-nocheck
 import entityClass from "src/utils/entityClass";
 import { Column, Entity } from "typeorm";
 
