@@ -1,6 +1,7 @@
 
 const path = require('path');
 const fs = require('fs');
+const fs2 = require('fs-extra');
 const readline = require('readline').createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -79,10 +80,16 @@ const generate = (filepath) => {
         let obj = await readfile({ filepath: path.join(process.cwd(), 'xxx') })
         //创建文件夹
         // fs.mkdirSync(filepath, { recursive: true })
+        try {
+            //备份文件夹
+            fs2.copySync(filepath, path.join(__dirname, '/备份', filepath))
+        } catch (err) { }
+        let filenamearr = filepath.split('\\')
+        let filename = filenamearr.at(-1) != '' ? filenamearr.at(-1) : filenamearr.at(-2);
         for (const key of obj.data.keys()) {
-            let keystr = key.replaceAll('xxx', 'crud')
+            let keystr = key.replaceAll('xxx', filename)
             let value = obj.data.get(key).toString().replaceAll('\n', '\r\n');
-            let valuestr = value.replaceAll(/xxx/gi, 'Crud')
+            let valuestr = value.replaceAll(/xxx/gi, filename.at(0).toUpperCase() + filename.slice(1))
             fs.writeFile(path.join(process.cwd(), keystr), valuestr, function (err) {
                 if (!err) {
                     console.log('文件生成成功，文件名为' + path.join(process.cwd(), keystr));
