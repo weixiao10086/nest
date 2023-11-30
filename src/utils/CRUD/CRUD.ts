@@ -84,8 +84,10 @@ const generate = (filepath) => {
             //备份文件夹
             fs2.copySync(filepath, path.join(__dirname, '/备份', filepath))
         } catch (err) { }
+
         let filenamearr = filepath.split('\\')
         let filename = filenamearr.at(-1) != '' ? filenamearr.at(-1) : filenamearr.at(-2);
+
         for (const key of obj.data.keys()) {
             let keystr = key.replaceAll('xxx', filename)
             let value = obj.data.get(key).toString();// .replaceAll('\n', '\r\n')

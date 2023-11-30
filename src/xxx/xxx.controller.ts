@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { XxxService } from './xxx.service';
 import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
@@ -9,13 +9,18 @@ export class XxxController {
   constructor(private readonly xxxService: XxxService) { }
 
   @Post()
-  create(@Body() createXxxDto: CreateXxxDto) {
+  create(@Body() createXxxDto: CreateXxxDto|Array<CreateXxxDto>) {
     return R(this.xxxService.create(createXxxDto));
   }
 
   @Get()
   findAll() {
     return R(this.xxxService.findAll());
+  }
+
+  @Get('list')
+  findList(@Query() params) {
+    return R(this.xxxService.findList(params), params);
   }
 
   @Get(':id')

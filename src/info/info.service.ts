@@ -35,8 +35,6 @@ export class InfoService {
   }
   findOne(id: string) {
     // return this.infoRepository.findOne({ where: { id: id } });
-    console.log(id);
-    console.log(typeof id);
     return this.infoRepository.createQueryBuilder().where({ id }).getOne()
   }
   update(id: number, updateInfoDto: UpdateInfoDto) {

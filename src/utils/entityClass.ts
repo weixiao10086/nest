@@ -26,6 +26,8 @@ export default class entityClass  {
         type: 'timestamp',
         select: false,
         comment: "删除时间",
+        //不可修改
+        update:false
     })
     deleteAt: String | null;
 }
