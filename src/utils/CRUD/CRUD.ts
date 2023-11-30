@@ -88,8 +88,11 @@ const generate = (filepath) => {
         let filename = filenamearr.at(-1) != '' ? filenamearr.at(-1) : filenamearr.at(-2);
         for (const key of obj.data.keys()) {
             let keystr = key.replaceAll('xxx', filename)
-            let value = obj.data.get(key).toString().replaceAll('\n', '\r\n');
+            let value = obj.data.get(key).toString();// .replaceAll('\n', '\r\n')
             let valuestr = value.replaceAll(/xxx/gi, filename.at(0).toUpperCase() + filename.slice(1))
+            //去除文档型注释
+            // console.log(valuestr.match(/(?:^|\n|\r)\s*\/\*[\s\S]*?\*\/\s*(?:\r|\n|$)/g));
+            valuestr = valuestr.replaceAll(/(?:^|\n|\r)\s*\/\*[\s\S]*?\*\/\s*(?:\r|\n|$)/g, '\n')
             fs.writeFile(path.join(process.cwd(), keystr), valuestr, function (err) {
                 if (!err) {
                     console.log('文件生成成功，文件名为' + path.join(process.cwd(), keystr));
