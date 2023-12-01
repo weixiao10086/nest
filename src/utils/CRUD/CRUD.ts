@@ -91,6 +91,7 @@ const generate = (filepath) => {
         for (const key of obj.data.keys()) {
             let keystr = key.replaceAll('xxx', filename)
             let value = obj.data.get(key).toString();// .replaceAll('\n', '\r\n')
+            value = value.replaceAll('xxx.', filename)
             let valuestr = value.replaceAll(/xxx/gi, filename.at(0).toUpperCase() + filename.slice(1))
             //去除文档型注释
             // console.log(valuestr.match(/(?:^|\n|\r)\s*\/\*[\s\S]*?\*\/\s*(?:\r|\n|$)/g));
