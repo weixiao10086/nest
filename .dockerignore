@@ -1,0 +1,5 @@
+/src/utils/CRUD
+.git/
+/dist
+/sql
+.log
