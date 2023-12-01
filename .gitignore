@@ -2,7 +2,7 @@
 /dist
 /node_modules
 **/**/node_modules
-
+/src/utils/CRUD/备份
 # Logs
 logs
 *.log

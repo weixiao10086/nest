@@ -26,14 +26,14 @@ import { CrudModule } from './crud/crud.module';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: '82.156.136.205',
       port: 3306,
       username: 'root',
-      password: '',
+      password: 'qi000214..',
       database: 'nest',
       // entities: [Info, Photo, Course,User],
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      // synchronize: true,
       dateStrings: true,
       logging: true,
       logger: "file"

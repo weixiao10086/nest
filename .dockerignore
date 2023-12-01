@@ -1,5 +1,7 @@
 /src/utils/CRUD
-.git/
+/src/utils/CICD
+.git
 /dist
 /sql
+/node_modules
 .log

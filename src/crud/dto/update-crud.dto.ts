@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateCrudDto } from './create-Crud.dto';
-
-export class UpdateCrudDto extends PartialType(CreateCrudDto) {}
+import { PartialType } from '@nestjs/swagger';
+import { CreateCrudDto } from './create-crud.dto';
+
+export class UpdateCrudDto extends PartialType(CreateCrudDto) {}

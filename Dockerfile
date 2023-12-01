@@ -5,6 +5,7 @@ RUN mkdir -p /nest
 WORKDIR /nest
 # 复制当前文件到工作目录
 COPY . ./
+RUN npm config set registry https://registry.npm.taobao.org
 # npm 安装依赖
 RUN npm install 
 # 打包

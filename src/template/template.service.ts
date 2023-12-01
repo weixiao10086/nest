@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-const Mustache = require("Mustache");
+const Mustache = require("mustache");
 @Injectable()
 export class TemplateService {
   template(template,data){
