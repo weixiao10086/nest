@@ -11,7 +11,9 @@ import { extname, join } from 'path';
 @Module({
   imports: [MulterModule.register({
     storage: diskStorage({
-      destination: 'uploads',
+      destination: (req, file, callback) => {
+        return callback(null, 'uploads')
+      },
       filename: (req, file, callback) => {
         const fileName = `${new Date().getTime() + extname(file.originalname)}`
         return callback(null, fileName)
