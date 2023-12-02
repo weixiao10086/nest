@@ -1,5 +1,4 @@
-import { Controller, Request, Get, Post, UseGuards, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Controller, Request, Get, Post, UseGuards, Body,  } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
@@ -28,11 +27,4 @@ export class AppController {
   getProfile(@Request() req) {
     return req.user;
   }
-
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-  }
-
 }

@@ -15,6 +15,7 @@ import { JwtAuthGuard } from './auth/JwtAuthGuard';
 import { RouterModule } from './router/router.module';
 import { XxxModule } from './xxx/xxx.module';
 import { CrudModule } from './crud/crud.module';
+import { UploadModule } from './upload/upload.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -48,6 +49,7 @@ import { CrudModule } from './crud/crud.module';
     RouterModule,
     XxxModule,
     CrudModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService,
