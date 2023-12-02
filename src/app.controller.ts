@@ -1,4 +1,5 @@
-import { Controller, Request, Get, Post, UseGuards, Body } from '@nestjs/common';
+import { Controller, Request, Get, Post, UseGuards, Body, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { AuthGuard } from '@nestjs/passport';
 import { AppService } from './app.service';
 import { AuthService } from './auth/auth.service';
@@ -9,7 +10,7 @@ import R from './utils/R';
 export class AppController {
   constructor(private readonly appService: AppService,
     private readonly authService: AuthService
-    ) { }
+  ) { }
 
   @Get()
   getHello(): string {
@@ -18,7 +19,7 @@ export class AppController {
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')
   @Public()
-  async login(@Body() user:CreateUserDto) {
+  async login(@Body() user: CreateUserDto) {
     return R(this.authService.login(user));
   }
 
@@ -27,4 +28,11 @@ export class AppController {
   getProfile(@Request() req) {
     return req.user;
   }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+  }
+
 }
