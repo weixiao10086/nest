@@ -1,28 +1,41 @@
-import  WebSocket from 'ws';
-import { WebSocketAdapter, INestApplicationContext } from '@nestjs/common';
-import { MessageMappingProperties } from '@nestjs/websockets';
+import WebSocket from 'ws';
+import { WebSocketAdapter, INestApplicationContext, Param } from '@nestjs/common';
+import { ConnectedSocket, MessageBody, MessageMappingProperties, SubscribeMessage } from '@nestjs/websockets';
 import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
+import { Request } from 'express';
 
 export class WsAdapter implements WebSocketAdapter {
-  constructor(private app: INestApplicationContext) {}
+  constructor(private app: INestApplicationContext) { }
+  arr: Array<WebSocket> = []
 
+  //创建Websocket
   create(port: number, options: any = {}): any {
-    console.log('ws create');
     return new WebSocket.Server({ port, ...options });
   }
 
+  //连接
   bindClientConnect(server, callback: Function) {
-    console.log('ws bindClientConnect, server:\n', server);
-    server.on('connection', callback);
+    server.on('connection', (socket, http) => {
+      console.log(http.headers);
+      socket.id = Math.random();
+      callback(socket)
+    });
   }
 
+
+  //连接成功
   bindMessageHandlers(
     client: WebSocket,
     handlers: MessageMappingProperties[],
     process: (data: any) => Observable<any>,
   ) {
-    console.log('[waAdapter]有新的连接进来');
+    console.log(client.id, '连接成功');
+
+    this.arr.push(client)
+    console.log(this.arr.length, 'arr');
+
+    client.send('连接成功')
     fromEvent(client, 'message')
       .pipe(
         mergeMap((data) =>
@@ -33,6 +46,7 @@ export class WsAdapter implements WebSocketAdapter {
       .subscribe((response) => client.send(JSON.stringify(response)));
   }
 
+  //接收消息
   bindMessageHandler(
     client: WebSocket,
     buffer,
@@ -57,6 +71,13 @@ export class WsAdapter implements WebSocketAdapter {
     return process(messageHandler.callback(message.data));
   }
 
+  //断开连接
+  bindClientDisconnect(server, callback) {
+    server.on('close', ((res, a, b) => {
+      console.log(server.id, '断开连接');
+    }));
+  }
+  //关闭
   close(server) {
     console.log('ws server close');
     server.close();
