@@ -7,7 +7,9 @@ import {
 import * as WebSocket from 'ws';
 
 @WebSocketGateway(9623,{
-    cors: '*'
+    cors: {
+        origin:'*'
+    }
 })
 export class WsStartGateway {
     @SubscribeMessage('hello')

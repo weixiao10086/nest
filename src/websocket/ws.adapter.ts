@@ -3,7 +3,6 @@ import { WebSocketAdapter, INestApplicationContext, Param } from '@nestjs/common
 import { ConnectedSocket, MessageBody, MessageMappingProperties, SubscribeMessage } from '@nestjs/websockets';
 import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
-import { Request } from 'express';
 
 export class WsAdapter implements WebSocketAdapter {
   constructor(private app: INestApplicationContext) { }
@@ -22,7 +21,6 @@ export class WsAdapter implements WebSocketAdapter {
       callback(socket)
     });
   }
-
 
   //连接成功
   bindMessageHandlers(
