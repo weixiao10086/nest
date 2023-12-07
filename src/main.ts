@@ -7,6 +7,7 @@ import csurf from 'csurf';
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import { WsAdapter } from './websocket/ws.adapter';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const options = new DocumentBuilder()
@@ -43,6 +44,7 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
     }))
+    app.useWebSocketAdapter(new WsAdapter(app));
   await app.listen(9622);
 }
 bootstrap();

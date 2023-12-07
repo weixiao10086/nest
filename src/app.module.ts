@@ -15,7 +15,7 @@ import { JwtAuthGuard } from './auth/JwtAuthGuard';
 import { XxxModule } from './xxx/xxx.module';
 import { CrudModule } from './crud/crud.module';
 import { UploadModule } from './upload/upload.module';
-import { WsStartGateway } from './websocket/events.gateway';
+import { WsStartGateway } from './websocket/ws.gateway';
 @Module({
   imports: [
     ConfigModule.forRoot({
