@@ -13,9 +13,9 @@ import configuration from 'config/configuration';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/JwtAuthGuard';
 import { XxxModule } from './xxx/xxx.module';
-import { CrudModule } from './crud/crud.module';
 import { UploadModule } from './upload/upload.module';
 import { WsStartGateway } from './websocket/ws.gateway';
+import { RouterModule } from './router/router.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,7 +36,8 @@ import { WsStartGateway } from './websocket/ws.gateway';
       database: 'nest',
       // entities: [Info, Photo, Course,User],
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      // synchronize: true,
+      //同步数据库
+      synchronize: true,
       dateStrings: true,
       logging: true,
       logger: "file"
@@ -48,8 +49,8 @@ import { WsStartGateway } from './websocket/ws.gateway';
     AuthModule,
     UsersModule,
     XxxModule,
-    CrudModule,
     UploadModule,
+    RouterModule,
   ],
   controllers: [AppController],
   providers: [AppService,

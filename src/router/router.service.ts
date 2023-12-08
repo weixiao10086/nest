@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCrudDto } from './dto/create-crud.dto';
-import { UpdateCrudDto } from './dto/update-crud.dto';
+import { CreateRouterDto } from './dto/create-router.dto';
+import { UpdateRouterDto } from './dto/update-router.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Crud } from './entities/crud.entity';
+import { Router } from './entities/router.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
 
 @Injectable()
-export class CrudService {
+export class RouterService {
   constructor(
-    @InjectRepository(Crud)
-    private DB: Repository<Crud>
+    @InjectRepository(Router)
+    private DB: Repository<Router>
   ) { }
 
-  async create(createDto: CreateCrudDto | Array<CreateCrudDto>) {
+  async create(createDto: CreateRouterDto | Array<CreateRouterDto>) {
     return this.DB.createQueryBuilder().insert()
       .values(createDto)
       .execute();
@@ -23,9 +23,9 @@ export class CrudService {
     return this.DB.createQueryBuilder().getMany();
   }
 
-  async findList(params: Page & Crud) {
+  async findList(params: Page & Router) {
     const { skip, take } = page(params)
-    const where: FindOptionsWhere<Crud> = {
+    const where: FindOptionsWhere<Router> = {
       "id": params.id,
       ...("params.id" && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
@@ -41,7 +41,7 @@ export class CrudService {
     return this.DB.createQueryBuilder().where({ id }).getOne()
   }
 
-  update(id: string, updateDto: UpdateCrudDto) {
+  update(id: string, updateDto: UpdateRouterDto) {
     return this.DB.update(id, updateDto);
   }
 
