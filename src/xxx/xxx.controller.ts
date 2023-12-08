@@ -3,13 +3,10 @@ import { XxxService } from './xxx.service';
 import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
 import R from 'src/utils/R';
-import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/common/cache';
 
 @Controller('xxx')
-@UseInterceptors(CacheInterceptor)
 export class XxxController {
   constructor(
-    @Inject(CACHE_MANAGER) private cacheManager,
     private readonly xxxService: XxxService) { }
 
   @Post()
@@ -19,7 +16,6 @@ export class XxxController {
 
   @Get()
   async findAll(@Req() req) {
-    console.log(await this.cacheManager);
     return R(this.xxxService.findAll());
   }
 
