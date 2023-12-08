@@ -1,20 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseInterceptors, Inject } from '@nestjs/common';
 import { XxxService } from './xxx.service';
 import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
 import R from 'src/utils/R';
+import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/common/cache';
 
 @Controller('xxx')
+@UseInterceptors(CacheInterceptor)
 export class XxxController {
-  constructor(private readonly xxxService: XxxService) { }
+  constructor(
+    @Inject(CACHE_MANAGER) private cacheManager,
+    private readonly xxxService: XxxService) { }
 
   @Post()
-  create(@Body() createXxxDto: CreateXxxDto|Array<CreateXxxDto>) {
+  create(@Body() createXxxDto: CreateXxxDto | Array<CreateXxxDto>) {
     return R(this.xxxService.create(createXxxDto));
   }
 
   @Get()
-  findAll(@Req() req) {
+  async findAll(@Req() req) {
+    console.log(await this.cacheManager);
     return R(this.xxxService.findAll());
   }
 

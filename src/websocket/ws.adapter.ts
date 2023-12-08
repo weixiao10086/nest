@@ -1,9 +1,8 @@
 import WebSocket from 'ws';
-import { WebSocketAdapter, INestApplicationContext, Param } from '@nestjs/common';
+import { WebSocketAdapter, INestApplicationContext, Param, Req, Inject } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, MessageMappingProperties, SubscribeMessage } from '@nestjs/websockets';
 import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
-
 export class WsAdapter implements WebSocketAdapter {
   constructor(private app: INestApplicationContext) { }
   arr: Array<WebSocket> = []
@@ -15,9 +14,11 @@ export class WsAdapter implements WebSocketAdapter {
   }
 
   //连接
-  bindClientConnect(server, callback: Function) {
+  bindClientConnect(server:WebSocket, callback: Function) {
     server.on('connection', (socket, http) => {
-      console.log(http.headers.cookie);
+      let token = `Bearer  ` + http.headers['sec-websocket-protocol']
+      console.log(token, 'token');
+      let arr = http.headers['sec-websocket-protocol'].split('.')
       socket.id = Math.random();
       callback(socket)
     });

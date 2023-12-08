@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CacheModule } from '@nestjs/common/cache'
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -40,6 +41,11 @@ import { WsStartGateway } from './websocket/ws.gateway';
       dateStrings: true,
       logging: true,
       logger: "file"
+    }),
+    CacheModule.register({
+      ttl: 5, //秒
+      max: 10, //缓存中最大和最小数量
+      isGlobal: true
     }),
     InfoModule,
     PhotoModule,
