@@ -7,6 +7,7 @@ import { mergeMap, filter } from 'rxjs/operators';
 export class WsAdapter implements WebSocketAdapter {
   constructor(private app: INestApplicationContext) { }
   arr: Array<WebSocket> = []
+  map: Map<any, WebSocket> = new Map();
 
   //创建Websocket
   create(port: number, options: any = {}): any {
@@ -16,7 +17,7 @@ export class WsAdapter implements WebSocketAdapter {
   //连接
   bindClientConnect(server, callback: Function) {
     server.on('connection', (socket, http) => {
-      console.log(http.headers);
+      console.log(http.headers.cookie);
       socket.id = Math.random();
       callback(socket)
     });
@@ -28,11 +29,7 @@ export class WsAdapter implements WebSocketAdapter {
     handlers: MessageMappingProperties[],
     process: (data: any) => Observable<any>,
   ) {
-    console.log(client.id, '连接成功');
-
-    this.arr.push(client)
-    console.log(this.arr.length, 'arr');
-
+    this.map.set(client.id, client)
     client.send('连接成功')
     fromEvent(client, 'message')
       .pipe(
@@ -73,6 +70,7 @@ export class WsAdapter implements WebSocketAdapter {
   bindClientDisconnect(server, callback) {
     server.on('close', ((res, a, b) => {
       console.log(server.id, '断开连接');
+      this.map.delete(server.id)
     }));
   }
   //关闭

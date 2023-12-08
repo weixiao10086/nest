@@ -8,7 +8,7 @@ import * as WebSocket from 'ws';
 
 @WebSocketGateway(9623,{
     cors: {
-        origin:'*'
+        origin:'*',
     }
 })
 export class WsStartGateway {

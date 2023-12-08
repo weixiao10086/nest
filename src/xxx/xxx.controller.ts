@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req } from '@nestjs/common';
 import { XxxService } from './xxx.service';
 import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
@@ -14,7 +14,7 @@ export class XxxController {
   }
 
   @Get()
-  findAll() {
+  findAll(@Req() req) {
     return R(this.xxxService.findAll());
   }
 

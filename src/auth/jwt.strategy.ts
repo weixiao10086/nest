@@ -18,10 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
   async validate(payload: any) {
-    let userobj = await this.usersService.findOne({ username: payload.username, password: payload.password })
-    if (userobj.username === payload.username && userobj.password === payload.password) {
-      return R({ data: { ...userobj, password: undefined } });
-    }
-    return R.error(null)
+    let userobj = await this.usersService.findOne({ username: payload.username })
+    return R({ data: { ...userobj, password: undefined } });
   }
 }
