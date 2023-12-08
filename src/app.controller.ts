@@ -53,10 +53,10 @@ export class AppController {
 
     //session
     session.visits = session.visits ? session.visits + 1 : 1;
-    if (user?.code==="8888"||session.code?.toLocaleLowerCase() === user?.code?.toLocaleLowerCase()) {
+    if (user?.code === "8888" || session.code?.toLocaleLowerCase() === user?.code?.toLocaleLowerCase()) {
       return R(this.authService.login(user));
     } else {
-      return R.error({msg:"验证码错误"})
+      return R.error({ msg: "验证码错误" })
     }
   }
 
