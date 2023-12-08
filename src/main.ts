@@ -8,6 +8,7 @@ import helmet from 'helmet'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { WsAdapter } from './websocket/ws.adapter';
+import dayjs from 'dayjs';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const options = new DocumentBuilder()
@@ -47,4 +48,5 @@ async function bootstrap() {
     app.useWebSocketAdapter(new WsAdapter(app));
   await app.listen(9622);
 }
+globalThis.$dayJS=dayjs
 bootstrap();
