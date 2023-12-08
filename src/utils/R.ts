@@ -50,7 +50,7 @@ const R = async (obj: paramsType | Promise<any>, params?: Page) => {
 R.success = async (data: Object | string = {}) => {
     return { success: true, code: 200, data: await data, msg: '成功', time: dayjs().format('YYYY-MM-DD HH:mm:ss') }
 }
-R.error = async (data = {}) => {
-    throw new ForbiddenException({ success: false, code: 500, data: {}, msg: '失败', time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
+R.error = async ({data = {},msg='失败'}) => {
+    throw new ForbiddenException({ success: false, code: 500, data, msg, time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 }
 export default R;

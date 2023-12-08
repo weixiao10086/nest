@@ -6,6 +6,7 @@ import { AuthService } from './auth/auth.service';
 import { Public } from './auth/JwtAuthGuard';
 import { CreateUserDto } from './users/dto/create-user.dto';
 import R from './utils/R';
+import svgCaptcha from 'svg-captcha';
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService,
@@ -16,10 +17,27 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  //验证码
+  @Get('code')
+  @Public()
+  createCaptcha(@Session() session: Record<string, any>, @Res() res) {
+    const captcha = svgCaptcha.create({
+      size: 4,//生成几个验证码
+      fontSize: 50, //文字大小
+      width: 100,  //宽度
+      height: 34,  //高度
+      background: '#cc9966',  //背景颜色
+    })
+    session.code = captcha.text //存储验证码记录到session
+    res.type('image/svg+xml')
+    res.send(captcha.data)
+  }
+
   @UseGuards(AuthGuard('local'))
   @Post('auth/login')
   @Public()
-  async login(@Body() user: CreateUserDto,
+  async login(@Body() user,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Session() session: Record<string, any>) {
@@ -35,9 +53,13 @@ export class AppController {
 
     //session
     session.visits = session.visits ? session.visits + 1 : 1;
-    // console.log(session,'session');
-    return R(this.authService.login(user));
+    if (session.code?.toLocaleLowerCase() === user?.code?.toLocaleLowerCase()) {
+      return R(this.authService.login(user));
+    } else {
+      return R.error({msg:"验证码错误"})
+    }
   }
+
 
   @UseGuards(AuthGuard('jwt'))
   @Get('auth/userInfo')
