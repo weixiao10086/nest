@@ -10,7 +10,6 @@ export class AuthService {
     const user = await this.usersService.findOne({ username });
     if (user && user.password === pass) {
       const { password, ...result } = user;
-      console.log(result, 'result');
       return result;
     }
     return null;
@@ -18,8 +17,12 @@ export class AuthService {
 
   async login(user: any) {
     const payload = { username: user.username };
+    let token = this.jwtService.sign(payload)
     return {
-      access_token: this.jwtService.sign(payload),
+      access_token: token,
     };
+  }
+  async decode(token: any) {
+    return this.jwtService.decode(token.split("  ")[1])
   }
 }
