@@ -3,7 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import rateLimit from 'express-rate-limit';
-import csurf from 'csurf';
+// import csurf from 'csurf';
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
