@@ -5,12 +5,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Xxx } from './entities/xxx.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
+import * as xlsx from 'xlsx';
+/* import { Reflector } from "@nestjs/core"; */
 
 @Injectable()
 export class XxxService {
   constructor(
     @InjectRepository(Xxx)
-    private DB: Repository<Xxx>
+    private DB: Repository<Xxx>,
+    /* private reflector: Reflector */
   ) { }
 
   async create(createDto: CreateXxxDto | Array<CreateXxxDto>) {
@@ -60,5 +63,16 @@ export class XxxService {
       .where("id = :id", { id })
       .execute(); */
     /*  return this.DB.softRemove({id}); */
+  }
+
+  async exportExcel(data: any[], fileName: string): Promise<Buffer> {
+    const worksheet = xlsx.utils.json_to_sheet(data);
+    const workbook = xlsx.utils.book_new();
+    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const buffer = xlsx.write(workbook, {
+      type: 'buffer',
+      bookType: 'xlsx',
+    });
+    return buffer;
   }
 }

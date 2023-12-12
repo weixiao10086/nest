@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseInterceptors, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseInterceptors, Inject, Res } from '@nestjs/common';
 import { XxxService } from './xxx.service';
 import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
 import R from 'src/utils/R';
+import { Response } from 'express'
 
 @Controller('xxx')
 export class XxxController {
@@ -22,6 +23,18 @@ export class XxxController {
   @Get('list')
   findList(@Query() params) {
     return R(this.xxxService.findList(params), params);
+  }
+
+  @Get('export-excel')
+  async exportExcel(@Res() res: Response): Promise<void> {
+    const data = await this.xxxService.findAll();
+    const fileName = 'xxx.xlsx';
+    const buffer = await this.xxxService.exportExcel(data, fileName);
+    res.set({
+      'Content-Disposition': `attachment; filename=${fileName}`,
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    res.send(buffer);
   }
 
   @Get(':id')
