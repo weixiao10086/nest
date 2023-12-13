@@ -1,3 +1,4 @@
+//响应函数
 import { ForbiddenException } from "./forbidden.exception";
 import { Page } from "./page";
 

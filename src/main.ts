@@ -9,6 +9,8 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { WsAdapter } from './websocket/ws.adapter';
 import dayjs from 'dayjs';
+import { AllExceptionsFilter } from './utils/any-exception.filter';
+import { OrmExceptionsFilter } from './utils/orm-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const options = new DocumentBuilder()
@@ -46,6 +48,8 @@ async function bootstrap() {
       saveUninitialized: false,
     }))
     app.useWebSocketAdapter(new WsAdapter(app));
+    // app.useGlobalFilters(new AllExceptionsFilter());
+    app.useGlobalFilters(new OrmExceptionsFilter());
   await app.listen(9622);
 }
 globalThis.$dayJS=dayjs

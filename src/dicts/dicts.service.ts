@@ -31,8 +31,9 @@ export class DictsService {
       ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     }
-    return await this.DB.createQueryBuilder()
-      .leftJoinAndSelect("Dicts.dict", "dicts")
+    return await this.DB.createQueryBuilder("dicts")
+      // .innerJoinAndSelect("dicts.dicts", 'bieming')
+      .leftJoinAndSelect("dicts.dicts", 'bieming')
       .where(where)
       .skip(skip)
       .take(take)

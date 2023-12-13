@@ -1,3 +1,4 @@
+//公共实体基类
 import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export default class entityClass  {
