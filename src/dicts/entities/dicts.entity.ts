@@ -1,6 +1,6 @@
 import { Dict } from "src/dict/entities/dict.entity";
 import entityClass from "src/utils/entityClass";
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
 
 @Entity()
 export class Dicts extends entityClass {
