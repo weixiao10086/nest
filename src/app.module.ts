@@ -16,6 +16,8 @@ import { XxxModule } from './xxx/xxx.module';
 import { UploadModule } from './upload/upload.module';
 import { WsStartGateway } from './websocket/ws.gateway';
 import { RouterModule } from './router/router.module';
+import { DictsModule } from './dicts/dicts.module';
+import { DictModule } from './dict/dict.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -51,6 +53,8 @@ import { RouterModule } from './router/router.module';
     XxxModule,
     UploadModule,
     RouterModule,
+    DictsModule,
+    DictModule,
   ],
   controllers: [AppController],
   providers: [AppService,
