@@ -66,6 +66,7 @@ export class XxxService {
   }
 
   async exportExcel(data: any[], fileName: string): Promise<Buffer> {
+    /* const worksheet = xlsx.utils.json_to_sheet(data,{header:['name','id'],"skipHeader":true}); */
     const worksheet = xlsx.utils.json_to_sheet(data);
     const workbook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
