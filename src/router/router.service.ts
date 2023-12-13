@@ -20,7 +20,7 @@ export class RouterService {
   }
 
   findAll() {
-    return this.DB.createQueryBuilder().getMany();
+    return this.DB.createQueryBuilder("router").getMany();
   }
 
   async findList(params: Page & Router) {
