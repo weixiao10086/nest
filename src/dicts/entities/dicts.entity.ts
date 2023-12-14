@@ -4,7 +4,7 @@ import { Column, Entity, OneToMany } from "typeorm";
 
 @Entity()
 export class Dicts extends entityClass {
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ comment: "字典名", type: 'varchar', length: 255 })
     name: string;
 
     @OneToMany(() => Dict, Dict => Dict.dicts)

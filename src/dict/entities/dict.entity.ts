@@ -5,12 +5,12 @@ import { Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn
 
 @Entity()
 export class Dict extends entityClass {
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ comment: "字典key", type: 'varchar', length: 255 })
     key: string;
 
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ comment: "字典value", type: 'varchar', length: 255 })
     value: string;
 
-    @ManyToOne(() => Dicts, Dicts => Dicts.dicts ,{ "cascade": true ,"nullable":false})
-    dicts:Dicts
+    @ManyToOne(() => Dicts, Dicts => Dicts.dicts, { "cascade": true, "nullable": false })
+    dicts: Dicts
 }

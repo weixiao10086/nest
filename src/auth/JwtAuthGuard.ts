@@ -4,6 +4,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { SetMetadata } from '@nestjs/common';
 import rxjs from 'rxjs';
 
+//创建@Public装饰器
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 

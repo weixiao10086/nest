@@ -4,7 +4,7 @@ import { Column, Entity } from "typeorm";
 @Entity()
 /* @Tree("closure-table") */
 export class Xxx extends entityClass {
-    @Column({ type: 'varchar', length: 255 })
+    @Column({ comment: "数据库注释",type: 'varchar', length: 255 })
     name: string;
 
     /*  连表
