@@ -10,4 +10,16 @@ export class User extends entityClass {
     @Exclude()
     @Column({ comment: "密码", type: 'varchar', length: 255 })
     password: string;
+
+    @Column({ comment: "性别", type: 'char', "nullable": true, "enum": [1, 0] })
+    gender: number;
+
+    @Column({ comment: "电话", type: 'varchar', length: 30, "nullable": true })
+    phone: string;
+
+    @Column({ comment: "邮箱", type: 'varchar', length: 30, "nullable": true })
+    Email: string;
+
+    @Column({ comment: "账号状态", type: 'char', length: 4, "nullable": true, default: '1' })
+    status: string;
 }

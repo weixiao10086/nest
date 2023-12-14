@@ -16,8 +16,8 @@ export class WsAdapter implements WebSocketAdapter {
   //连接
   bindClientConnect(server:WebSocket, callback: Function) {
     server.on('connection', (socket, http) => {
-      let token = `Bearer  ` + http.headers['sec-websocket-protocol']
-      let arr = http.headers['sec-websocket-protocol'].split('.')
+      // let token = `Bearer  ` + http.headers['sec-websocket-protocol']
+      // let arr = http.headers['sec-websocket-protocol'].split('.')
       socket.id = Math.random();
       callback(socket)
     });
