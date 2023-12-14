@@ -28,7 +28,6 @@ export class RouterService {
   async findList(params: Page & Router) {
     const { skip, take } = page(params)
     const where: FindOptionsWhere<Router> = {
-      "id": params.id,
       ...("params.id" && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     }
@@ -44,7 +43,7 @@ export class RouterService {
   }
 
   update(id: string, updateDto: UpdateRouterDto) {
-    return this.DB.update(id, updateDto);
+    return this.DB.save({ ...updateDto, id });
   }
 
   remove(id: string) {
