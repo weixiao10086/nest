@@ -16,6 +16,7 @@ export class Xxx extends entityClass {
         */
 
     /*  树形
+    api文档 这样绑定关系"parent":{"id":"4"}
     @TreeParent()
     parent: Router;
   
