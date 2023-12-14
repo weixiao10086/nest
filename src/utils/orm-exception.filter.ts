@@ -1,4 +1,4 @@
-//任意异常过滤器
+//typeorm异常过滤器
 import {
   ExceptionFilter,
   Catch,
