@@ -1,14 +1,15 @@
 import entityClass from "src/utils/entityClass";
-import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, Tree, TreeChildren, TreeParent, TreeRepository, UpdateDateColumn } from "typeorm";
 
 @Entity()
+@Tree("closure-table")
 export class Router extends entityClass {
     @Column({ type: 'varchar', length: 255 })
     name: string;
 
-    @ManyToOne(() => Router, Router => Router.children)
+    @TreeParent()
     parent: Router;
 
-    @OneToMany(() => Router, Router => Router.parent)
+    @TreeChildren()
     children: Router[];
 }

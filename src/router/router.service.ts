@@ -3,22 +3,24 @@ import { CreateRouterDto } from './dto/create-router.dto';
 import { UpdateRouterDto } from './dto/update-router.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Router } from './entities/router.entity';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, Like, Repository, TreeRepository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
 
 @Injectable()
 export class RouterService {
   constructor(
     @InjectRepository(Router)
-    private DB: Repository<Router>
+    //注入树实体
+    private DB: TreeRepository<Router>
   ) { }
 
   async create(createDto: CreateRouterDto | Array<CreateRouterDto>) {
-    return this.DB.createQueryBuilder().insert()
-      .values(createDto)
-      .execute();
+    return this.DB.save(createDto as CreateRouterDto)
   }
 
+  findTree() {
+    return this.DB.findTrees();
+  }
   findAll() {
     return this.DB.createQueryBuilder("router").getMany();
   }

@@ -13,6 +13,7 @@ export class XxxService {
   constructor(
     @InjectRepository(Xxx)
     private DB: Repository<Xxx>,
+    /* private DB: TreeRepository<Xxx> */
     /* private reflector: Reflector */
   ) { }
 

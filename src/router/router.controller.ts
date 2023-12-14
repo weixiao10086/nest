@@ -14,6 +14,11 @@ export class RouterController {
     return R(this.RouterService.create(createRouterDto));
   }
 
+  @Get('tree')
+  async findTree(@Req() req) {
+    return R(this.RouterService.findTree());
+  }
+
   @Get()
   async findAll(@Req() req) {
     return R(this.RouterService.findAll());

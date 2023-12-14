@@ -49,7 +49,7 @@ async function bootstrap() {
     }))
     app.useWebSocketAdapter(new WsAdapter(app));
     // app.useGlobalFilters(new AllExceptionsFilter());
-    app.useGlobalFilters(new OrmExceptionsFilter());
+    // app.useGlobalFilters(new OrmExceptionsFilter());
   await app.listen(9622);
 }
 globalThis.$dayJS=dayjs
