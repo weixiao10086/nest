@@ -13,15 +13,18 @@ export class XxxService {
   constructor(
     @InjectRepository(Xxx)
     private DB: Repository<Xxx>,
-    /* private DB: TreeRepository<Xxx> */
-    /* private reflector: Reflector */
+    /*树形
+     private DB: TreeRepository<Xxx> */
+    /*元数据
+     private reflector: Reflector */
   ) { }
 
   async create(createDto: CreateXxxDto | Array<CreateXxxDto>) {
     return this.DB.createQueryBuilder().insert()
       .values(createDto)
       .execute();
-    /*  return this.DB.save(createDto as CreateXxxDto); */
+    /*  (树形新增必须用这个)
+     return this.DB.save(createDto as CreateXxxDto); */
   }
 
   findAll() {
@@ -30,20 +33,21 @@ export class XxxService {
   }
 
   async findList(params: Page & Xxx) {
-    /*  return this.DB.findAndCount({...page(params), relations: ["photos"]}); */
+    /*  relations连表查询
+      return this.DB.findAndCount({...page(params), relations: ["photos"]}); */
     const { skip, take } = page(params)
     const where: FindOptionsWhere<Xxx> = {
-      "id": params.id,
       ...("params.id" && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     }
-    return await this.DB.createQueryBuilder()
+    return await this.DB.createQueryBuilder('xxx')
+    /*  连表 
+    // .innerJoinAndSelect("xxx.dicts", 'bieming')
+    // .leftJoinAndSelect("xxx.dicts", 'bieming') */
       .where(where)
       .skip(skip)
       .take(take)
       .getManyAndCount()
-    /*       .leftJoinAndSelect("Info.photos", "photos")
-          .leftJoinAndSelect("Info.courses", "courses") */
   }
 
   findOne(id: string) {
@@ -56,6 +60,8 @@ export class XxxService {
     /*  return this.DB.createQueryBuilder().update().set(updateDto)
        .where("id = :id", { id })
        .execute(); */
+    /*  树形修改
+     return this.DB.save({ ...updateDto, id }); */
   }
 
   remove(id: string) {

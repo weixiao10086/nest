@@ -2,7 +2,23 @@ import entityClass from "src/utils/entityClass";
 import { Column, Entity } from "typeorm";
 
 @Entity()
+/* @Tree("closure-table") */
 export class Xxx extends entityClass {
     @Column({ type: 'varchar', length: 255 })
     name: string;
+
+    /*  连表
+    @OneToMany(() => Xxx2, Xxx2 => Xxx2.xxx2list)
+    xxx2list: xxx2[]; 
+        另一个实体xxx2:
+            @ManyToOne(() => Xxx, Xxx => Xxx.xxx2list ,{ "cascade": true ,"nullable":false})
+            xxx2list:Xxx
+        */
+
+    /*  树形
+    @TreeParent()
+    parent: Router;
+  
+    @TreeChildren()
+    children: Router[]; */
 }
