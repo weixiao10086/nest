@@ -8,7 +8,6 @@ import helmet from 'helmet'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { WsAdapter } from './websocket/ws.adapter';
-import dayjs from 'dayjs';
 import { AllExceptionsFilter } from './utils/any-exception.filter';
 import { OrmExceptionsFilter } from './utils/orm-exception.filter';
 async function bootstrap() {
@@ -52,5 +51,13 @@ async function bootstrap() {
     // app.useGlobalFilters(new OrmExceptionsFilter());
   await app.listen(9622);
 }
+
+import dayjs from 'dayjs';
 globalThis.$dayJS=dayjs
+
+import { Faker, zh_CN } from '@faker-js/faker';
+const faker = new Faker({
+  locale: [zh_CN],
+})
+globalThis.$faker=faker
 bootstrap();

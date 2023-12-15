@@ -4,7 +4,7 @@ import { Column, Entity } from "typeorm";
 
 @Entity()
 export class User extends entityClass {
-    @Column({ comment: "用户名", type: 'varchar', length: 255 })
+    @Column({ comment: "用户名", type: 'varchar', length: 255,unique:true })
     username: string;
 
     @Exclude()

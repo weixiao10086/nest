@@ -1,8 +1,8 @@
 //公共实体基类
 import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-export default class entityClass  {
-    @PrimaryGeneratedColumn({ comment: "id",type:'bigint' })
+export default class entityClass {
+    @PrimaryGeneratedColumn({ comment: "id", type: 'bigint' })
     id: string;
 
     @CreateDateColumn({
@@ -28,7 +28,7 @@ export default class entityClass  {
         select: false,
         comment: "删除时间",
         //不可修改
-        update:false
+        update: false
     })
     deleteAt: String | null;
 }

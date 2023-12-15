@@ -13,8 +13,10 @@ import { AuthController } from './auth.controller';
     UsersModule,
     PassportModule,
     JwtModule.register({
+      //jwt的加密key
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '600s' },
+      //token过期时间
+      signOptions: { expiresIn: '6000s' },
     }),
   ],
   controllers: [AuthController],
