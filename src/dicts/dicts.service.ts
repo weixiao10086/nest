@@ -44,6 +44,9 @@ export class DictsService {
   findOne(id: string) {
     return this.DB.createQueryBuilder().where({ id }).getOne()
   }
+  findKey(key: string) {
+    return this.DB.findOne({where:{key},"relations":['dicts']})
+  }
 
   update(id: string, updateDto: UpdateDictsDto) {
     return this.DB.update(id, updateDto);
@@ -51,7 +54,7 @@ export class DictsService {
 
   remove(id: string) {
     return this.DB.softDelete(id);
-    /*  return this.DB.softRemove({id}); */
+    //  return this.DB.softRemove({id});
   }
 
   async exportExcel(data: any[], fileName: string): Promise<Buffer> {

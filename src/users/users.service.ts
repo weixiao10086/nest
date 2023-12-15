@@ -10,7 +10,6 @@ export class UsersService {
     private users: Repository<User>
   ) { }
   async create(createDto: CreateUserDto | Array<CreateUserDto>) {
-    console.log(createDto, 'createDto');
     return this.users.createQueryBuilder().insert()
       .values(createDto)
       .execute();

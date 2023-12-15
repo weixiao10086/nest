@@ -3,7 +3,7 @@ import { DictsService } from './dicts.service';
 import { CreateDictsDto } from './dto/create-dicts.dto';
 import { UpdateDictsDto } from './dto/update-dicts.dto';
 import R from 'src/utils/R';
-import { Response } from 'express'
+import { Response, query } from 'express'
 
 @Controller('Dicts')
 export class DictsController {
@@ -37,6 +37,10 @@ export class DictsController {
     res.send(buffer);
   }
 
+  @Get('key')
+  findKey(@Query('key') key: string) {
+    return R(this.DictsService.findKey(key));
+  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return R(this.DictsService.findOne(id));
