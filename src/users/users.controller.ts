@@ -20,7 +20,7 @@ export class UsersController {
 
   @Get('list')
   findList(@Query() params) {
-    return R(this.usersService.findList(),params);
+    return R(this.usersService.findList(params),params);
   }
 
   // @Get(':id')
