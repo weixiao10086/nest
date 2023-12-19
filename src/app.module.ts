@@ -19,7 +19,6 @@ import { RouterModule } from './router/router.module';
 import { DictsModule } from './dicts/dicts.module';
 import { DictModule } from './dict/dict.module';
 import { RolesGuard } from './roles/roles.guard';
-import { CaslModule } from './casl/casl.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -58,7 +57,6 @@ import { CaslModule } from './casl/casl.module';
     RouterModule,
     DictsModule,
     DictModule,
-    CaslModule,
   ],
   controllers: [AppController],
   providers: [AppService,
