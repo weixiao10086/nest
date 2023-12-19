@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+// import { CacheModule } from '@nestjs/common/cache';
+// import redisStore from 'cache-manager-redis-store';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -19,8 +21,15 @@ import { RouterModule } from './router/router.module';
 import { DictsModule } from './dicts/dicts.module';
 import { DictModule } from './dict/dict.module';
 import { RolesGuard } from './roles/roles.guard';
+import { CacheModule } from './cache/cache.module';
+
 @Module({
   imports: [
+    // CacheModule.register({
+    //   store: redisStore,
+    //   host: 'localhost',
+    //   port: 6379,
+    // }),
     ConfigModule.forRoot({
       //是否禁止加载环境变量
       // ignoreEnvFile: true,
@@ -44,7 +53,14 @@ import { RolesGuard } from './roles/roles.guard';
       synchronize: true,
       dateStrings: true,
       logging: true,
-      logger: "file"
+      logger: "file",
+      // cache: {
+      //   type: "redis",
+      //   options: {
+      //     host: "localhost",
+      //     port: 6379
+      //   }
+      // }
     }),
     InfoModule,
     PhotoModule,
@@ -57,6 +73,7 @@ import { RolesGuard } from './roles/roles.guard';
     RouterModule,
     DictsModule,
     DictModule,
+    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService,

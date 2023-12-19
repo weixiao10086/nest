@@ -5,11 +5,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import R from 'src/utils/R';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/enums/role.enum';
-
+import { CacheService } from 'src/cache/cache.service';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService,
+    // private cacheService: CacheService
+  ) { }
 
   @Post()
   @Roles(Role.Admin)
@@ -17,8 +19,10 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
   @Get()
-  findAll() {
-    return R(this.usersService.findAll());
+  async findAll() {
+    let obj = await R(this.usersService.findAll())
+    // this.cacheService.set('users', obj.data)
+    return obj;
   }
 
   @Get('list')

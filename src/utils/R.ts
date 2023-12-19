@@ -31,7 +31,7 @@ export interface paramsType {
     time?: String;
     msg?: String;
 }
-const R = async (obj: paramsType | Promise<any>, params?: Page) => {
+const R = async (obj: paramsType | Promise<any>, params?: Page):Promise<paramsType> => {
     const { page = 1, size = 10 } = params || {};
     if (obj instanceof Promise || obj instanceof String) {
         obj = { data: await obj }
@@ -48,10 +48,10 @@ const R = async (obj: paramsType | Promise<any>, params?: Page) => {
     }
     return Robj
 }
-R.success = async (data: Object | string = {}) => {
+R.success = async (data: Object | string = {}):Promise<paramsType> => {
     return { success: true, code: 200, data: await data, msg: '成功', time: dayjs().format('YYYY-MM-DD HH:mm:ss') }
 }
-R.error = async ({data = {},msg='失败'}) => {
+R.error = async ({data = {},msg='失败'}):Promise<paramsType> => {
     throw new ForbiddenException({ success: false, code: 500, data, msg, time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
 }
 export default R;
