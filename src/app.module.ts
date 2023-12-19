@@ -18,6 +18,8 @@ import { WsStartGateway } from './websocket/ws.gateway';
 import { RouterModule } from './router/router.module';
 import { DictsModule } from './dicts/dicts.module';
 import { DictModule } from './dict/dict.module';
+import { RolesGuard } from './roles/roles.guard';
+import { CaslModule } from './casl/casl.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,13 +31,13 @@ import { DictModule } from './dict/dict.module';
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      // host: 'localhost',
-      host: '82.156.136.205',
+      host: 'localhost',
+      // host: '82.156.136.205',
       port: 3306,
-      // username: 'root',
-      // password: '123456',
       username: 'root',
-      password: 'qi000214..',
+      password: '',
+      // password: '123456',
+      // password: 'qi000214..',
       database: 'nest',
       // entities: [Info, Photo, Course,User],
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
@@ -56,13 +58,21 @@ import { DictModule } from './dict/dict.module';
     RouterModule,
     DictsModule,
     DictModule,
+    CaslModule,
   ],
   controllers: [AppController],
   providers: [AppService,
+    //token
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    //角色权限
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    //websocket
     WsStartGateway
   ],
 

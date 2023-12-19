@@ -3,24 +3,27 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import R from 'src/utils/R';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/enums/role.enum';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
   @Get()
+  @Roles(Role.Admin)
   findAll() {
     return R(this.usersService.findAll());
   }
 
   @Get('list')
   findList(@Query() params) {
-    return R(this.usersService.findList(params),params);
+    return R(this.usersService.findList(params), params);
   }
 
   // @Get(':id')
