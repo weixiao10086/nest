@@ -1,10 +1,10 @@
-import { Global, Module } from '@nestjs/common';
+import { Catch, Global, Module, UseFilters } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { UploadController } from './upload.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Upload } from './entities/upload.entity';
 import { MulterModule } from '@nestjs/platform-express/multer';
-import { diskStorage } from 'multer';
+import { MulterError, diskStorage } from 'multer';
 import { extname, join } from 'path';
 
 @Global()
@@ -23,7 +23,7 @@ import { extname, join } from 'path';
     }),
     limits: {
       // 限制文件大小为 10 MB
-      fileSize: 10 * 1024 * 1024, // 默认无限制
+      fileSize: 1 * 1024 * 1024, // 默认无限制
       // 限制文件名长度为 50 bytes
       fieldNameSize: 50, // 默认 100 bytes
     },
@@ -34,6 +34,7 @@ import { extname, join } from 'path';
         callback(null, true)
       } else {
         callback(null, false)
+        // callback(new MulterError("LIMIT_PART_COUNT"), false)
       }
     }
   }), TypeOrmModule.forFeature([Upload])],
