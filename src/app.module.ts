@@ -23,7 +23,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { redisStore } from 'cache-manager-redis-store';
 import { MyCacheInterceptor } from './cache/my-cache.interceptor';
-// import { CacheModule } from './cache/cache.module';
+import { MyCacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -35,9 +35,10 @@ import { MyCacheInterceptor } from './cache/my-cache.interceptor';
         host: 'localhost',
         port: 6379,
         //缓存时间
-        ttl: 5, //秒
+        ttl: 50, //秒
       }
     ),
+    MyCacheModule,
     ConfigModule.forRoot({
       //是否禁止加载环境变量
       // ignoreEnvFile: true,

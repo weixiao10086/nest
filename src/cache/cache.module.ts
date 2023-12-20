@@ -22,4 +22,4 @@ import { createClient } from 'redis';
   ],
   exports: [CacheService],
 })
-export class CacheModule {}
+export class MyCacheModule {}
