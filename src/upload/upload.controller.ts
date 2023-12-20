@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
 import R from 'src/utils/R';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('Upload')
 export class UploadController {
@@ -35,8 +35,15 @@ export class UploadController {
   }
 
   @Post()
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return file
+  // @UseInterceptors(FileInterceptor('file'))
+  // uploadFile(@UploadedFile() file: Express.Multer.File) {
+  // return file
+  @UseInterceptors(AnyFilesInterceptor())
+  uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+    if (files.length) {
+      return R({ data: files, msg: "上传成功" })
+    } else {
+      return R.error({ msg: "上传失败，格式错误", data: null })
+    }
   }
 }
