@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, UploadedFiles, HttpCode } from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
@@ -40,10 +40,10 @@ export class UploadController {
   // return file
   @UseInterceptors(AnyFilesInterceptor())
   uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
-    if (files.length) {
+    if (files?.length) {
       return R({ data: files, msg: "上传成功" })
     } else {
-      return R.error({ msg: "上传失败，格式错误", data: null })
+      return R.error({ msg: "上传失败", data: null, code: 415 })
     }
   }
 }

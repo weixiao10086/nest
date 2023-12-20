@@ -36,7 +36,7 @@ import { extname, join } from 'path';
         callback(null, false)
         // callback(new MulterError("LIMIT_PART_COUNT"), false)
       }
-    }
+    },
   }), TypeOrmModule.forFeature([Upload])],
   controllers: [UploadController],
   providers: [UploadService]
