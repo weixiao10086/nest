@@ -16,6 +16,7 @@ import { AuthController } from './auth.controller';
       secret: jwtConstants.secret,
       //token过期时间
       signOptions: { expiresIn: '6000s' },
+      global:true
     }),
   ],
   controllers: [AuthController],
