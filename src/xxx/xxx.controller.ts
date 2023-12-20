@@ -4,6 +4,7 @@ import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
 import R from 'src/utils/R';
 import { Response } from 'express'
+import { NoCache } from 'src/cache/my-cache.interceptor';
 
 @Controller('xxx')
 export class XxxController {
@@ -26,6 +27,7 @@ export class XxxController {
   }
 
   @Get('export-excel')
+  @NoCache()
   async exportExcel(@Res() res: Response): Promise<void> {
     const data = await this.xxxService.findAll();
     const fileName = 'xxx.xlsx';
