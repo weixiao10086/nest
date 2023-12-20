@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { WebSocketAdapter, INestApplicationContext, Param, Req, Inject } from '@nestjs/common';
+import { WebSocketAdapter, INestApplicationContext, Param, Req } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, MessageMappingProperties, SubscribeMessage } from '@nestjs/websockets';
 import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';

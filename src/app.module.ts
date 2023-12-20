@@ -19,21 +19,21 @@ import { RouterModule } from './router/router.module';
 import { DictsModule } from './dicts/dicts.module';
 import { DictModule } from './dict/dict.module';
 import { RolesGuard } from './roles/roles.guard';
-// import { CacheInterceptor, CacheModule } from '@nestjs/common/cache';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
-import { APP_GUARD, APP_INTERCEPTOR, HttpAdapterHost } from '@nestjs/core';
+import { CacheModule } from '@nestjs/cache-manager';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { redisStore } from 'cache-manager-redis-store';
+import { MyCacheInterceptor } from './cache/my-cache.interceptor';
 // import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
     CacheModule.register(
       {
+        isGlobal: true,
         //@ts-ignore
         store: redisStore,
         host: 'localhost',
         port: 6379,
-        isGlobal: true,
         //缓存时间
         ttl: 5, //秒
       }
@@ -99,7 +99,8 @@ import { redisStore } from 'cache-manager-redis-store';
     //缓存
     {
       provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
+      // useClass: CacheInterceptor,
+      useClass: MyCacheInterceptor,
     },
   ],
 
