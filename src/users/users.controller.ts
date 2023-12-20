@@ -20,7 +20,7 @@ export class UsersController {
   }
   
   @Get()
-  @NoCache()
+  // @NoCache()
   async findAll() {
     let obj = await R(this.usersService.findAll())
     // this.cacheService.set('users', obj.data)
