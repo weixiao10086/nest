@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
-// import { CacheModule } from '@nestjs/common/cache';
-// import redisStore from 'cache-manager-redis-store';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -12,7 +11,6 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import configuration from 'config/configuration';
-import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/JwtAuthGuard';
 import { XxxModule } from './xxx/xxx.module';
 import { UploadModule } from './upload/upload.module';
@@ -21,15 +19,25 @@ import { RouterModule } from './router/router.module';
 import { DictsModule } from './dicts/dicts.module';
 import { DictModule } from './dict/dict.module';
 import { RolesGuard } from './roles/roles.guard';
-import { CacheModule } from './cache/cache.module';
+// import { CacheInterceptor, CacheModule } from '@nestjs/common/cache';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { APP_GUARD, APP_INTERCEPTOR, HttpAdapterHost } from '@nestjs/core';
+import { redisStore } from 'cache-manager-redis-store';
+// import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
-    // CacheModule.register({
-    //   store: redisStore,
-    //   host: 'localhost',
-    //   port: 6379,
-    // }),
+    CacheModule.register(
+      {
+        //@ts-ignore
+        store: redisStore,
+        host: 'localhost',
+        port: 6379,
+        isGlobal: true,
+        //缓存时间
+        ttl: 5, //秒
+      }
+    ),
     ConfigModule.forRoot({
       //是否禁止加载环境变量
       // ignoreEnvFile: true,
@@ -73,7 +81,6 @@ import { CacheModule } from './cache/cache.module';
     RouterModule,
     DictsModule,
     DictModule,
-    CacheModule,
   ],
   controllers: [AppController],
   providers: [AppService,
@@ -88,7 +95,12 @@ import { CacheModule } from './cache/cache.module';
       useClass: RolesGuard,
     },
     //websocket
-    WsStartGateway
+    WsStartGateway,
+    //缓存
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CacheInterceptor,
+    },
   ],
 
 })

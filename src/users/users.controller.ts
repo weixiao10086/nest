@@ -5,7 +5,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import R from 'src/utils/R';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/enums/role.enum';
-import { CacheService } from 'src/cache/cache.service';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {

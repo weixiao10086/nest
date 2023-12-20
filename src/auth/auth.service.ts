@@ -23,6 +23,6 @@ export class AuthService {
     };
   }
   async decode(token: any) {
-    return this.jwtService.decode(token.split("  ")[1])
+    return this.jwtService.decode(token)
   }
 }
