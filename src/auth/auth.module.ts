@@ -15,7 +15,7 @@ import { AuthController } from './auth.controller';
       //jwt的加密key
       secret: jwtConstants.secret,
       //token过期时间
-      signOptions: { expiresIn: '6000s' },
+      signOptions: { expiresIn: '60s' },
       global:true
     }),
   ],

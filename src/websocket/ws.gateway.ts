@@ -4,16 +4,22 @@ import {
     SubscribeMessage,
     WebSocketGateway,
 } from '@nestjs/websockets';
+import { UsersService } from 'src/users/users.service';
 import * as WebSocket from 'ws';
 
-@WebSocketGateway(9623,{
+@WebSocketGateway(9623, {
     cors: {
-        origin:'*',
+        origin: '*',
     }
 })
 export class WsStartGateway {
+    constructor(
+        private readonly usersService: UsersService,
+    ) { }
+
     @SubscribeMessage('hello')
-    hello(@MessageBody() data: string): string {
+    hello(@MessageBody() data: string): any {
+        // console.log(this.usersService.findAll);
         return data;
     }
 

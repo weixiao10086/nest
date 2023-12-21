@@ -3,8 +3,13 @@ import { WebSocketAdapter, INestApplicationContext, Param, Req } from '@nestjs/c
 import { ConnectedSocket, MessageBody, MessageMappingProperties, SubscribeMessage } from '@nestjs/websockets';
 import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
+import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from 'src/auth/constants';
 export class WsAdapter implements WebSocketAdapter {
-  constructor(private app: INestApplicationContext) { }
+  jwtService: JwtService;
+  constructor(private app: INestApplicationContext) {
+    this.jwtService = new JwtService({ secret: jwtConstants.secret })
+  }
   arr: Array<WebSocket> = []
   map: Map<any, WebSocket> = new Map();
 
@@ -15,12 +20,21 @@ export class WsAdapter implements WebSocketAdapter {
 
   //连接
   bindClientConnect(server: WebSocket, callback: Function) {
-    server.on('connection', (socket, http) => {
-      // let token = `Bearer  ` + http.headers['sec-websocket-protocol']
+    server.on('connection', (socket: WebSocket, http) => {
       // let token = http.headers['authorization']
-      // let arr = http.headers['sec-websocket-protocol'].split('.')
-      socket.id = Math.random();
-      callback(socket)
+      // let arr = http.headers['authorization'].split('  ')
+      // let token = arr[1]
+      let token = http.headers['sec-websocket-protocol']
+      try {
+        //验证token
+        let user = this.jwtService.verify(token)
+        console.log(user, 'user');
+        socket.id = Math.random();
+        callback(socket)
+      } catch (error) {
+        socket.send('登录过期')
+        this.close(socket)
+      }
     });
   }
 
