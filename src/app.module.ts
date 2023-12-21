@@ -24,6 +24,7 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { redisStore } from 'cache-manager-redis-store';
 import { MyCacheInterceptor } from './cache/my-cache.interceptor';
 import { MyCacheModule } from './cache/cache.module';
+import { WsModule } from './websocket/ws.module';
 
 @Module({
   imports: [
@@ -82,6 +83,8 @@ import { MyCacheModule } from './cache/cache.module';
     RouterModule,
     DictsModule,
     DictModule,
+    //websocket
+    WsModule,
   ],
   controllers: [AppController],
   providers: [AppService,
@@ -95,8 +98,6 @@ import { MyCacheModule } from './cache/cache.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-    //websocket
-    WsStartGateway,
     //缓存
     {
       provide: APP_INTERCEPTOR,

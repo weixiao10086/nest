@@ -3,6 +3,7 @@ import {
     MessageBody,
     SubscribeMessage,
     WebSocketGateway,
+    WebSocketServer,
 } from '@nestjs/websockets';
 import { UsersService } from 'src/users/users.service';
 import * as WebSocket from 'ws';
@@ -13,9 +14,9 @@ import * as WebSocket from 'ws';
     }
 })
 export class WsStartGateway {
-    constructor(
-        private readonly usersService: UsersService,
-    ) { }
+
+    @WebSocketServer()
+    server: WebSocket;
 
     @SubscribeMessage('hello')
     hello(@MessageBody() data: string): any {
@@ -30,6 +31,18 @@ export class WsStartGateway {
     ): string {
         console.log('收到消息 client:');
         client.send(JSON.stringify({ event: 'tmp', data: '这里是个临时信息' }));
+        return data;
+    }
+
+    @SubscribeMessage('all')
+    all(
+        @MessageBody() data: string,
+        @ConnectedSocket() client?: WebSocket,
+    ): string {
+        let set: Set<WebSocket> = this.server.clients;
+        for (const socket of set) {
+            socket.send(JSON.stringify({ event: 'tmp', data }))
+        }
         return data;
     }
 }

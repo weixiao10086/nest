@@ -7,11 +7,13 @@ import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { NoCache } from 'src/cache/my-cache.interceptor';
 import { CacheService } from 'src/cache/cache.service';
+import { WsStartGateway } from 'src/websocket/ws.gateway';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService,
-    private cacheService: CacheService
+    // private cacheService: CacheService,
+    private readonly ws: WsStartGateway
   ) { }
 
   @Post()
@@ -23,6 +25,8 @@ export class UsersController {
   @Get()
   // @NoCache()
   async findAll() {
+    // console.log(this.ws.server.clients,'154');
+    // console.log(this.ws.all('111'), '154');
     // console.log(await this.cacheService.get("/dicts"), '/dicts');
     let obj = await R(this.usersService.findAll())
     // this.cacheService.set('users', obj.data)
