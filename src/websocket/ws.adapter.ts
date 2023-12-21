@@ -10,8 +10,6 @@ export class WsAdapter implements WebSocketAdapter {
   constructor(private app: INestApplicationContext) {
     this.jwtService = new JwtService({ secret: jwtConstants.secret })
   }
-  arr: Array<WebSocket> = []
-  map: Map<any, WebSocket> = new Map();
 
   //创建Websocket
   create(port: number, options: any = {}): any {
@@ -44,7 +42,6 @@ export class WsAdapter implements WebSocketAdapter {
     handlers: MessageMappingProperties[],
     process: (data: any) => Observable<any>,
   ) {
-    this.map.set(client.id, client)
     client.send('连接成功')
     fromEvent(client, 'message')
       .pipe(
@@ -85,7 +82,6 @@ export class WsAdapter implements WebSocketAdapter {
   bindClientDisconnect(server, callback) {
     server.on('close', ((res, a, b) => {
       console.log(server.id, '断开连接');
-      this.map.delete(server.id)
     }));
   }
   //关闭

@@ -8,7 +8,7 @@ import {
 import { UsersService } from 'src/users/users.service';
 import * as WebSocket from 'ws';
 
-@WebSocketGateway(9623, {
+@WebSocketGateway(9623,{
     cors: {
         origin: '*',
     }
