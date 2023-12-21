@@ -32,9 +32,18 @@ import { WsModule } from './websocket/ws.module';
       {
         isGlobal: true,
         //@ts-ignore
-        store: redisStore,
-        //缓存时间
-        ttl: 50, //秒
+        store: () => redisStore({
+          socket: {
+            // host: 'localhost',
+            host: '82.156.136.205',
+            port: 6379,
+          },
+          //哪个DB
+          "database": 4,
+          "password": "root@1234",
+          //过期时间
+          "ttl": 50
+        }),
       }
     ),
     // MyCacheModule,
