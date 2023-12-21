@@ -1,4 +1,4 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -22,7 +22,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   console.log('http://localhost:9622/api');
   //cors
-  // app.enableCors();
+  app.enableCors();
   //静态文件资源
   app.useStaticAssets('uploads', { prefix: '/uploads' })
   //限速
@@ -46,6 +46,8 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
     }))
+    // const httpAdapter = app.getHttpAdapter();
+    // const adapterHost = app.get(HttpAdapterHost);
     app.useWebSocketAdapter(new WsAdapter(app));
     // app.useGlobalFilters(new AllExceptionsFilter());
     // app.useGlobalFilters(new OrmExceptionsFilter());

@@ -5,9 +5,12 @@ import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/auth/constants';
+import { HttpAdapterHost } from '@nestjs/core';
+import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 export class WsAdapter implements WebSocketAdapter {
   jwtService: JwtService;
-  constructor(private app: INestApplicationContext) {
+  constructor(private app: INestApplicationContext,
+  ) {
     this.jwtService = new JwtService({ secret: jwtConstants.secret })
   }
 
@@ -22,12 +25,21 @@ export class WsAdapter implements WebSocketAdapter {
       // let token = http.headers['authorization']
       // let arr = http.headers['authorization'].split('  ')
       // let token = arr[1]
+
+      // console.log(http.headers['x-forwarded-for'], 'http');
+      // console.log(http.socket.remoteAddress, 'http');
+      // const ip = http.headers['x-real-ip'] || http.connection.remoteAddress
+      // console.log(http.connection.remoteAddress, 'http');
+      // console.log(ip, 'ip');
+
+
       let token = http.headers['sec-websocket-protocol']
       try {
         //验证token
         let user = this.jwtService.verify(token)
         console.log(user, 'user');
         socket.id = Math.random();
+        socket.user = user;
         callback(socket)
       } catch (error) {
         socket.send('登录过期')

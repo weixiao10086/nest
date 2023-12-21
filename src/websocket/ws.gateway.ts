@@ -8,12 +8,15 @@ import {
 import { UsersService } from 'src/users/users.service';
 import * as WebSocket from 'ws';
 
-@WebSocketGateway(9623,{
+@WebSocketGateway(9623, {
     cors: {
         origin: '*',
     }
 })
 export class WsStartGateway {
+    constructor(
+        // private readonly usersService:UsersService
+    ) { }
 
     @WebSocketServer()
     server: WebSocket;
@@ -39,6 +42,8 @@ export class WsStartGateway {
         @MessageBody() data: string,
         @ConnectedSocket() client?: WebSocket,
     ): string {
+        // console.log(this.usersService,'usersService');
+
         let set: Set<WebSocket> = this.server.clients;
         for (const socket of set) {
             socket.send(JSON.stringify({ event: 'tmp', data }))

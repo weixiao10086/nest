@@ -26,7 +26,7 @@ export class UsersController {
   // @NoCache()
   async findAll() {
     // console.log(this.ws.server.clients,'154');
-    // console.log(this.ws.all('111'), '154');
+    console.log(this.ws.all('111'), '154');
     // console.log(await this.cacheService.get("/dicts"), '/dicts');
     let obj = await R(this.usersService.findAll())
     // this.cacheService.set('users', obj.data)
