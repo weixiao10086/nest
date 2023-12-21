@@ -34,13 +34,13 @@ import { WsModule } from './websocket/ws.module';
         //@ts-ignore
         store: () => redisStore({
           socket: {
-            // host: 'localhost',
-            host: '82.156.136.205',
+            host: 'localhost',
+            // host: '82.156.136.205',
             port: 6379,
           },
           //哪个DB
           "database": 4,
-          "password": "root@1234",
+          // "password": "root@1234",
           //过期时间
           "ttl": 50
         }),
