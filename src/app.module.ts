@@ -23,7 +23,7 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { redisStore } from 'cache-manager-redis-store';
 import { MyCacheInterceptor } from './cache/my-cache.interceptor';
-import { MyCacheModule } from './cache/cache.module';
+// import { MyCacheModule } from './cache/cache.module';
 import { WsModule } from './websocket/ws.module';
 
 @Module({
@@ -33,13 +33,11 @@ import { WsModule } from './websocket/ws.module';
         isGlobal: true,
         //@ts-ignore
         store: redisStore,
-        host: 'localhost',
-        port: 6379,
         //缓存时间
         ttl: 50, //秒
       }
     ),
-    MyCacheModule,
+    // MyCacheModule,
     ConfigModule.forRoot({
       //是否禁止加载环境变量
       // ignoreEnvFile: true,
