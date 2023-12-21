@@ -46,20 +46,20 @@ async function bootstrap() {
       resave: false,
       saveUninitialized: false,
     }))
-    // const httpAdapter = app.getHttpAdapter();
-    // const adapterHost = app.get(HttpAdapterHost);
-    app.useWebSocketAdapter(new WsAdapter(app));
-    // app.useGlobalFilters(new AllExceptionsFilter());
-    // app.useGlobalFilters(new OrmExceptionsFilter());
+  // const httpAdapter = app.getHttpAdapter();
+  // const adapterHost = app.get(HttpAdapterHost);
+  app.useWebSocketAdapter(new WsAdapter(app));
+  // app.useGlobalFilters(new AllExceptionsFilter());
+  // app.useGlobalFilters(new OrmExceptionsFilter());
   await app.listen(9622);
 }
 
 import dayjs from 'dayjs';
-globalThis.$dayJS=dayjs
+globalThis.$dayJS = dayjs
 
 import { Faker, zh_CN } from '@faker-js/faker';
 const faker = new Faker({
   locale: [zh_CN],
 })
-globalThis.$faker=faker
+globalThis.$faker = faker
 bootstrap();
