@@ -6,14 +6,18 @@ import R from 'src/utils/R';
 import { Roles } from 'src/roles/roles.decorator';
 import { Role } from 'src/enums/role.enum';
 import { NoCache } from 'src/cache/my-cache.interceptor';
-import { CacheService } from 'src/cache/cache.service';
 import { WsStartGateway } from 'src/websocket/ws.gateway';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from "cache-manager"
+
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService,
     // private cacheService: CacheService,
-    private readonly ws: WsStartGateway
+    private readonly ws: WsStartGateway,
+    //读写redis
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) { }
 
   @Post()
@@ -27,9 +31,9 @@ export class UsersController {
   async findAll() {
     // console.log(this.ws.server.clients,'154');
     // console.log(this.ws.all('111'), '154');
-    // console.log(await this.cacheService.get("/dicts"), '/dicts');
+    // console.log(await this.cacheManager.get('aaa'));
+    // console.log(await this.cacheManager.set('aaa',111));
     let obj = await R(this.usersService.findAll())
-    // this.cacheService.set('users', obj.data)
     return obj;
   }
 
