@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseInterceptors, Inject, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req,Response, StreamableFile } from '@nestjs/common';
 import { XxxService } from './xxx.service';
 import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
 import R from 'src/utils/R';
-import { Response } from 'express'
 import { NoCache } from 'src/cache/my-cache.interceptor';
 
 @Controller('xxx')
@@ -28,7 +27,7 @@ export class XxxController {
 
   @Get('export-excel')
   @NoCache()
-  async exportExcel(@Res() res: Response): Promise<void> {
+  async exportExcel(@Response({ passthrough: true }) res): Promise<StreamableFile> {
     const data = await this.xxxService.findAll();
     const fileName = 'xxx.xlsx';
     const buffer = await this.xxxService.exportExcel(data, fileName);
@@ -36,7 +35,7 @@ export class XxxController {
       'Content-Disposition': `attachment; filename=${fileName}`,
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-    res.send(buffer);
+    return new StreamableFile(buffer);
   }
 
   @Get(':id')
