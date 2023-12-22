@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req,Response, StreamableFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Response, StreamableFile } from '@nestjs/common';
 import { XxxService } from './xxx.service';
 import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
 import R from 'src/utils/R';
 import { NoCache } from 'src/cache/my-cache.interceptor';
+import { Page } from 'src/utils/page';
+import { Xxx } from './entities/xxx.entity';
 
 @Controller('xxx')
 export class XxxController {
@@ -27,10 +29,10 @@ export class XxxController {
 
   @Get('export-excel')
   @NoCache()
-  async exportExcel(@Response({ passthrough: true }) res): Promise<StreamableFile> {
-    const data = await this.xxxService.findAll();
+  async exportExcel(@Query() params: Page & Xxx, @Response({ passthrough: true }) res): Promise<StreamableFile> {
+    const data = await this.xxxService.findList({ ...params, page: null, size: null });
     const fileName = 'xxx.xlsx';
-    const buffer = await this.xxxService.exportExcel(data, fileName);
+    const buffer = await this.xxxService.exportExcel(data[0], fileName);
     res.set({
       'Content-Disposition': `attachment; filename=${fileName}`,
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',

@@ -27,6 +27,7 @@ export class UsersService {
       ...(params.username && { username: Like(`%${params.username}%`) }),
       ...(params.phone && { phone: Like(`%${params.phone}%`) }),
       ...(params.email && { email: Like(`%${params.email}%`) }),
+      ...(params.gender && { gender: params.gender }),
       ...(params.status && { status: params.status }),
     }
     return await this.DB.createQueryBuilder()

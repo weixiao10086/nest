@@ -5,6 +5,7 @@ import R from 'src/utils/R';
 import { Public } from './JwtAuthGuard';
 import svgCaptcha from 'svg-captcha';
 import { Request, Response } from 'express'
+import { NoCache } from 'src/cache/my-cache.interceptor';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -12,6 +13,7 @@ export class AuthController {
   //验证码
   @Get('code')
   @Public()
+  @NoCache()
   createCaptcha(@Session() session: Record<string, any>, @Res() res) {
     const captcha = svgCaptcha.create({
       size: 4,//生成几个验证码

@@ -37,7 +37,7 @@ export class XxxService {
       return this.DB.findAndCount({...page(params), relations: ["photos"]}); */
     const { skip, take } = page(params)
     const where: FindOptionsWhere<Xxx> = {
-      ...("params.id" && { id: params.id }),
+      ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     }
     return await this.DB.createQueryBuilder('xxx')

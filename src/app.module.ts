@@ -3,9 +3,6 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { InfoModule } from './info/info.module';
-import { PhotoModule } from './photo/photo.module';
-import { CourseModule } from './course/course.module';
 import { TemplateModule } from './template/template.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -79,9 +76,6 @@ import { WsModule } from './websocket/ws.module';
       //   }
       // }
     }),
-    InfoModule,
-    PhotoModule,
-    CourseModule,
     TemplateModule,
     AuthModule,
     UsersModule,
