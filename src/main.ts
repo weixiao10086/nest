@@ -10,6 +10,7 @@ import session from 'express-session';
 import { WsAdapter } from './websocket/ws.adapter';
 import { AllExceptionsFilter } from './utils/any-exception.filter';
 import { OrmExceptionsFilter } from './utils/orm-exception.filter';
+import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const options = new DocumentBuilder()
@@ -51,6 +52,16 @@ async function bootstrap() {
   app.useWebSocketAdapter(new WsAdapter(app));
   // app.useGlobalFilters(new AllExceptionsFilter());
   // app.useGlobalFilters(new OrmExceptionsFilter());
+
+  // MVC(模型-视图=控制器)
+  app.useStaticAssets('public',
+    {
+      prefix: '/public',
+    }
+  );
+  app.setBaseViewsDir('views');
+  app.setViewEngine('hbs');
+
   await app.listen(9622);
 }
 

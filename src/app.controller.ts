@@ -1,14 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
-import { AuthService } from './auth/auth.service';
+import { Controller, Get, Render } from '@nestjs/common';
+import { Public } from './auth/JwtAuthGuard';
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService,
-    private readonly authService: AuthService
-  ) { }
 
+  @Public()
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Render('index')
+  root() {
+    return { message: 'MVC' };
   }
 }
