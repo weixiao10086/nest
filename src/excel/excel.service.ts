@@ -1,6 +1,4 @@
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Inject, Injectable } from '@nestjs/common';
-import { Cache } from "cache-manager"
+import {  Injectable } from '@nestjs/common';
 import { DictsService } from 'src/dicts/dicts.service';
 import * as xlsx from 'xlsx';
 @Injectable()
