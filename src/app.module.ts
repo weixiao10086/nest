@@ -23,6 +23,7 @@ import { MyCacheInterceptor } from './cache/my-cache.interceptor';
 // import { MyCacheModule } from './cache/cache.module';
 import { WsModule } from './websocket/ws.module';
 import { ExcelModule } from './excel/excel.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
   imports: [
@@ -88,6 +89,7 @@ import { ExcelModule } from './excel/excel.module';
     //websocket
     WsModule,
     ExcelModule,
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService,

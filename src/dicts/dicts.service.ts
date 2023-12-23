@@ -16,7 +16,6 @@ export class DictsService {
     @Inject(CACHE_MANAGER) private cacheManager: Cache
   ) {
     this.cacheDicts()
-    // this.cacheDicts()
   }
 
   async create(createDto: CreateDictsDto | Array<CreateDictsDto>) {
