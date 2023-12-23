@@ -41,9 +41,9 @@ export class XxxService {
       ...(params.name && { name: Like(`%${params.name}%`) }),
     }
     return await this.DB.createQueryBuilder('xxx')
-    /*  连表 
-    // .innerJoinAndSelect("xxx.dicts", 'bieming')
-    // .leftJoinAndSelect("xxx.dicts", 'bieming') */
+      /*  连表 
+      // .innerJoinAndSelect("xxx.dicts", 'bieming')
+      // .leftJoinAndSelect("xxx.dicts", 'bieming') */
       .where(where)
       .skip(skip)
       .take(take)
@@ -74,7 +74,11 @@ export class XxxService {
 
   async exportExcel(data: any[], fileName: string): Promise<Buffer> {
     /* const worksheet = xlsx.utils.json_to_sheet(data,{header:['name','id'],"skipHeader":true}); */
+    // const worksheet = xlsx.utils.aoa_to_sheet(data);
     const worksheet = xlsx.utils.json_to_sheet(data);
+    // xlsx.utils.sheet_add_aoa(worksheet, [
+    //   ['id','姓名']                            // <-- 把1写入到B3里面
+    // ], { origin: "A1" });
     const workbook = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     const buffer = xlsx.write(workbook, {

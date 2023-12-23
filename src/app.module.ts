@@ -22,6 +22,7 @@ import { redisStore } from 'cache-manager-redis-store';
 import { MyCacheInterceptor } from './cache/my-cache.interceptor';
 // import { MyCacheModule } from './cache/cache.module';
 import { WsModule } from './websocket/ws.module';
+import { ExcelModule } from './excel/excel.module';
 
 @Module({
   imports: [
@@ -86,6 +87,7 @@ import { WsModule } from './websocket/ws.module';
     DictModule,
     //websocket
     WsModule,
+    ExcelModule,
   ],
   controllers: [AppController],
   providers: [AppService,

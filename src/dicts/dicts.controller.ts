@@ -39,9 +39,9 @@ export class DictsController {
     res.send(buffer);
   }
 
-  @Get('key')
-  findKey(@Query('key') key: string) {
-    return R(this.DictsService.findKey(key));
+  @Get('key/:key')
+  findKey(@Param() param: any) {
+    return R(this.DictsService.findKey(param?.key));
   }
   @Get(':id')
   findOne(@Param('id') id: string) {

@@ -7,6 +7,7 @@ import { Dicts } from './entities/dicts.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Dicts])],
   controllers: [DictsController],
-  providers: [DictsService]
+  providers: [DictsService],
+  exports:[DictsService]
 })
 export class DictsModule { }
