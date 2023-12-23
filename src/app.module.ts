@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -16,7 +16,7 @@ import { RouterModule } from './router/router.module';
 import { DictsModule } from './dicts/dicts.module';
 import { DictModule } from './dict/dict.module';
 import { RolesGuard } from './roles/roles.guard';
-import { CacheModule } from '@nestjs/cache-manager';
+import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { redisStore } from 'cache-manager-redis-store';
 import { MyCacheInterceptor } from './cache/my-cache.interceptor';
@@ -104,8 +104,8 @@ import { ExcelModule } from './excel/excel.module';
     //缓存
     {
       provide: APP_INTERCEPTOR,
-      // useClass: CacheInterceptor,
-      useClass: MyCacheInterceptor,
+      useClass: CacheInterceptor,
+      // useClass: MyCacheInterceptor,
     },
   ],
 

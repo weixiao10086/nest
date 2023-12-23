@@ -71,20 +71,4 @@ export class XxxService {
       .execute(); */
     /*  return this.DB.softRemove({id}); */
   }
-
-  async exportExcel(data: any[], fileName: string): Promise<Buffer> {
-    /* const worksheet = xlsx.utils.json_to_sheet(data,{header:['name','id'],"skipHeader":true}); */
-    // const worksheet = xlsx.utils.aoa_to_sheet(data);
-    const worksheet = xlsx.utils.json_to_sheet(data);
-    // xlsx.utils.sheet_add_aoa(worksheet, [
-    //   ['id','姓名']                            // <-- 把1写入到B3里面
-    // ], { origin: "A1" });
-    const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const buffer = xlsx.write(workbook, {
-      type: 'buffer',
-      bookType: 'xlsx',
-    });
-    return buffer;
-  }
 }
