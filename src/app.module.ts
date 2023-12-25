@@ -24,6 +24,7 @@ import { MyCacheInterceptor } from './cache/my-cache.interceptor';
 import { WsModule } from './websocket/ws.module';
 import { ExcelModule } from './excel/excel.module';
 import { RolesModule } from './roles/roles.module';
+import { DeptModule } from './dept/dept.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { RolesModule } from './roles/roles.module';
     WsModule,
     ExcelModule,
     RolesModule,
+    DeptModule,
   ],
   controllers: [AppController],
   providers: [AppService,

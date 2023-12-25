@@ -1,7 +1,7 @@
 import { IsNotEmpty } from "class-validator";
 import { Dicts } from "src/dicts/entities/dicts.entity";
 import entityClass from "src/utils/entityClass";
-import { Column, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne,  } from "typeorm";
 
 @Entity()
 export class Dict extends entityClass {
