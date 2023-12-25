@@ -4,7 +4,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import R from 'src/utils/R';
 import { Roles } from 'src/roles/roles.decorator';
-import { Role } from 'src/enums/role.enum';
 import { NoCache } from 'src/cache/my-cache.interceptor';
 import { WsStartGateway } from 'src/websocket/ws.gateway';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -21,7 +20,7 @@ export class UsersController {
   ) { }
 
   @Post()
-  @Roles(Role.Admin)
+  @Roles('/add')
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }

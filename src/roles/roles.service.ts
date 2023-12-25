@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRolesDto } from './dto/create-roles.dto';
-import { UpdateRolesDto } from './dto/update-roles.dto';
+import { CreateRolesDto } from './dto/create-Roles.dto';
+import { UpdateRolesDto } from './dto/update-Roles.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Roles } from './entities/roles.entity';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { Role } from './entities/role.entity';
+import { FindOptionsWhere, In, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
 import * as xlsx from 'xlsx';
 @Injectable()
 export class RolesService {
   constructor(
-    @InjectRepository(Roles)
-    private DB: Repository<Roles>,
+    @InjectRepository(Role)
+    private DB: Repository<Role>,
     /*元数据
      private reflector: Reflector */
   ) { }
@@ -25,13 +25,13 @@ export class RolesService {
     return this.DB.createQueryBuilder().getMany();
   }
 
-  async findList(params: Page & Roles) {
+  async findList(params: Page & Role) {
     const { skip, take } = page(params)
-    const where: FindOptionsWhere<Roles> = {
+    const where: FindOptionsWhere<Role> = {
       ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     }
-    return await this.DB.createQueryBuilder('Roles')
+    return await this.DB.createQueryBuilder('Role')
       .where(where)
       .skip(skip)
       .take(take)
@@ -39,6 +39,7 @@ export class RolesService {
   }
 
   findOne(id: string) {
+    return this.DB.findOne({ where: { id }, "relations": ["routers"] })
     return this.DB.createQueryBuilder().where({ id }).getOne()
   }
 
@@ -51,5 +52,8 @@ export class RolesService {
   remove(id: string) {
     return this.DB.softDelete(id);
     /*  return this.DB.softRemove({id}); */
+  }
+  findrouters(ids: Array<string>) {
+    return this.DB.find({ where: { id: In(ids) }, "relations": ['routers'] })
   }
 }

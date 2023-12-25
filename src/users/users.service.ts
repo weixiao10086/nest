@@ -11,11 +11,11 @@ export class UsersService {
     private DB: Repository<User>
   ) { }
   async create(createDto: CreateUserDto | Array<CreateUserDto>) {
-    return this.DB.createQueryBuilder().insert()
-      .values(createDto)
-      .execute();
-    /*  (树形新增必须用这个)
-     return this.DB.save(createDto as CreateXxxDto); */
+    // return this.DB.createQueryBuilder().insert()
+    //   .values(createDto)
+    //   .execute();
+    //  (树形新增必须用这个)
+     return this.DB.save(createDto as CreateUserDto);
   }
   async findAll() {
     return this.DB.find()
@@ -37,7 +37,7 @@ export class UsersService {
       .getManyAndCount()
   }
   async findOne(findObj: FindOptionsWhere<User>): Promise<User | undefined> {
-    let obj = await this.DB.findOne({ where: { ...findObj } })
+    let obj = await this.DB.findOne({ where: { ...findObj},"relations":["roles"] })
     return obj
   }
 }

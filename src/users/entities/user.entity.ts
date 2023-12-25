@@ -1,7 +1,7 @@
 import { Exclude } from "class-transformer";
-import { Role } from "src/enums/role.enum";
+import { Role } from "src/roles/entities/role.entity";
 import entityClass from "src/utils/entityClass";
-import { Column, Entity } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany } from "typeorm";
 
 @Entity()
 export class User extends entityClass {
@@ -24,7 +24,8 @@ export class User extends entityClass {
     @Column({ comment: "账号状态", type: 'char', length: 4, "nullable": true, default: '1' })
     status: string;
 
-    @Column({ comment: "角色", type: "enum", enum: Role, default: Role.User })
+    //角色权限
+    @ManyToMany(() => Role, Role => Role.users, { "cascade": true, "nullable": false})
+    @JoinTable()
     roles: Role[];
-
 }

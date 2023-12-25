@@ -5,7 +5,7 @@ import { UpdateRolesDto } from './dto/update-roles.dto';
 import R from 'src/utils/R';
 import { NoCache } from 'src/cache/my-cache.interceptor';
 import { Page } from 'src/utils/page';
-import { Roles } from './entities/roles.entity';
+import { Role } from './entities/role.entity';
 import 'reflect-metadata';
 import { ExcelService } from 'src/excel/excel.service';
 
@@ -33,10 +33,10 @@ export class RolesController {
 
   @Get('export-excel')
   @NoCache()
-  async exportExcel(@Query() params: Page & Roles, @Response({ passthrough: true }) res): Promise<StreamableFile> {
+  async exportExcel(@Query() params: Page & Role, @Response({ passthrough: true }) res): Promise<StreamableFile> {
     const data = await this.RolesService.findList({ ...params, page: null, size: null });
     const fileName = 'roles.xlsx';
-    const buffer = await this.excelService.exportExcel(data[0], fileName, Roles);
+    const buffer = await this.excelService.exportExcel(data[0], fileName, Role);
     res.set({
       'Content-Disposition': `attachment; filename=${fileName}`,
       'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
