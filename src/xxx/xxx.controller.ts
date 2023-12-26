@@ -8,6 +8,7 @@ import { Page } from 'src/utils/page';
 import { Xxx } from './entities/xxx.entity';
 import 'reflect-metadata';
 import { ExcelService } from 'src/excel/excel.service';
+import { Roles } from 'src/roles/roles.decorator';
 
 @Controller('xxx')
 export class XxxController {
@@ -17,22 +18,26 @@ export class XxxController {
   ) { }
 
   @Post()
+  @Roles('xxx/add')
   create(@Body() createXxxDto: CreateXxxDto | Array<CreateXxxDto>) {
     return R(this.xxxService.create(createXxxDto));
   }
 
   @Get()
+  @Roles('xxx/all')
   async findAll(@Req() req) {
     return R(this.xxxService.findAll());
   }
 
   @Get('list')
+  @Roles('xxx/list')
   findList(@Query() params) {
     return R(this.xxxService.findList(params), params);
   }
 
   @Get('export-excel')
   @NoCache()
+  @Roles('xxx/export')
   async exportExcel(@Query() params: Page & Xxx, @Response({ passthrough: true }) res): Promise<StreamableFile> {
     const data = await this.xxxService.findList({ ...params, page: null, size: null });
     const fileName = 'xxx.xlsx';
@@ -44,16 +49,19 @@ export class XxxController {
     return new StreamableFile(buffer);
   }
   @Get(':id')
+  @Roles('xxx/list')
   findOne(@Param('id') id: string) {
     return R(this.xxxService.findOne(id));
   }
 
   @Patch(':id')
+  @Roles('xxx/update')
   update(@Param('id') id: string, @Body() updateDto: UpdateXxxDto) {
     return R(this.xxxService.update(id, updateDto));
   }
 
   @Delete(':id')
+  @Roles('xxx/delete')
   remove(@Param('id') id: string) {
     return R(this.xxxService.remove(id));
   }
