@@ -18,7 +18,8 @@ export class UsersService {
     return this.DB.save(createDto as CreateUserDto);
   }
   async findAll() {
-    return this.DB.find()
+    let queryBuilde = this.DB.createQueryBuilder()
+    return queryBuilde.getMany()
   }
   async findList(params: Page & User) {
     const { skip, take } = page(params)

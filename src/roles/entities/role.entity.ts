@@ -11,14 +11,17 @@ export class Role extends entityClass {
     @Column({ comment: "角色名称", type: 'varchar', length: 255 })
     name: string;
 
-    @Column({ comment: "权限标识", type: 'varchar', length: 30 })
-    powerkey: string;
+    @Column({
+        comment: "权限标识(1:全部数据,2:自定义数据,3:本级及子级,4:本级,5:本人数据)",
+        type: "enum", enum: [1, 2, 3, 4, 5], default: 5
+    })
+    powerkey: number;
 
     @Column({ comment: "备注", type: 'varchar', length: 255, "nullable": true })
     bak: string;
 
     //菜单权限
-    @ManyToMany(()=>Router,Router=>Router.roles,{"cascade": true,"nullable": true})
+    @ManyToMany(() => Router, Router => Router.roles, { "cascade": true, "nullable": true })
     @JoinTable()
     routers: Router[];
 

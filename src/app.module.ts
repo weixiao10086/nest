@@ -25,6 +25,7 @@ import { WsModule } from './websocket/ws.module';
 import { ExcelModule } from './excel/excel.module';
 import { RolesModule } from './roles/roles.module';
 import { DeptModule } from './dept/dept.module';
+import { DataScopeInterceptor } from './dept/data-scope.interceptor';
 
 @Module({
   imports: [
@@ -111,6 +112,11 @@ import { DeptModule } from './dept/dept.module';
       provide: APP_INTERCEPTOR,
       // useClass: CacheInterceptor,
       useClass: MyCacheInterceptor,
+    },
+    /* 数据权限拦截器 */
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: DataScopeInterceptor,
     },
   ],
 

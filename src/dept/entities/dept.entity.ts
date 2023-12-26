@@ -7,6 +7,7 @@ import { User } from "src/users/entities/user.entity";
 @Tree("closure-table")
 export class Dept extends entityClass {
 
+    @Excel({ name: '部门名称', sort: 0 })
     @Column({ comment: "部门名称", type: 'varchar', length: 255 })
     name: string;
 
