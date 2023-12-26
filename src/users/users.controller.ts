@@ -28,7 +28,6 @@ export class UsersController {
   @Get()
   @NoCache()
   async findAll(@Req() req) {
-    console.log(await req.user.getDataScope(), 'req');
     // console.log(this.ws.server.clients,'154');
     // console.log(this.ws.all('111'), '154');
     // console.log(await this.cacheManager.get('aaa'));

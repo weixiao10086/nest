@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, In, Like, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { page, Page } from 'src/utils/page';
@@ -15,7 +15,7 @@ export class UsersService {
     //   .values(createDto)
     //   .execute();
     //  (树形新增必须用这个)
-     return this.DB.save(createDto as CreateUserDto);
+    return this.DB.save(createDto as CreateUserDto);
   }
   async findAll() {
     return this.DB.find()
@@ -37,7 +37,7 @@ export class UsersService {
       .getManyAndCount()
   }
   async findOne(findObj: FindOptionsWhere<User>): Promise<User | undefined> {
-    let obj = await this.DB.findOne({ where: { ...findObj},"relations":["roles","dept"] })
+    let obj = await this.DB.findOne({ where: { ...findObj }, "relations": ["roles", "dept"] })
     return obj
   }
 }
