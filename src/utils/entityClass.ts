@@ -1,11 +1,14 @@
 //公共实体基类
 import { Excel } from "src/excel/excel";
-import { CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export default class entityClass {
     @Excel({sort:0,name:"编号"})
     @PrimaryGeneratedColumn({ comment: "id", type: 'bigint' })
     id: string;
+
+    @Column({ comment: "权限id", type: 'bigint',"nullable":true})
+    deptId: string;
 
     @CreateDateColumn({
         name: 'create_time',

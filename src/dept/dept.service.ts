@@ -3,24 +3,28 @@ import { CreateDeptDto } from './dto/create-dept.dto';
 import { UpdateDeptDto } from './dto/update-dept.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dept } from './entities/dept.entity';
-import { FindOptionsWhere, Like, Repository } from 'typeorm';
+import { FindOptionsWhere, Like, TreeRepository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
 import * as xlsx from 'xlsx';
 @Injectable()
 export class DeptService {
   constructor(
     @InjectRepository(Dept)
-    private DB: Repository<Dept>,
+    private DB: TreeRepository<Dept>,
     /*元数据
      private reflector: Reflector */
   ) { }
 
   async create(createDto: CreateDeptDto | Array<CreateDeptDto>) {
-    return this.DB.createQueryBuilder().insert()
-      .values(createDto)
-      .execute();
+    return this.DB.save(createDto as CreateDeptDto)
   }
 
+  findTree() {
+    return this.DB.findTrees();
+  }
+  findchildrenId(id) {
+    return this.DB.findDescendants({ id } as Dept);
+  }
   findAll() {
     return this.DB.createQueryBuilder().getMany();
   }
@@ -43,9 +47,8 @@ export class DeptService {
   }
 
   update(id: string, updateDto: UpdateDeptDto) {
-    return this.DB.update(id, updateDto);
-    /*  树形修改
-     return this.DB.save({ ...updateDto, id }); */
+    //  树形修改
+    return this.DB.save({ ...updateDto, id });
   }
 
   remove(id: string) {

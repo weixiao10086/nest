@@ -28,7 +28,7 @@ export class RouterService {
   async findList(params: Page & Router) {
     const { skip, take } = page(params)
     const where: FindOptionsWhere<Router> = {
-      ...("params.id" && { id: params.id }),
+      ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     }
     return await this.DB.createQueryBuilder()

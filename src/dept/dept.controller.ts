@@ -25,6 +25,14 @@ export class DeptController {
   async findAll(@Req() req) {
     return R(this.DeptService.findAll());
   }
+  @Get('tree')
+  async findTree(@Req() req) {
+    return R(this.DeptService.findTree());
+  }
+  @Get('children')
+  async findchildrenId(@Query("id") id) {
+    return R(this.DeptService.findchildrenId(id));
+  }
 
   @Get('list')
   findList(@Query() params) {

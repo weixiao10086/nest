@@ -37,7 +37,7 @@ export class UsersService {
       .getManyAndCount()
   }
   async findOne(findObj: FindOptionsWhere<User>): Promise<User | undefined> {
-    let obj = await this.DB.findOne({ where: { ...findObj},"relations":["roles"] })
+    let obj = await this.DB.findOne({ where: { ...findObj},"relations":["roles","dept"] })
     return obj
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query, Inject, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -26,8 +26,9 @@ export class UsersController {
   }
 
   @Get()
-  // @NoCache()
-  async findAll() {
+  @NoCache()
+  async findAll(@Req() req) {
+    console.log(await req.user.getDataScope(), 'req');
     // console.log(this.ws.server.clients,'154');
     // console.log(this.ws.all('111'), '154');
     // console.log(await this.cacheManager.get('aaa'));

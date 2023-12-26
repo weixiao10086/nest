@@ -31,6 +31,7 @@ import { DeptModule } from './dept/dept.module';
     CacheModule.register(
       {
         isGlobal: true,
+
         //@ts-ignore
         store: () => redisStore({
           socket: {
@@ -108,8 +109,8 @@ import { DeptModule } from './dept/dept.module';
     //缓存
     {
       provide: APP_INTERCEPTOR,
-      useClass: CacheInterceptor,
-      // useClass: MyCacheInterceptor,
+      // useClass: CacheInterceptor,
+      useClass: MyCacheInterceptor,
     },
   ],
 
