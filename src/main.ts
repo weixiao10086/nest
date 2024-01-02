@@ -10,9 +10,10 @@ import session from 'express-session';
 import { WsAdapter } from './websocket/ws.adapter';
 import { AllExceptionsFilter } from './utils/any-exception.filter';
 import { OrmExceptionsFilter } from './utils/orm-exception.filter';
-import { join } from 'path';
+import configuration from 'config/configuration';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const configService = app.get(ConfigService<typeof configuration>);
   const options = new DocumentBuilder()
     .setTitle('Nest项目')
     .setDescription('The cats API description')
@@ -21,7 +22,6 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
-  console.log('http://localhost:9622/api');
   //cors
   app.enableCors();
   //静态文件资源
@@ -33,13 +33,13 @@ async function bootstrap() {
       max: 1000, // limit each IP to 100 requests per windowMs
     })
   );
-  //CSRF保护
-  // app.use(csurf());
   //通过适当地设置 HTTP 头，Helmet 可以帮助保护您的应用免受一些众所周知的 Web 漏洞的影响
   app.use(helmet());
 
   //cookie
   app.use(cookieParser('cookiekey'));
+  //CSRF保护
+  // app.use(csurf({ cookie: true }));
 
   app.use(
     session({
@@ -61,14 +61,16 @@ async function bootstrap() {
   );
   app.setBaseViewsDir('views');
   app.setViewEngine('hbs');
-
-  await app.listen(9622);
+  await app.listen(configService.get('APP_PORT'));
+  Logger.verbose(`http://localhost:${configService.get('APP_PORT')}/api`);
 }
 
 import dayjs from 'dayjs';
 globalThis.$dayJS = dayjs
 
 import { Faker, zh_CN } from '@faker-js/faker';
+import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 const faker = new Faker({
   locale: [zh_CN],
 })

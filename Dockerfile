@@ -1,16 +1,16 @@
-FROM node:16.15.0
-# 创建工作目录
-RUN mkdir -p /nest
-# 指定工作目录
-WORKDIR /nest
-# 复制当前文件到工作目录
-COPY . ./
-RUN npm config set registry https://registry.npm.taobao.org
-# npm 安装依赖
-RUN npm install 
-# 打包
-RUN npm run build
-# 启动服务
-CMD npm run start:prod
-# 暴露端口
-EXPOSE 9621
+# 基础镜像
+# FROM node:16.15.0-slim
+FROM node:18-alpine
+# 创建一个应用目录
+WORKDIR /app
+# 这个星号通配符意思是复制package.json和package-lock.json,复制到当前应用目录
+COPY package*.json ./
+# 安装应用依赖
+RUN yarn install
+# 安装完毕后复制当前目录所有文件到镜像目录里面
+COPY . . 
+# 执行npm run build 后生成dist目录
+# RUN npm run build
+# 使用打包后的镜像
+# CMD ["npm","run","start:prod"]
+CMD ["npm","run","start:docker:prod"]

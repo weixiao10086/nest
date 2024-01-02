@@ -1,7 +1,12 @@
 src/utils/CRUD
 src/utils/CICD
 .git
+.gitignore
 dist
 sql
 node_modules
-.log
+*.tar
+*.log
+*.lock
+*.http
+uploads

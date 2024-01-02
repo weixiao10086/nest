@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateRolesDto } from './dto/create-Roles.dto';
-import { UpdateRolesDto } from './dto/update-Roles.dto';
+import { CreateRolesDto } from './dto/create-roles.dto';
+import { UpdateRolesDto } from './dto/update-roles.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { FindOptionsWhere, In, Like, Repository } from 'typeorm';

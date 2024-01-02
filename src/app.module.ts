@@ -6,7 +6,7 @@ import { AppService } from './app.service';
 import { TemplateModule } from './template/template.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from 'config/configuration';
 import { JwtAuthGuard } from './auth/JwtAuthGuard';
 import { XxxModule } from './xxx/xxx.module';
@@ -26,16 +26,24 @@ import { ExcelModule } from './excel/excel.module';
 import { RolesModule } from './roles/roles.module';
 import { DeptModule } from './dept/dept.module';
 import { DataScopeInterceptor } from './dept/data-scope.interceptor';
-
+const envFilePath = ['.env', '.env.dev', '.env.prod']
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      //是否禁止加载环境变量
+      // ignoreEnvFile: true,
+      //是否加载为全局模块
+      isGlobal: true,
+      load: [configuration],
+      envFilePath,
+    }),
     CacheModule.register(
       {
         isGlobal: true,
-
         //@ts-ignore
         store: () => redisStore({
           socket: {
+            // host: 'localhost',
             host: 'localhost',
             // host: '82.156.136.205',
             port: 6379,
@@ -49,36 +57,34 @@ import { DataScopeInterceptor } from './dept/data-scope.interceptor';
       }
     ),
     // MyCacheModule,
-    ConfigModule.forRoot({
-      //是否禁止加载环境变量
-      // ignoreEnvFile: true,
-      //是否加载为全局模块
-      isGlobal: true,
-      load: [configuration],
-    }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      // host: '82.156.136.205',
-      port: 3306,
-      username: 'root',
-      password: '123456',
-      // password: 'qi000214..',
-      database: 'nest',
-      // entities: [Info, Photo, Course,User],
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      //同步数据库
-      synchronize: true,
-      dateStrings: true,
-      logging: true,
-      logger: "file",
-      // cache: {
-      //   type: "redis",
-      //   options: {
-      //     host: "localhost",
-      //     port: 6379
-      //   }
-      // }
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'mysql',
+          host: 'localhost',
+          // host: '82.156.136.205',
+          port: 3306,
+          username: 'root',
+          password: '123456',
+          // password: 'qi000214..',
+          database: 'nest',
+          // entities: [Info, Photo, Course,User],
+          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          //同步数据库
+          synchronize: true,
+          dateStrings: true,
+          logging: true,
+          logger: "file",
+          // cache: {
+          //   type: "redis",
+          //   options: {
+          //     host: "localhost",
+          //     port: 6379
+          //   }
+          // }
+        }
+      }
     }),
     TemplateModule,
     AuthModule,
