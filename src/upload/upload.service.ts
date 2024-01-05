@@ -26,7 +26,7 @@ export class UploadService {
   async findList(params: Page & Upload) {
     const { skip, take } = page(params)
     const where: FindOptionsWhere<Upload> = {
-      ...("params.id" && { id: params.id }),
+      ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     }
     return await this.DB.createQueryBuilder()
