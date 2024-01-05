@@ -44,7 +44,7 @@ const envFilePath = ['.env', '.env.dev', '.env.prod']
         store: () => redisStore({
           socket: {
             // host: 'localhost',
-            host: 'localhost',
+            host: '127.0.0.1',
             // host: '82.156.136.205',
             port: 6379,
           },

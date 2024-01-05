@@ -1,15 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOptionsWhere, In, Like, Repository } from 'typeorm';
+import { EntityManager, FindOptionsWhere, In, Like, QueryRunner, Repository, SelectQueryBuilder } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { page, Page } from 'src/utils/page';
+import dataAuth from 'src/utils/dataauth';
+
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private DB: Repository<User>
-  ) { }
+  ) {
+  }
   async create(createDto: CreateUserDto | Array<CreateUserDto>) {
     // return this.DB.createQueryBuilder().insert()
     //   .values(createDto)
@@ -18,6 +21,7 @@ export class UsersService {
     return this.DB.save(createDto as CreateUserDto);
   }
   async findAll() {
+    console.log(await dataAuth(this.DB).andWhere({ id: '4' }).getMany(), '111');
     let queryBuilde = this.DB.createQueryBuilder()
     return queryBuilde.getMany()
   }
