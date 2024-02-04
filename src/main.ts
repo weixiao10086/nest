@@ -68,11 +68,11 @@ async function bootstrap() {
 import dayjs from 'dayjs';
 globalThis.$dayJS = dayjs
 
-import { Faker, zh_CN } from '@faker-js/faker';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
-const faker = new Faker({
-  locale: [zh_CN],
-})
-globalThis.$faker = faker
+// import { Faker, zh_CN } from '@faker-js/faker';
+// const faker = new Faker({
+//   locale: [zh_CN],
+// })
+// globalThis.$faker = faker
 bootstrap();

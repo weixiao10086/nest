@@ -8,7 +8,7 @@ import { Request, Response } from 'express'
 import { NoCache } from 'src/cache/my-cache.interceptor';
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   //验证码
   @Get('code')
