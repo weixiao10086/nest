@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Dept } from './entities/dept.entity';
 import { FindOptionsWhere, Like, TreeRepository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
-import * as xlsx from 'xlsx';
 @Injectable()
 export class DeptService {
   constructor(

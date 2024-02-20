@@ -26,7 +26,7 @@ export class DictService {
   async findList(params: Page & Dict) {
     const { skip, take } = page(params)
     const where: FindOptionsWhere<Dict> = {
-      ...("params.id" && { id: params.id }),
+      ...(params.id && { id: params.id }),
       ...(params.key && { name: Like(`%${params.key}%`) }),
     }
     return await this.DB.createQueryBuilder()

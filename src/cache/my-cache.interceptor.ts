@@ -1,5 +1,5 @@
 import { ExecutionContext } from '@nestjs/common';
-import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 
 import { SetMetadata } from '@nestjs/common';
 // @NoCache()装饰器用于跳过缓存

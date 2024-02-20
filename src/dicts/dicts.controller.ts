@@ -3,7 +3,7 @@ import { DictsService } from './dicts.service';
 import { CreateDictsDto } from './dto/create-dicts.dto';
 import { UpdateDictsDto } from './dto/update-dicts.dto';
 import R from 'src/utils/R';
-import { Response, query } from 'express'
+import { Response } from 'express'
 import { CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('dicts')

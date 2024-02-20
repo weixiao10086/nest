@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query, Inject, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, ClassSerializerInterceptor, Query, Inject, Req, Request } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,7 +8,6 @@ import { NoCache } from 'src/cache/my-cache.interceptor';
 import { WsStartGateway } from 'src/websocket/ws.gateway';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from "cache-manager"
-import { DataScope } from 'src/dept/datascope.decorator';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -28,13 +27,13 @@ export class UsersController {
 
   @Get()
   @NoCache()
-  // @DataScope()
   async findAll(@Req() req) {
     // console.log(req.sqlString, 'sqlString');
     // console.log(this.ws.server.clients,'154');
     // console.log(this.ws.all('111'), '154');
     // console.log(await this.cacheManager.get('aaa'));
     // console.log(await this.cacheManager.set('aaa',111));
+    console.log(req.user,'reqreqreqreqreq');
     let obj = await R(this.usersService.findAll())
     return obj;
   }
