@@ -6,7 +6,7 @@ export class ExcelService {
   constructor(    //读写redis
     private readonly dictsService: DictsService
   ) { }
-  async exportExcel(data: any[], fileName: string, metaClass): Promise<Buffer> {
+  async exportExcel(data: any[], metaClass): Promise<Buffer> {
     let metaKeys = Reflect.getMetadataKeys(metaClass);
     // let metaKeys = Reflect.getMetadata('excel-name',metaClass);
     console.log(metaKeys);

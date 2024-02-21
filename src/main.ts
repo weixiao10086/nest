@@ -11,6 +11,8 @@ import { WsAdapter } from './websocket/ws.adapter';
 import { AllExceptionsFilter } from './utils/any-exception.filter';
 import { OrmExceptionsFilter } from './utils/orm-exception.filter';
 import configuration from 'config/configuration';
+import { ConfigService } from '@nestjs/config';
+import { Logger } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService<typeof configuration>);
@@ -64,15 +66,9 @@ async function bootstrap() {
   await app.listen(configService.get('APP_PORT'));
   Logger.verbose(`http://localhost:${configService.get('APP_PORT')}/api`);
 }
-
-import dayjs from 'dayjs';
-globalThis.$dayJS = dayjs
-
-import { ConfigService } from '@nestjs/config';
-import { Logger } from '@nestjs/common';
+bootstrap();
 // import { Faker, zh_CN } from '@faker-js/faker';
 // const faker = new Faker({
 //   locale: [zh_CN],
 // })
 // globalThis.$faker = faker
-bootstrap();

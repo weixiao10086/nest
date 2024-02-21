@@ -61,15 +61,8 @@ export class XxxController {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
     const data = await this.xxxService.findList({ ...params, page: null, size: null });
-    let buffer=await this.excelService.exportExcel(data,fileName,Xxx)
+    let buffer=await this.excelService.exportExcel(data,Xxx)
     return new StreamableFile(buffer);
-    // const fileName = 'xxx.xlsx';
-    // const buffer = await this.excelService.exportExcel(data[0], fileName, Xxx);
-    // res.set({
-    //   'Content-Disposition': `attachment; filename=${fileName}`,
-    //   'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    // });
-    // return new StreamableFile(buffer);
   }
   @Get(':id')
   @Roles('xxx/list')
