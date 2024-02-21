@@ -53,7 +53,7 @@ export class XxxController {
   async exportExcel(
     @Query() params: Page & Xxx,
     @Response({ passthrough: true }) res,
-  ): Promise<StreamableFile> {
+  ): Promise<StreamableFile|string> {
     const fileName = 'xxx.xlsx';
     res.set({
       'Content-Disposition': `attachment; filename=${fileName}`,
@@ -61,7 +61,10 @@ export class XxxController {
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
     const data = await this.xxxService.findList({ ...params, page: null, size: null });
-    let buffer=await this.excelService.exportExcel(data,Xxx)
+    if(data[1]===0){
+      return '内容为空'
+    }
+    let buffer=await this.excelService.exportExcel(data[0],Xxx)
     return new StreamableFile(buffer);
   }
   @Get(':id')

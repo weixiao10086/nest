@@ -26,6 +26,8 @@ export class ExcelService {
     //   { header: 'D.O.B.', key: 'DOB', width: 10, outlineLevel: 1 },
     //   { header: 'Id', key: 'id', width: 10 },
     // ];
+    console.log(data,'data');
+    
     sheet.addRows(
       data
     //   [{

@@ -11,7 +11,7 @@ export class Xxx extends entityClass {
     name: string;
 
     @Excel({ header: '测试', dict: 'status', sort: 8 })
-    @Column({ comment: "数据库注释", type: 'varchar', length: 255 })
+    @Column({ comment: "数据库注释", type: 'varchar', length: 255,nullable: true})
     ceshi: string;
 
     /*  连表
