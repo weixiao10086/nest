@@ -21,7 +21,7 @@ export class UsersService {
     return this.DB.save(createDto as CreateUserDto);
   }
   async findAll() {
-    console.log(await dataAuth(this.DB).andWhere({ id: '4' }).getMany(), '111');
+    // console.log(await dataAuth(this.DB).andWhere({ id: '4' }).getMany(), '111');
     let queryBuilde = this.DB.createQueryBuilder()
     return queryBuilde.getMany()
   }

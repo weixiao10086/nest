@@ -3,7 +3,7 @@ import { Excel } from "src/excel/excel";
 import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export default class entityClass {
-    @Excel({sort:0,name:"编号"})
+    // @Excel({sort:8,header:"编号"})
     @PrimaryGeneratedColumn({ comment: "id", type: 'bigint' })
     id: string;
 

@@ -6,11 +6,11 @@ import { Column, Entity } from "typeorm";
 /* @Tree("closure-table") */
 export class Xxx extends entityClass {
 
-    @Excel({ name: '名称', sort: 0 })
+    @Excel({ header: '名称', sort: 8 })
     @Column({ comment: "数据库注释", type: 'varchar', length: 255 })
     name: string;
 
-    /* @Excel({ name: '测试', dict: 'gender', sort: 4 }) */
+    @Excel({ header: '测试', dict: 'status', sort: 8 })
     @Column({ comment: "数据库注释", type: 'varchar', length: 255 })
     ceshi: string;
 

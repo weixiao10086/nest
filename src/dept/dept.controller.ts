@@ -3,7 +3,6 @@ import { DeptService } from './dept.service';
 import { CreateDeptDto } from './dto/create-dept.dto';
 import { UpdateDeptDto } from './dto/update-dept.dto';
 import R from 'src/utils/R';
-import { NoCache } from 'src/cache/my-cache.interceptor';
 import { Page } from 'src/utils/page';
 import { Dept } from './entities/dept.entity';
 import 'reflect-metadata';
@@ -39,18 +38,6 @@ export class DeptController {
     return R(this.DeptService.findList(params), params);
   }
 
-  @Get('export-excel')
-  @NoCache()
-  async exportExcel(@Query() params: Page & Dept, @Response({ passthrough: true }) res): Promise<StreamableFile> {
-    const data = await this.DeptService.findList({ ...params, page: null, size: null });
-    const fileName = 'dept.xlsx';
-    const buffer = await this.excelService.exportExcel(data[0], fileName, Dept);
-    res.set({
-      'Content-Disposition': `attachment; filename=${fileName}`,
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    return new StreamableFile(buffer);
-  }
   @Get(':id')
   findOne(@Param('id') id: string) {
     return R(this.DeptService.findOne(id));

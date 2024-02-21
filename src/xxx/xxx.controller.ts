@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Response, StreamableFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Req,
+  Response,
+  StreamableFile,
+} from '@nestjs/common';
 import { XxxService } from './xxx.service';
 import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
@@ -15,7 +27,7 @@ export class XxxController {
   constructor(
     private readonly xxxService: XxxService,
     private readonly excelService: ExcelService,
-  ) { }
+  ) {}
 
   @Post()
   @Roles('xxx/add')
@@ -37,16 +49,27 @@ export class XxxController {
 
   @Get('export-excel')
   @NoCache()
-  @Roles('xxx/export')
-  async exportExcel(@Query() params: Page & Xxx, @Response({ passthrough: true }) res): Promise<StreamableFile> {
-    const data = await this.xxxService.findList({ ...params, page: null, size: null });
+  // @Roles('xxx/export')
+  async exportExcel(
+    @Query() params: Page & Xxx,
+    @Response({ passthrough: true }) res,
+  ): Promise<StreamableFile> {
     const fileName = 'xxx.xlsx';
-    const buffer = await this.excelService.exportExcel(data[0], fileName, Xxx);
     res.set({
       'Content-Disposition': `attachment; filename=${fileName}`,
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Content-Type':
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
+    const data = await this.xxxService.findList({ ...params, page: null, size: null });
+    let buffer=await this.excelService.exportExcel(data,fileName,Xxx)
     return new StreamableFile(buffer);
+    // const fileName = 'xxx.xlsx';
+    // const buffer = await this.excelService.exportExcel(data[0], fileName, Xxx);
+    // res.set({
+    //   'Content-Disposition': `attachment; filename=${fileName}`,
+    //   'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    // });
+    // return new StreamableFile(buffer);
   }
   @Get(':id')
   @Roles('xxx/list')

@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Xxx } from './entities/xxx.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
-import * as xlsx from 'xlsx';
+import { Dept } from 'src/dept/entities/dept.entity';
 /* import { Reflector } from "@nestjs/core"; */
 
 @Injectable()
@@ -44,6 +44,8 @@ export class XxxService {
       /*  连表 
       // .innerJoinAndSelect("xxx.dicts", 'bieming')
       // .leftJoinAndSelect("xxx.dicts", 'bieming') */
+      // .leftJoinAndSelect(Dept, 'dept', 'dept.id = article.createBy')
+      // .leftJoinAndMapOne("user.profilePhoto", "user.photos", "photo", "photo.isForProfile = TRUE")
       .where(where)
       .skip(skip)
       .take(take)

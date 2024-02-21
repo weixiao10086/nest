@@ -3,7 +3,6 @@ import { DictsService } from './dicts.service';
 import { CreateDictsDto } from './dto/create-dicts.dto';
 import { UpdateDictsDto } from './dto/update-dicts.dto';
 import R from 'src/utils/R';
-import { Response } from 'express'
 import { CacheTTL } from '@nestjs/cache-manager';
 
 @Controller('dicts')
@@ -25,18 +24,6 @@ export class DictsController {
   @Get('list')
   findList(@Query() params) {
     return R(this.DictsService.findList(params), params);
-  }
-
-  @Get('export-excel')
-  async exportExcel(@Res() res: Response): Promise<void> {
-    const data = await this.DictsService.findAll();
-    const fileName = 'dicts.xlsx';
-    const buffer = await this.DictsService.exportExcel(data, fileName);
-    res.set({
-      'Content-Disposition': `attachment; filename=${fileName}`,
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    res.send(buffer);
   }
 
   @Get('key/:key')

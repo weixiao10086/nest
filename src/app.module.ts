@@ -16,12 +16,13 @@ import { DictModule } from './dict/dict.module';
 import { RolesGuard } from './roles/roles.guard';
 import { CacheInterceptor, CacheModule } from '@nestjs/cache-manager';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
-import { redisStore } from 'cache-manager-redis-store';
+import { redisStore } from 'cache-manager-ioredis-yet';
 import { MyCacheInterceptor } from './cache/my-cache.interceptor';
 import { WsModule } from './websocket/ws.module';
 import { ExcelModule } from './excel/excel.module';
 import { RolesModule } from './roles/roles.module';
 import { DeptModule } from './dept/dept.module';
+import type { RedisClientOptions } from 'redis';
 const envFilePath = ['.env', '.env.dev', '.env.prod'];
 @Module({
   imports: [
@@ -33,23 +34,16 @@ const envFilePath = ['.env', '.env.dev', '.env.prod'];
       load: [configuration],
       envFilePath,
     }),
-    CacheModule.register({
+    CacheModule.register<RedisClientOptions>({
       isGlobal: true,
       //@ts-ignore
-      store: () =>
-        redisStore({
-          socket: {
-            // host: 'localhost',
-            host: '127.0.0.1',
-            // host: '82.156.136.205',
-            port: 6379,
-          },
-          //哪个DB
-          database: 4,
-          // "password": "root@1234",
-          //过期时间
-          ttl: 50,
-        }),
+      store: () => {
+        return redisStore({
+          host: '127.0.0.1',
+          ttl: 5 * 1000,
+          db: 4,
+        });
+      },
     }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
@@ -70,13 +64,6 @@ const envFilePath = ['.env', '.env.dev', '.env.prod'];
           dateStrings: true,
           logging: true,
           logger: 'file',
-          // cache: {
-          //   type: "redis",
-          //   options: {
-          //     host: "localhost",
-          //     port: 6379
-          //   }
-          // }
         };
       },
     }),

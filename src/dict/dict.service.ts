@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Dict } from './entities/dict.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
-import * as xlsx from 'xlsx';
 @Injectable()
 export class DictService {
   constructor(
@@ -49,14 +48,4 @@ export class DictService {
     /*  return this.DB.softRemove({id}); */
   }
 
-  async exportExcel(data: any[], fileName: string): Promise<Buffer> {
-    const worksheet = xlsx.utils.json_to_sheet(data);
-    const workbook = xlsx.utils.book_new();
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const buffer = xlsx.write(workbook, {
-      type: 'buffer',
-      bookType: 'xlsx',
-    });
-    return buffer;
-  }
 }

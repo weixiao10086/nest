@@ -25,17 +25,6 @@ export class DictController {
     return R(this.DictService.findList(params), params);
   }
 
-  @Get('export-excel')
-  async exportExcel(@Res() res: Response): Promise<void> {
-    const data = await this.DictService.findAll();
-    const fileName = 'dict.xlsx';
-    const buffer = await this.DictService.exportExcel(data, fileName);
-    res.set({
-      'Content-Disposition': `attachment; filename=${fileName}`,
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    res.send(buffer);
-  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
