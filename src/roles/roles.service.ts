@@ -10,8 +10,6 @@ export class RolesService {
   constructor(
     @InjectRepository(Role)
     private DB: Repository<Role>,
-    /*元数据
-     private reflector: Reflector */
   ) { }
 
   async create(createDto: CreateRolesDto | Array<CreateRolesDto>) {
@@ -39,18 +37,14 @@ export class RolesService {
 
   findOne(id: string) {
     return this.DB.findOne({ where: { id }, "relations": ["routers"] })
-    return this.DB.createQueryBuilder().where({ id }).getOne()
   }
 
   update(id: string, updateDto: UpdateRolesDto) {
     return this.DB.update(id, updateDto);
-    /*  树形修改
-     return this.DB.save({ ...updateDto, id }); */
   }
 
   remove(id: string) {
     return this.DB.softDelete(id);
-    /*  return this.DB.softRemove({id}); */
   }
   findrouters(ids: Array<string>) {
     return this.DB.find({ where: { id: In(ids) }, "relations": ['routers'] })

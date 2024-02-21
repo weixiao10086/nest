@@ -3,7 +3,6 @@ import { DictService } from './dict.service';
 import { CreateDictDto } from './dto/create-dict.dto';
 import { UpdateDictDto } from './dto/update-dict.dto';
 import R from 'src/utils/R';
-import { Response } from 'express'
 
 @Controller('Dict')
 export class DictController {

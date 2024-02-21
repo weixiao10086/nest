@@ -46,6 +46,5 @@ export class UploadService {
 
   remove(id: string) {
     return this.DB.softDelete(id);
-    /*  return this.DB.softRemove({id}); */
   }
 }

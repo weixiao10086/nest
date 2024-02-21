@@ -19,7 +19,6 @@ export class DictsService {
   }
 
   findAll() {
-    // return this.DB.createQueryBuilder().getMany();
     return this.DB.find({ relations: ["dicts"] });
   }
 
@@ -52,6 +51,5 @@ export class DictsService {
 
   remove(id: string) {
     return this.DB.softDelete(id);
-    //  return this.DB.softRemove({id});
   }
 }

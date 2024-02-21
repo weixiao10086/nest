@@ -52,6 +52,5 @@ export class DeptService {
 
   remove(id: string) {
     return this.DB.softDelete(id);
-    /*  return this.DB.softRemove({id}); */
   }
 }
