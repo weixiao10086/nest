@@ -20,8 +20,7 @@ export class UsersService {
     //  (树形新增必须用这个)
     return this.DB.save(createDto as CreateUserDto);
   }
-  async findAll() {
-    // console.log(await dataAuth(this.DB).andWhere({ id: '4' }).getMany(), '111');
+  async findAll(user?: User){
     let queryBuilde = this.DB.createQueryBuilder()
     return queryBuilde.getMany()
   }

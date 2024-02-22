@@ -2,14 +2,10 @@
 import { Excel } from "src/excel/excel";
 import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
-export default class entityClass {
+export  class entityCommonClass {
     // @Excel({sort:8,header:"编号"})
     @PrimaryGeneratedColumn({ comment: "id", type: 'bigint' })
     id: string;
-
-    @Column({ comment: "权限id", type: 'bigint',"nullable":true})
-    deptId: string;
-
     @CreateDateColumn({
         name: 'create_time',
         type: 'timestamp',
@@ -36,4 +32,8 @@ export default class entityClass {
         update: false
     })
     deleteAt: String | null;
+}
+export default class entityClass extends entityCommonClass{
+    @Column({ comment: "权限id", type: 'bigint',"nullable":true})
+    deptId: string;
 }

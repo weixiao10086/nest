@@ -17,6 +17,9 @@ export class Role extends entityClass {
     })
     powerkey: number;
 
+    @Column({ comment: "自定义数据:部门id数组",type: "simple-array", })
+    deptArr: string[];
+
     @Column({ comment: "备注", type: 'varchar', length: 255, "nullable": true })
     bak: string;
 

@@ -1,11 +1,11 @@
-import entityClass from "src/utils/entityClass";
+import { entityCommonClass } from "src/utils/entityClass";
 import { Excel } from "src/excel/excel";
 import { Column, Entity, OneToMany, Tree, TreeChildren, TreeParent } from "typeorm";
 import { User } from "src/users/entities/user.entity";
 
 @Entity({ "name": "dept" })
 @Tree("closure-table")
-export class Dept extends entityClass {
+export class Dept extends entityCommonClass {
 
     @Excel({ name: '部门名称', sort: 0 })
     @Column({ comment: "部门名称", type: 'varchar', length: 255 })

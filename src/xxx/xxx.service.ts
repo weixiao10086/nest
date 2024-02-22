@@ -6,6 +6,8 @@ import { Xxx } from './entities/xxx.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
 import { Dept } from 'src/dept/entities/dept.entity';
+import dataAuth from 'src/utils/dataauth';
+import { User } from 'src/users/entities/user.entity';
 /* import { Reflector } from "@nestjs/core"; */
 
 @Injectable()
@@ -27,7 +29,8 @@ export class XxxService {
      return this.DB.save(createDto as CreateXxxDto); */
   }
 
-  findAll() {
+  async findAll(user?:User) {
+    console.log(await (await dataAuth(this.DB,user)).andWhere({ }).getMany(), '111');
     /* return this.DB.find(); */
     return this.DB.createQueryBuilder().getMany();
   }

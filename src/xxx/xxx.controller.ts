@@ -38,7 +38,7 @@ export class XxxController {
   @Get()
   @Roles('xxx/all')
   async findAll(@Req() req) {
-    return R(this.xxxService.findAll());
+    return R(this.xxxService.findAll(req.user));
   }
 
   @Get('list')

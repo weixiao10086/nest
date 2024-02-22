@@ -44,7 +44,7 @@ export class UsersController {
     // console.log(req.sqlString, 'sqlString');
     // console.log(this.ws.server.clients,'154');
     // console.log(this.ws.all('111'), '154');
-    let obj = await R(this.usersService.findAll());
+    let obj = await R(this.usersService.findAll(req.user));
     return obj;
   }
 

@@ -11,10 +11,10 @@ export class Router extends entityClass {
     @Column({ comment: "路径标识", type: 'varchar', length: 255,"unique":true })
     path: string;
 
-    @Column({ comment: "类型", type: 'varchar', length: 255 })
+    @Column({ comment: "类型", type: 'varchar', length: 255,default:"1" })
     type: string;
 
-    @Column({ comment: "图标", type: 'varchar', length: 255 })
+    @Column({ comment: "图标", type: 'varchar', length: 255 ,nullable:true})
     icon: string;
 
     @ManyToMany(() => Role, Role => Role.routers)
