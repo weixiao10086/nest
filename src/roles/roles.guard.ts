@@ -16,12 +16,15 @@ export class RolesGuard implements CanActivate {
       return true
     }
     const { user } = context.switchToHttp().getRequest();
-    if (user.routers.includes(requiredRoles)) {
-      console.log(`你有该权限`);
-    } else {
-      console.log('你没有该权限');
-    }
-    return user.id==='1'||user.routers.includes(requiredRoles)
+    let isauth=user.id==='1'||user.routers.includes(requiredRoles);
+    // if (isauth) {
+    //   //有接口权限
+    //   console.log(`${user.username}有${requiredRoles}权限`);
+    // } else {
+    //   //无接口权限
+    //   console.log('你没有该权限');
+    // }
+    return isauth
     // return requiredRoles.some((role) => user.roles?.includes(role));
   }
 }
