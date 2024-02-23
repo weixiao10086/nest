@@ -37,6 +37,7 @@ export class XxxController {
 
   @Get()
   @Roles('xxx/all')
+  @NoCache()
   async findAll(@Req() req) {
     return R(this.xxxService.findAll(req.user));
   }

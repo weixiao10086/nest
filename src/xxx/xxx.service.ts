@@ -15,34 +15,32 @@ export class XxxService {
   constructor(
     @InjectRepository(Xxx)
     private DB: Repository<Xxx>,
-    /*树形
+  ) /*树形
      private DB: TreeRepository<Xxx> */
-    /*元数据
+  /*元数据
      private reflector: Reflector */
-  ) { }
+  {}
 
   async create(createDto: CreateXxxDto | Array<CreateXxxDto>) {
-    return this.DB.createQueryBuilder().insert()
-      .values(createDto)
-      .execute();
+    return this.DB.createQueryBuilder().insert().values(createDto).execute();
     /*  (树形新增必须用这个)
      return this.DB.save(createDto as CreateXxxDto); */
   }
 
-  async findAll(user?:User) {
-    console.log(await (await dataAuth(this.DB,user)).andWhere({ }).getMany(), '111');
+  async findAll(user?: User) {
     /* return this.DB.find(); */
-    return this.DB.createQueryBuilder().getMany();
+    // return this.DB.createQueryBuilder().getMany();
+    return dataAuth(this.DB, user).andWhere({}).getMany();
   }
 
   async findList(params: Page & Xxx) {
     /*  relations连表查询
       return this.DB.findAndCount({...page(params), relations: ["photos"]}); */
-    const { skip, take } = page(params)
+    const { skip, take } = page(params);
     const where: FindOptionsWhere<Xxx> = {
       ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
-    }
+    };
     return await this.DB.createQueryBuilder('xxx')
       /*  连表 
       // .innerJoinAndSelect("xxx.dicts", 'bieming')
@@ -52,12 +50,12 @@ export class XxxService {
       .where(where)
       .skip(skip)
       .take(take)
-      .getManyAndCount()
+      .getManyAndCount();
   }
 
   findOne(id: string) {
     /*  return this.DB.findOne({ where: { id: id } }); */
-    return this.DB.createQueryBuilder().where({ id }).getOne()
+    return this.DB.createQueryBuilder().where({ id }).getOne();
   }
 
   update(id: string, updateDto: UpdateXxxDto) {

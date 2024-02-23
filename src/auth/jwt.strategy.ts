@@ -29,11 +29,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       });
       return pre
     }, new Set())
-    const getDataScope=async ()=>{
-      let deprChildren = await this.deptService.findchildrenId(userobj.deptId)
-      let deptarr = deprChildren.map(item => item.id)
-      return deptarr
-    }
-    return { ...userobj, password: undefined, routers: [...routers] ,getDataScope};
+    // const getDataScope=async ()=>{
+    //   let deprChildren = await this.deptService.findchildrenId(userobj.deptId)
+    //   let deptarr = deprChildren.map(item => item.id)
+    //   return deptarr
+    // }
+    // return { ...userobj, password: undefined, routers: [...routers] ,getDataScope};
+    return { ...userobj, password: undefined, routers: [...routers]};
   }
 }
