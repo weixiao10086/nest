@@ -32,6 +32,12 @@ export  class entityCommonClass {
         update: false
     })
     deleteAt: String | null;
+
+  @Column({ name: 'create_by', comment: '创建人', length: 30, default: null })
+  createBy: string;
+
+  @Column({ name: 'update_by', comment: '更新人', length: 30, default: null })
+  updateBy: string;
 }
 export default class entityClass extends entityCommonClass{
     @Column({ comment: "权限id", type: 'bigint',"nullable":true})
