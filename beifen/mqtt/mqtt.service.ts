@@ -48,6 +48,7 @@ export class MqttService {
     //   // client.end()
     // })
   }
+  //   主题           消息                             消息设置
   push(topic: string, message: string | Buffer, options: IClientPublishOptions={"qos":2}) {
     try {
       this.client.publish(topic, message, options)

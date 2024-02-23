@@ -48,6 +48,7 @@ export class RabbitmqService implements OnModuleInit {
    * rabbitmq发送消息
    * @param message
    */
+  //          队列  交换机  路由key    消息
   async push(queue, ex, routingKey, message: string): Promise<void> {
     const messageProperties = {
       priority: 0,
