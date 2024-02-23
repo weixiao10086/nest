@@ -23,6 +23,7 @@ import { ExcelModule } from './excel/excel.module';
 import { RolesModule } from './roles/roles.module';
 import { DeptModule } from './dept/dept.module';
 import type { RedisClientOptions } from 'redis';
+import { RedisModule } from './redis/redis.module';
 const envFilePath = ['.env', '.env.dev', '.env.prod'];
 @Module({
   imports: [
@@ -80,6 +81,7 @@ const envFilePath = ['.env', '.env.dev', '.env.prod'];
     ExcelModule,
     RolesModule,
     DeptModule,
+    RedisModule
   ],
   controllers: [AppController],
   providers: [
