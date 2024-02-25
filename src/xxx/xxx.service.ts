@@ -33,7 +33,7 @@ export class XxxService {
     return dataAuth(this.DB, user).andWhere({}).getMany();
   }
 
-  async findList(params: Page & Xxx) {
+  async findList(params: Page & Xxx,user:User) {
     /*  relations连表查询
       return this.DB.findAndCount({...page(params), relations: ["photos"]}); */
     const { skip, take } = page(params);
@@ -41,13 +41,13 @@ export class XxxService {
       ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     };
-    return await this.DB.createQueryBuilder('xxx')
+    return await dataAuth(this.DB, user)
       /*  连表 
       // .innerJoinAndSelect("xxx.dicts", 'bieming')
       // .leftJoinAndSelect("xxx.dicts", 'bieming') */
       // .leftJoinAndSelect(Dept, 'dept', 'dept.id = article.createBy')
       // .leftJoinAndMapOne("user.profilePhoto", "user.photos", "photo", "photo.isForProfile = TRUE")
-      .where(where)
+      .andWhere(where)
       .skip(skip)
       .take(take)
       .getManyAndCount();

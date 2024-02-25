@@ -6,6 +6,9 @@ export const dataAuth = (
   user?: User ,
 ) => {
   let sql = manager.createQueryBuilder();
+  if(user.roles.length==0){
+    return sql
+  }
   let sqlstring:any='';
   for (let i = 0; i < user.roles.length; i++) {
     const item = user.roles[i];

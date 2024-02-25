@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   Query,
-  Req,
   Response,
   StreamableFile,
 } from '@nestjs/common';
@@ -21,6 +20,7 @@ import { Xxx } from './entities/xxx.entity';
 import 'reflect-metadata';
 import { ExcelService } from 'src/excel/excel.service';
 import { Roles } from 'src/roles/roles.decorator';
+import { User } from 'src/utils/user.decorator';
 
 @Controller('xxx')
 export class XxxController {
@@ -38,14 +38,14 @@ export class XxxController {
   @Get()
   @Roles('xxx/all')
   @NoCache()
-  async findAll(@Req() req) {
-    return R(this.xxxService.findAll(req.user));
+  async findAll(@User() user) {
+    return R(this.xxxService.findAll(user));
   }
 
   @Get('list')
   @Roles('xxx/list')
-  findList(@Query() params) {
-    return R(this.xxxService.findList(params), params);
+  findList(@Query() params,@User() user) {
+    return R(this.xxxService.findList(params,user), params);
   }
 
   @Get('export-excel')
@@ -54,6 +54,7 @@ export class XxxController {
   async exportExcel(
     @Query() params: Page & Xxx,
     @Response({ passthrough: true }) res,
+    @User() user
   ): Promise<StreamableFile|string> {
     const fileName = 'xxx.xlsx';
     res.set({
@@ -61,7 +62,7 @@ export class XxxController {
       'Content-Type':
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-    const data = await this.xxxService.findList({ ...params, page: null, size: null });
+    const data = await this.xxxService.findList({ ...params, page: null, size: null },user);
     if(data[1]===0){
       return '内容为空'
     }
