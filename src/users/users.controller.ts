@@ -11,7 +11,6 @@ import {
   Query,
   Inject,
   Req,
-  Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,7 +21,6 @@ import { NoCache } from 'src/cache/my-cache.interceptor';
 import { WsStartGateway } from 'src/websocket/ws.gateway';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
-import { Redis } from 'ioredis';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
