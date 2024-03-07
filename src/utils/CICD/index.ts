@@ -39,7 +39,7 @@ async function deploy() {
         // 异步进行，先注册连接状态的监听事件
         setTimeout(() => {
             connect.connect({
-                host: '82.156.136.205', // 服务器地址
+                host: '***********', // 服务器地址
                 port: 22, // 端口号
                 username: 'root', // 用户名
                 password: 'qi000214..' // 密码

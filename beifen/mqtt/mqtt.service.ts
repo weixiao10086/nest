@@ -7,7 +7,7 @@ export class MqttService {
   private readonly logger = new Logger('mqtt')
   constructor() {
     return
-    this.client = mqtt.connect('mqtt://82.156.136.205:1883', {
+    this.client = mqtt.connect('mqtt://localhost:1883', {
       connectTimeout: 10000, // 超时时间
       clientId: 'node-mq' + Math.random(),	//客户端ID
       username: 'admin', 

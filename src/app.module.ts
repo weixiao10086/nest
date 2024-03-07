@@ -52,11 +52,9 @@ const envFilePath = ['.env', '.env.dev', '.env.prod'];
         return {
           type: 'mysql',
           host: 'localhost',
-          // host: '82.156.136.205',
           port: 3306,
           username: 'root',
           password: '123456',
-          // password: 'qi000214..',
           database: 'nest',
           // entities: [Info, Photo, Course,User],
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
