@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { dtoCommonClass } from "src/utils/entityClass";
 
-export class CreateUserDto {
+export class CreateUserDto extends dtoCommonClass{
     @ApiProperty({ type: String, description: '账号', default: 'admin' })
     username: string;
 

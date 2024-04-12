@@ -21,6 +21,7 @@ import { NoCache } from 'src/cache/my-cache.interceptor';
 import { WsStartGateway } from 'src/websocket/ws.gateway';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { User } from 'src/utils/user.decorator';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
@@ -32,7 +33,8 @@ export class UsersController {
 
   @Post()
   @Roles('/add')
-  create(@Body() createUserDto: CreateUserDto) {
+  create(@Body() createUserDto: CreateUserDto,@User() user) {
+    createUserDto.createBy=user.id
     return this.usersService.create(createUserDto);
   }
 
