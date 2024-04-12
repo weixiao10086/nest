@@ -45,9 +45,7 @@ export default class entityClass extends entityCommonClass{
 }
 
 export  class dtoCommonClass {
-  @Column({ name: 'create_by', comment: '创建人', length: 30, default: null,  select: false})
   createBy: string;
 
-  @Column({ name: 'update_by', comment: '更新人', length: 30, default: null ,  select: false})
   updateBy: string;
 }
