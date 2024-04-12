@@ -18,7 +18,12 @@ export class UsersService {
     //   .values(createDto)
     //   .execute();
     //  (树形新增必须用这个)
-    return this.DB.save(createDto as CreateUserDto);
+   return this.DB.manager.transaction(()=>{
+      return this.DB.save(createDto as CreateUserDto);
+    }).catch(e=>{
+      // console.log(e);
+      return e
+    })
   }
   async findAll(user?: User){
     let queryBuilde = this.DB.createQueryBuilder()
