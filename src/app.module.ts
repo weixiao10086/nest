@@ -24,7 +24,9 @@ import { RolesModule } from './roles/roles.module';
 import { DeptModule } from './dept/dept.module';
 import type { RedisClientOptions } from 'redis';
 import { RedisModule } from './redis/redis.module';
-const envFilePath = ['.env', '.env.dev', '.env.prod'];
+// const envFilePath = ['.env', '.env.dev', '.env.prod'];
+const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -35,27 +37,45 @@ const envFilePath = ['.env', '.env.dev', '.env.prod'];
       load: [configuration],
       envFilePath,
     }),
-    CacheModule.register<RedisClientOptions>({
-      isGlobal: true,
-      //@ts-ignore
-      store: () => {
-        return redisStore({
-          host: '127.0.0.1',
-          ttl: 5 * 1000,
-          db: 4,
-        });
+    CacheModule.registerAsync<RedisClientOptions>({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const Redis_config= configService.get("REDIS");
+        return {
+          isGlobal: true,
+          //@ts-ignore
+          store: () => {
+            return redisStore({
+              host: Redis_config.host,
+              ttl: Redis_config.ttl * 1000,
+              db: Redis_config.database,
+            });
+          },
+        }
       },
     }),
+    // CacheModule.register<RedisClientOptions>({
+    //   isGlobal: true,
+    //   //@ts-ignore
+    //   store: () => {
+    //     return redisStore({
+    //       host: '127.0.0.1',
+    //       ttl: 5 * 1000,
+    //       db: 4,
+    //     });
+    //   },
+    // }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
+      useFactory: (configService: ConfigService<typeof configuration>) => {
+        const DATABASE_config = configService.get("DATABASE");
         return {
           type: 'mysql',
-          host: 'localhost',
-          port: 3306,
-          username: 'root',
-          password: '123456',
-          database: 'nest',
+          host: DATABASE_config.host,
+          port: DATABASE_config.port,
+          username: DATABASE_config.username,
+          password: DATABASE_config.password,
+          database: DATABASE_config.database,
           // entities: [Info, Photo, Course,User],
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           //同步数据库
@@ -102,4 +122,4 @@ const envFilePath = ['.env', '.env.dev', '.env.prod'];
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

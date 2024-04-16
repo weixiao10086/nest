@@ -19,7 +19,6 @@ import R from 'src/utils/R';
 import { Roles } from 'src/roles/roles.decorator';
 import { NoCache } from 'src/cache/my-cache.interceptor';
 import { WsStartGateway } from 'src/websocket/ws.gateway';
-import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { User } from 'src/utils/user.decorator';
 @Controller('users')
@@ -28,7 +27,6 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly ws: WsStartGateway,
-    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @Post()

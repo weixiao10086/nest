@@ -8,7 +8,7 @@ async function deploy() {
 
     // 第一步，构建项目
     await new Promise((resolve, reject) => {
-        child_process.exec('CD E:\\文龙\\Nest\\nest-admin&npm run build&exit;', {
+        child_process.exec('CD D:/Webqinaduan/nest/nest&npm run build&exit;', {
             maxBuffer: 999999999, //标准输出或标准错误允许的最大数据量（单位字节）。 超出则子进程将终止并截断任何输出。
         }, function (err, stdout, stderr) {
             // 子进程执行结束后的回调
@@ -39,10 +39,10 @@ async function deploy() {
         // 异步进行，先注册连接状态的监听事件
         setTimeout(() => {
             connect.connect({
-                host: '***********', // 服务器地址
+                host: '49.232.30.218', // 服务器地址
                 port: 22, // 端口号
                 username: 'root', // 用户名
-                password: 'qi000214..' // 密码
+                password: 'wen2216694426@L' // 密码
             })
         })
 
@@ -60,7 +60,7 @@ async function deploy() {
                     console.log('链接成功');
                     // sftp连接成功，发起上传
                     const file = path.join(process.cwd(), '../../../dist.zip') // 要上传的文件
-                    const dest = '/www/wenlong/dist.zip' //  linux下存放目录和文件名称。
+                    const dest = '/www/ceshi/dist.zip' //  linux下存放目录和文件名称。
                     sftp.fastPut(file, dest, (err, res) => {
                         if (err) {
                             reject(err) // 上传失败
@@ -87,7 +87,7 @@ async function deploy() {
                     }
 
                     // 到目录下解压文件，再删除掉zip包
-                    stream.write('cd /www/wenlong/ && unzip dist.zip \nnext\n')
+                    stream.write('cd /www/ceshi/ && unzip dist.zip \nnext\n')
                     stream.write('rm -r -f dist.zip \nexit\n')
 
                     stream.on('close', err => {
