@@ -4,14 +4,15 @@ import { ConnectedSocket, MessageBody, MessageMappingProperties, SubscribeMessag
 import { Observable, fromEvent, EMPTY } from 'rxjs';
 import { mergeMap, filter } from 'rxjs/operators';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from 'src/auth/constants';
 import { HttpAdapterHost } from '@nestjs/core';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
+import { ConfigService } from '@nestjs/config';
+import configuration from 'config/configuration';
 export class WsAdapter implements WebSocketAdapter {
   jwtService: JwtService;
-  constructor(private app: INestApplicationContext,
-  ) {
-    this.jwtService = new JwtService({ secret: jwtConstants.secret })
+  constructor(private app: INestApplicationContext) {
+    const configService = app.get(ConfigService<typeof configuration>);
+    this.jwtService = new JwtService({ secret: configService.get('JWT').key })
   }
 
   //创建Websocket
