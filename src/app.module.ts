@@ -49,6 +49,7 @@ const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
               host: Redis_config.host,
               ttl: Redis_config.ttl * 1000,
               db: Redis_config.database,
+              password:Redis_config.password
             });
           },
         }

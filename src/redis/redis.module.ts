@@ -12,8 +12,8 @@ import Redis from 'ioredis';
         return new Redis({
           port: REDIS_config.port, // Redis port
           host: REDIS_config.host, // Redis host
-          password: REDIS_config.REDIS_PASSWORD,
-          db: REDIS_config.REDIS_DATABASE, // Defaults to 0
+          password: REDIS_config.password,
+          db: REDIS_config.database, // Defaults to 0
         })
       },
       provide: 'REDIS',
