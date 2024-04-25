@@ -14,8 +14,8 @@ export class RouterService {
     private DB: TreeRepository<Router>
   ) { }
 
-  async create(createDto: CreateRouterDto | Array<CreateRouterDto>) {
-    return this.DB.save(createDto as CreateRouterDto)
+  async create(createDto: CreateRouterDto) {
+    return this.DB.save(createDto)
   }
 
   findTree() {

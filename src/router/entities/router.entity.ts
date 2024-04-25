@@ -8,13 +8,13 @@ export class Router extends entityClass {
     @Column({ comment: "名称", type: 'varchar', length: 30 })
     name: string;
 
-    @Column({ comment: "路径标识", type: 'varchar', length: 255,"unique":true })
+    @Column({ comment: "路径标识", type: 'varchar', length: 255, "unique": true })
     path: string;
 
-    @Column({ comment: "类型", type: 'varchar', length: 255,default:"1" })
+    @Column({ comment: "类型{1:菜单,2:按钮}", type: 'varchar', length: 255, default: "1" })
     type: string;
 
-    @Column({ comment: "图标", type: 'varchar', length: 255 ,nullable:true})
+    @Column({ comment: "图标", type: 'varchar', length: 255, nullable: true })
     icon: string;
 
     @ManyToMany(() => Role, Role => Role.routers)

@@ -27,7 +27,7 @@ export class XxxController {
   constructor(
     private readonly xxxService: XxxService,
     private readonly excelService: ExcelService,
-  ) {}
+  ) { }
 
   @Post()
   @Roles('xxx/add')
@@ -44,8 +44,9 @@ export class XxxController {
 
   @Get('list')
   @Roles('xxx/list')
-  findList(@Query() params,@User() user) {
-    return R(this.xxxService.findList(params,user), params);
+  @NoCache()
+  findList(@Query() params, @User() user) {
+    return R(this.xxxService.findList(params, user), params);
   }
 
   @Get('export-excel')
@@ -55,18 +56,18 @@ export class XxxController {
     @Query() params: Page & Xxx,
     @Response({ passthrough: true }) res,
     @User() user
-  ): Promise<StreamableFile|string> {
+  ): Promise<StreamableFile | string> {
     const fileName = 'xxx.xlsx';
     res.set({
       'Content-Disposition': `attachment; filename=${fileName}`,
       'Content-Type':
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     });
-    const data = await this.xxxService.findList({ ...params, page: null, size: null },user);
-    if(data[1]===0){
+    const data = await this.xxxService.findList({ ...params, page: null, size: null }, user);
+    if (data[1] === 0) {
       return '内容为空'
     }
-    let buffer=await this.excelService.exportExcel(data[0],Xxx)
+    let buffer = await this.excelService.exportExcel(data[0], Xxx)
     return new StreamableFile(buffer);
   }
   @Get(':id')

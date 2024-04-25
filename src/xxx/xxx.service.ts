@@ -30,7 +30,7 @@ export class XxxService {
   async findAll(user?: User) {
     /* return this.DB.find(); */
     // return this.DB.createQueryBuilder().getMany();
-    return dataAuth(this.DB, user).andWhere({}).getMany();
+    return dataAuth(this.DB, user).andWhere({}).getManyAndCount();
   }
 
   async findList(params: Page & Xxx,user:User) {
@@ -39,6 +39,7 @@ export class XxxService {
     const { skip, take } = page(params);
     const where: FindOptionsWhere<Xxx> = {
       ...(params.id && { id: params.id }),
+      ...(params.ceshi && { ceshi: params.ceshi }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
     };
     return await dataAuth(this.DB, user)

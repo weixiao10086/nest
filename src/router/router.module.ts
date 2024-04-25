@@ -7,6 +7,7 @@ import { Router } from './entities/router.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Router])],
   controllers: [RouterController],
-  providers: [RouterService]
+  providers: [RouterService],
+  exports:[RouterService]
 })
 export class RouterModule { }

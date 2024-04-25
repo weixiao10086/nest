@@ -14,6 +14,6 @@ export class Dict extends entityClass {
     @ManyToOne(() => Dicts, Dicts => Dicts.dicts, { "cascade": true, "nullable": false, onDelete: 'CASCADE' })
     dicts: Dicts
 
-    @Column({ comment: "对应字典", type: 'varchar', length: 255 })
-    dictskey: string
+//     @Column({ comment: "对应字典", type: 'varchar', length: 255 })
+//     dictskey: string
 }

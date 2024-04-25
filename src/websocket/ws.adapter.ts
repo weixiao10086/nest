@@ -12,7 +12,12 @@ export class WsAdapter implements WebSocketAdapter {
   jwtService: JwtService;
   constructor(private app: INestApplicationContext) {
     const configService = app.get(ConfigService<typeof configuration>);
-    this.jwtService = new JwtService({ secret: configService.get('JWT').key })
+    const JWT_config = configService.get("JWT");
+    this.jwtService = new JwtService({
+      secret: JWT_config.key,
+      //token过期时间
+      signOptions: { expiresIn: JWT_config.time ?? '6000s' },
+    })
   }
 
   //创建Websocket

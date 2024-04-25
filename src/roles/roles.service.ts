@@ -47,6 +47,11 @@ export class RolesService {
     return this.DB.softDelete(id);
   }
   findrouters(ids: Array<string>) {
-    return this.DB.find({ where: { id: In(ids) }, "relations": ['routers'] })
+    return this.DB.find({
+      where: {
+        // id: In(ids),
+        ...(ids && { id: In(ids) })
+      }, "relations": ['routers']
+    })
   }
 }

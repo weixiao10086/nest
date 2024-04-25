@@ -10,7 +10,7 @@ export class RouterController {
     private readonly RouterService: RouterService) { }
 
   @Post()
-  create(@Body() createRouterDto: CreateRouterDto | Array<CreateRouterDto>) {
+  create(@Body() createRouterDto: CreateRouterDto) {
     return R(this.RouterService.create(createRouterDto));
   }
 

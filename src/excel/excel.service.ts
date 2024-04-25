@@ -36,6 +36,7 @@ export class ExcelService {
     //   dob: new Date()
     // }]
     );
+    sheet.mergeCells('A2:B2');
     const buffer = await workbook.xlsx.writeBuffer();
     return buffer;
   }
