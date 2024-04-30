@@ -116,11 +116,11 @@ const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
       useClass: RolesGuard,
     },
     //缓存
-    {
-      provide: APP_INTERCEPTOR,
-      // useClass: CacheInterceptor,
-      useClass: MyCacheInterceptor,
-    },
+    // {
+    //   provide: APP_INTERCEPTOR,
+    //   // useClass: CacheInterceptor,
+    //   useClass: MyCacheInterceptor,
+    // },
   ],
 })
 export class AppModule { }

@@ -30,7 +30,7 @@ export class DictsService {
     }
     return await this.DB.createQueryBuilder("dicts")
       // .innerJoinAndSelect("dicts.dicts", 'bieming')
-      .leftJoinAndSelect("dicts.dicts", 'bieming')
+      // .leftJoinAndSelect("dicts.dicts", 'bieming')
       .where(where)
       .skip(skip)
       .take(take)

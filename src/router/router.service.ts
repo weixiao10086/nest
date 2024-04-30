@@ -9,37 +9,37 @@ import { Page, page } from 'src/utils/page';
 @Injectable()
 export class RouterService {
   constructor(
-    @InjectRepository(Router)
     //注入树实体
-    private DB: TreeRepository<Router>
-  ) { }
+    @InjectRepository(Router)
+    private DB: TreeRepository<Router>,
+  ) {}
 
   async create(createDto: CreateRouterDto) {
-    return this.DB.save(createDto)
+    return this.DB.save(createDto);
   }
 
   findTree() {
     return this.DB.findTrees();
   }
   findAll() {
-    return this.DB.createQueryBuilder("router").getMany();
+    return this.DB.createQueryBuilder('router').getMany();
   }
 
   async findList(params: Page & Router) {
-    const { skip, take } = page(params)
+    const { skip, take } = page(params);
     const where: FindOptionsWhere<Router> = {
       ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
-    }
+    };
     return await this.DB.createQueryBuilder()
-      .where(where)
+      .where(where, {})
       .skip(skip)
       .take(take)
-      .getManyAndCount()
+      .getManyAndCount();
   }
 
   findOne(id: string) {
-    return this.DB.createQueryBuilder().where({ id }).getOne()
+    return this.DB.createQueryBuilder().where({ id, eager: true }).getOne();
   }
 
   update(id: string, updateDto: UpdateRouterDto) {
