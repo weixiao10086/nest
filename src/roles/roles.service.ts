@@ -10,12 +10,10 @@ export class RolesService {
   constructor(
     @InjectRepository(Role)
     private DB: Repository<Role>,
-  ) { }
+  ) {}
 
-  async create(createDto: CreateRolesDto | Array<CreateRolesDto>) {
-    return this.DB.createQueryBuilder().insert()
-      .values(createDto)
-      .execute();
+  async create(createDto: Partial<Role>) {
+    return this.DB.createQueryBuilder().insert().values(createDto).execute();
   }
 
   findAll() {
@@ -23,20 +21,20 @@ export class RolesService {
   }
 
   async findList(params: Page & Role) {
-    const { skip, take } = page(params)
+    const { skip, take } = page(params);
     const where: FindOptionsWhere<Role> = {
       ...(params.id && { id: params.id }),
       ...(params.name && { name: Like(`%${params.name}%`) }),
-    }
+    };
     return await this.DB.createQueryBuilder('Role')
       .where(where)
       .skip(skip)
       .take(take)
-      .getManyAndCount()
+      .getManyAndCount();
   }
 
   findOne(id: string) {
-    return this.DB.findOne({ where: { id }, "relations": ["routers"] })
+    return this.DB.findOne({ where: { id }, relations: ['routers'] });
   }
 
   update(id: string, updateDto: UpdateRolesDto) {
@@ -50,8 +48,9 @@ export class RolesService {
     return this.DB.find({
       where: {
         // id: In(ids),
-        ...(ids && { id: In(ids) })
-      }, "relations": ['routers']
-    })
+        ...(ids && { id: In(ids) }),
+      },
+      relations: ['routers'],
+    });
   }
 }
