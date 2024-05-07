@@ -14,20 +14,31 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { page, Page } from 'src/utils/page';
 import dataAuth from 'src/utils/dataauth';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from '../roles/entities/role.entity';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private DB: Repository<User>,
+    private readonly rolesService: RolesService,
   ) {}
-  async create(createDto: CreateUserDto | Array<CreateUserDto>) {
+  async create(createDto: any) {
     // return this.DB.createQueryBuilder().insert()
     //   .values(createDto)
     //   .execute();
     //  (树形新增必须用这个)
     return this.DB.manager
       .transaction(() => {
+        if (createDto.roles) {
+          //   updateDto.roles = await this.rolesService.findIds(updateDto.roles);
+          createDto.roles = createDto.roles.map((item) => {
+            let obj = new Role();
+            obj['id'] = item;
+            return obj;
+          });
+        }
         return this.DB.save(createDto as CreateUserDto);
       })
       .catch((e) => {
@@ -56,14 +67,22 @@ export class UsersService {
       .getManyAndCount();
   }
   async findOne(findObj: FindOptionsWhere<User>): Promise<User | undefined> {
-    let obj = await this.DB.findOne({
+    let obj: any = await this.DB.findOne({
       where: { ...findObj },
       relations: ['roles', 'dept'],
     });
     return obj;
   }
-  update(id: string, updateDto: UpdateUserDto) {
-    return this.DB.update(id, updateDto);
+  async update(id: string, updateDto: any) {
+    if (updateDto.roles) {
+      //   updateDto.roles = await this.rolesService.findIds(updateDto.roles);
+      updateDto.roles = updateDto.roles.map((item) => {
+        let obj = new Role();
+        obj.id = item;
+        return obj;
+      });
+    }
+    return this.DB.save(updateDto);
     /*  return this.DB.createQueryBuilder().update().set(updateDto)
        .where("id = :id", { id })
        .execute(); */

@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, Response, StreamableFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Req,
+  Response,
+  StreamableFile,
+} from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRolesDto } from './dto/create-roles.dto';
 import { UpdateRolesDto } from './dto/update-roles.dto';
@@ -13,10 +25,10 @@ export class RolesController {
   constructor(
     private readonly RolesService: RolesService,
     private readonly excelService: ExcelService,
-  ) { }
+  ) {}
 
   @Post()
-  create(@Body() createRolesDto: CreateRolesDto | Array<CreateRolesDto>) {
+  create(@Body() createRolesDto: Partial<Role>) {
     return R(this.RolesService.create(createRolesDto));
   }
 

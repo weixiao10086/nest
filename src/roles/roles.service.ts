@@ -53,4 +53,8 @@ export class RolesService {
       relations: ['routers'],
     });
   }
+  async findIds(ids) {
+    // 用在新增使用者时候要回传Role[]
+    return await this.DB.find({ where: { id: In(ids) } });
+  }
 }

@@ -2,30 +2,37 @@ import { Exclude } from 'class-transformer';
 import { Dept } from 'src/dept/entities/dept.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import entityClass from 'src/utils/entityClass';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+} from 'typeorm';
 import { Excel } from '../../excel/excel';
 
 @Entity()
 export class User extends entityClass {
   @Excel({ header: '用户名' })
   @Column({ comment: '用户名', type: 'varchar', length: 255, unique: true })
-  username: string;
+  username?: string;
 
   @Exclude()
   @Column({ comment: '密码', type: 'varchar', length: 255 })
-  password: string;
+  password?: string;
 
   @Excel({ header: '性别' })
   @Column({ comment: '性别', type: 'char', nullable: true })
-  gender: number;
+  gender?: number;
 
   @Excel({ header: '电话' })
   @Column({ comment: '电话', type: 'varchar', length: 30, nullable: true })
-  phone: string;
+  phone?: string;
 
   @Excel({ header: '邮箱' })
   @Column({ comment: '邮箱', type: 'varchar', length: 30, nullable: true })
-  email: string;
+  email?: string;
 
   @Excel({ header: '账号状态' })
   @Column({
@@ -35,15 +42,17 @@ export class User extends entityClass {
     nullable: true,
     default: '1',
   })
-  status: string;
+  status?: string;
   @ManyToOne(() => Dept, (Dept) => Dept.users, { cascade: true })
-  dept: Dept;
+  dept?: Dept;
 
   //角色权限
   @ManyToMany(() => Role, (Role) => Role.users, {
     cascade: true,
-    nullable: false,
+    nullable: true,
+    //真删除时，自动删除关联表数据
+    onDelete: 'CASCADE', //NO ACTION
   })
   @JoinTable()
-  roles: Role[];
+  roles?: Role[];
 }
