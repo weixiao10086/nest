@@ -88,7 +88,7 @@ export class UsersController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return R(this.usersService.findOne({ id }));
+    return R(this.usersService.info({ id }));
   }
 
   @Patch(':id')

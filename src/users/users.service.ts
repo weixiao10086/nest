@@ -1,21 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  EntityManager,
-  FindOptionsWhere,
-  In,
-  Like,
-  QueryRunner,
-  Repository,
-  SelectQueryBuilder,
-} from 'typeorm';
+import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
 import { page, Page } from 'src/utils/page';
-import dataAuth from 'src/utils/dataauth';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { Role } from '../roles/entities/role.entity';
 import { RolesService } from '../roles/roles.service';
+import { Dept } from '../dept/entities/dept.entity';
+import entityClass from '../utils/entityClass';
+import { convertData } from '../utils/tool';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +16,7 @@ export class UsersService {
     private DB: Repository<User>,
     private readonly rolesService: RolesService,
   ) {}
+
   async create(createDto: any) {
     // return this.DB.createQueryBuilder().insert()
     //   .values(createDto)
@@ -31,25 +24,20 @@ export class UsersService {
     //  (树形新增必须用这个)
     return this.DB.manager
       .transaction(() => {
-        if (createDto.roles) {
-          //   updateDto.roles = await this.rolesService.findIds(updateDto.roles);
-          createDto.roles = createDto.roles.map((item) => {
-            let obj = new Role();
-            obj['id'] = item;
-            return obj;
-          });
-        }
-        return this.DB.save(createDto as CreateUserDto);
+        createDto.roles = convertData(createDto.roles, Role);
+        return this.DB.save(createDto);
       })
       .catch((e) => {
         // console.log(e);
         return e;
       });
   }
+
   async findAll(user?: User) {
     let queryBuilde = this.DB.createQueryBuilder();
     return queryBuilde.getMany();
   }
+
   async findList(params: Page & Partial<User>) {
     const { skip, take } = page(params);
     const where: FindOptionsWhere<User> = {
@@ -66,22 +54,25 @@ export class UsersService {
       .take(take)
       .getManyAndCount();
   }
+
   async findOne(findObj: FindOptionsWhere<User>): Promise<User | undefined> {
-    let obj: any = await this.DB.findOne({
+    return await this.DB.findOne({
       where: { ...findObj },
       relations: ['roles', 'dept'],
     });
+  }
+
+  async info(findObj: FindOptionsWhere<User>): Promise<User | undefined> {
+    let obj: any = await this.DB.findOne({
+      where: { ...findObj },
+      relations: ['roles'],
+    });
+    obj.roles = convertData(obj.roles, Role);
     return obj;
   }
+
   async update(id: string, updateDto: any) {
-    if (updateDto.roles) {
-      //   updateDto.roles = await this.rolesService.findIds(updateDto.roles);
-      updateDto.roles = updateDto.roles.map((item) => {
-        let obj = new Role();
-        obj.id = item;
-        return obj;
-      });
-    }
+    updateDto.roles = convertData(updateDto.roles, Role);
     return this.DB.save(updateDto);
     /*  return this.DB.createQueryBuilder().update().set(updateDto)
        .where("id = :id", { id })
@@ -97,4 +88,6 @@ export class UsersService {
       .execute(); */
     /*  return this.DB.softRemove({id}); */
   }
+
+  // new class()
 }

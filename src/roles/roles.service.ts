@@ -5,6 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { FindOptionsWhere, In, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
+import { convertData } from '../utils/tool';
+import { Router } from '../router/entities/router.entity';
 @Injectable()
 export class RolesService {
   constructor(
@@ -13,7 +15,15 @@ export class RolesService {
   ) {}
 
   async create(createDto: Partial<Role>) {
-    return this.DB.createQueryBuilder().insert().values(createDto).execute();
+    return this.DB.manager
+      .transaction(() => {
+        createDto.routers = convertData(createDto.routers, Role);
+        return this.DB.save(createDto);
+      })
+      .catch((e) => {
+        // console.log(e);
+        return e;
+      });
   }
 
   findAll() {
@@ -33,12 +43,15 @@ export class RolesService {
       .getManyAndCount();
   }
 
-  findOne(id: string) {
-    return this.DB.findOne({ where: { id }, relations: ['routers'] });
+  async findOne(id: string) {
+    let obj = await this.DB.findOne({ where: { id }, relations: ['routers'] });
+    obj.routers = convertData(obj.routers, Router);
+    return obj;
   }
 
-  update(id: string, updateDto: UpdateRolesDto) {
-    return this.DB.update(id, updateDto);
+  update(id: string, updateDto: any) {
+    updateDto.routers = convertData(updateDto.routers, Router);
+    return this.DB.save(updateDto);
   }
 
   remove(id: string) {
