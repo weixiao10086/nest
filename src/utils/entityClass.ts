@@ -45,6 +45,7 @@ export class entityCommonClass {
     length: 30,
     default: null,
     select: false,
+    update: false,
   })
   createBy: string;
 

@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts","src/utils/CRUD","src/utils/CICD"],
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts","src/utils/CRUD","src/utils/CICD","beifen"],
   "compilerOptions":{
     "sourceMap": false,
     "removeComments":true

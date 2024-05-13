@@ -1,13 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import Redis from 'ioredis';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+  tokentime;
+
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
-  ) {}
+    private readonly configService: ConfigService,
+    @Inject('REDIS') private redis: Redis,
+  ) {
+    this.tokentime = this.configService.get('JWT').time;
+  }
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne({ username });
@@ -29,10 +37,15 @@ export class AuthService {
   async login(user: any) {
     const payload = { username: user.username };
     let token = this.jwtService.sign(payload);
+    let redisKey = `token:${token}`;
+    //redis保存token 1有效
+    this.redis.set(redisKey, 1);
+    this.redis.expire(redisKey, this.tokentime);
     return {
       access_token: token,
     };
   }
+
   async decode(token: any) {
     return this.jwtService.decode(token);
   }

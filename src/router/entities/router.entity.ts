@@ -19,7 +19,7 @@ import {
 @Entity({ name: 'router' })
 @Tree('closure-table')
 export class Router extends entityClass {
-  @Column({ comment: '名称', type: 'varchar', length: 30 })
+  @Column({ comment: '名称', type: 'varchar', length: 50, unique: true })
   name: string;
 
   @Column({ comment: '路径标识', type: 'varchar', length: 255, unique: true })

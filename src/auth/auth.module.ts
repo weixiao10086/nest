@@ -18,19 +18,19 @@ import { RouterModule } from 'src/router/router.module';
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const JWT_config = configService.get("JWT");
+        const JWT_config = configService.get('JWT');
         return {
           //jwt的加密key
           secret: JWT_config.key,
           //token过期时间
-          signOptions: { expiresIn: JWT_config.time??'6000s' },
-          global: true
-        }
-      }
+          signOptions: { expiresIn: JWT_config.time + 's' },
+          global: true,
+        };
+      },
     }),
   ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

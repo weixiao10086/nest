@@ -1,13 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseInterceptors, UploadedFile, UploadedFiles, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseInterceptors,
+  UploadedFile,
+  UploadedFiles,
+  HttpCode,
+} from '@nestjs/common';
 import { UploadService } from './upload.service';
 import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
 import R from 'src/utils/R';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { User } from '../utils/user.decorator';
 
 @Controller('Upload')
 export class UploadController {
-  constructor(private readonly UploadService: UploadService) { }
+  constructor(private readonly UploadService: UploadService) {}
 
   @Get()
   findAll() {
@@ -39,11 +53,13 @@ export class UploadController {
   // uploadFile(@UploadedFile() file: Express.Multer.File) {
   // return file
   @UseInterceptors(AnyFilesInterceptor())
-  uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+  uploadFile(@UploadedFiles() files: Array<Express.Multer.File>, @User() user) {
+    console.log(files, 'files');
+    this.UploadService.create(files, user);
     if (files?.length) {
-      return R({ data: files, msg: "上传成功" })
+      return R({ data: files, msg: '上传成功' });
     } else {
-      return R.error({ msg: "上传失败", data: null, code: 415 })
+      return R.error({ msg: '上传失败', data: null, code: 415 });
     }
   }
 }

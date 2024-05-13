@@ -5,20 +5,20 @@ export default () => {
     DATABASE: {
       host: process.env.DB_HOST,
       port: parseInt(process.env.DB_PORT, 10) || 5432,
-      username:process.env.DB_USERNAME,
-      password:process.env.DB_PASSWORD,
-      database:process.env.DB_DATABASE
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
     },
-    REDIS:{
+    REDIS: {
       host: process.env.REDIS_HOST,
       port: parseInt(process.env.REDIS_PORT, 10) || 6379,
-      database:process.env.REDIS_DATABASE,
-      ttl:parseInt(process.env.REDIS_DDL),
-      password:process.env.REDIS_PASSWORD
+      database: process.env.REDIS_DATABASE,
+      ttl: parseInt(process.env.REDIS_DDL),
+      password: process.env.REDIS_PASSWORD,
     },
-    JWT:{
-      key:process.env.JWT_KEY,
-      time:process.env.JWT_TIME,
-    }
-  }
+    JWT: {
+      key: process.env.JWT_KEY,
+      time: process.env.JWT_TIME ? parseInt(process.env.JWT_TIME) : 6000,
+    },
+  };
 };

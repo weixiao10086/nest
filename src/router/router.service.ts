@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Router } from './entities/router.entity';
 import { FindOptionsWhere, Like, Repository, TreeRepository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class RouterService {
@@ -13,6 +14,23 @@ export class RouterService {
     @InjectRepository(Router)
     private DB: TreeRepository<Router>,
   ) {}
+  async authMenu(user: any) {
+    console.log(user, 'user');
+    let tree = await this.DB.findTrees();
+    let router = user.routers;
+    let set: Set<string> = new Set(router.map((item) => item.path));
+    console.log(set, 'set');
+    let digui = (node) => {
+      if (node.children) {
+        for (let i = 0; i < node.children.length; i++) {
+          digui(node.children[i]);
+        }
+      }
+      return;
+    };
+    digui(tree);
+    return { data: tree };
+  }
 
   async create(createDto: CreateRouterDto) {
     return this.DB.save(createDto);
