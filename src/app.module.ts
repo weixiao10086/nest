@@ -24,6 +24,7 @@ import { RolesModule } from './roles/roles.module';
 import { DeptModule } from './dept/dept.module';
 import type { RedisClientOptions } from 'redis';
 import { RedisModule } from './redis/redis.module';
+import { ParamsModule } from './params/params.module';
 // const envFilePath = ['.env', '.env.dev', '.env.prod'];
 const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
 
@@ -100,7 +101,8 @@ const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
     ExcelModule,
     RolesModule,
     DeptModule,
-    RedisModule
+    RedisModule,
+    ParamsModule
   ],
   controllers: [AppController],
   providers: [
