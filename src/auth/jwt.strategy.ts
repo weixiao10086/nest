@@ -8,6 +8,7 @@ import { DeptService } from 'src/dept/dept.service';
 import { RouterService } from 'src/router/router.service';
 import { Request } from 'express';
 import Redis from 'ioredis';
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
@@ -25,6 +26,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       passReqToCallback: true,
     });
   }
+
   async validate(req: Request, payload: any) {
     let token = req.headers['authorization'].split('  ').at(1);
     let redistoken = `token:${token}`;
@@ -40,7 +42,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       routers = await this.routerService.findAll();
     } else {
       let roles = await this.rolesService.findrouters(
-        userobj.id === '1' ? undefined : userobj.roles?.map((item) => item.id),
+        userobj.roles?.map((item) => item.id),
       );
       let set = roles.reduce((pre, item, index, arr) => {
         item.routers.forEach((element) => {
@@ -50,12 +52,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       }, new Set());
       routers = [...set];
     }
-    // const getDataScope=async ()=>{
-    //   let deprChildren = await this.deptService.findchildrenId(userobj.deptId)
-    //   let deptarr = deprChildren.map(item => item.id)
-    //   return deptarr
-    // }
-    // return { ...userobj, password: undefined, routers: [...routers] ,getDataScope};
     return { ...userobj, password: undefined, routers };
   }
 }

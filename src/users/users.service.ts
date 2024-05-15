@@ -58,7 +58,8 @@ export class UsersService {
   async findOne(findObj: FindOptionsWhere<User>): Promise<User | undefined> {
     return await this.DB.findOne({
       where: { ...findObj },
-      relations: ['roles', 'dept'],
+      // relations: ['roles', 'dept'],
+      relations: ['roles'],
     });
   }
 

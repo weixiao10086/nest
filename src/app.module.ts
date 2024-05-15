@@ -26,7 +26,9 @@ import type { RedisClientOptions } from 'redis';
 import { RedisModule } from './redis/redis.module';
 import { ParamsModule } from './params/params.module';
 // const envFilePath = ['.env', '.env.dev', '.env.prod'];
-const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
+const envFilePath = `.env${
+  process.env.NODE_ENV ? '.' + process.env.NODE_ENV : ''
+}`;
 
 @Module({
   imports: [
@@ -41,7 +43,7 @@ const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
     CacheModule.registerAsync<RedisClientOptions>({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const Redis_config= configService.get("REDIS");
+        const Redis_config = configService.get('REDIS');
         return {
           isGlobal: true,
           //@ts-ignore
@@ -50,10 +52,10 @@ const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
               host: Redis_config.host,
               ttl: Redis_config.ttl * 1000,
               db: Redis_config.database,
-              password:Redis_config.password
+              password: Redis_config.password,
             });
           },
-        }
+        };
       },
     }),
     // CacheModule.register<RedisClientOptions>({
@@ -70,7 +72,7 @@ const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService<typeof configuration>) => {
-        const DATABASE_config = configService.get("DATABASE");
+        const DATABASE_config = configService.get('DATABASE');
         return {
           type: 'mysql',
           host: DATABASE_config.host,
@@ -102,7 +104,7 @@ const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
     RolesModule,
     DeptModule,
     RedisModule,
-    ParamsModule
+    ParamsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -125,4 +127,4 @@ const envFilePath = `.env${process.env.NODE_ENV?'.'+process.env.NODE_ENV:''}`;
     // },
   ],
 })
-export class AppModule { }
+export class AppModule {}

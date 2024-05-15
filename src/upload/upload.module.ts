@@ -26,7 +26,7 @@ import { extname, join } from 'path';
       }),
       limits: {
         // 限制文件大小为 10 MB
-        fileSize: 1 * 1024 * 1024, // 默认无限制
+        fileSize: 500 * 1024 * 1024, // 默认无限制
         // 限制文件名长度为 50 bytes
         fieldNameSize: 50, // 默认 100 bytes
       },

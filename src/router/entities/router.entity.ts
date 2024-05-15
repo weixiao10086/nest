@@ -2,18 +2,11 @@ import { Role } from 'src/roles/entities/role.entity';
 import entityClass from 'src/utils/entityClass';
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
   Tree,
   TreeChildren,
   TreeParent,
-  TreeRepository,
-  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity({ name: 'router' })
