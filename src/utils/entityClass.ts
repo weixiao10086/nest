@@ -4,9 +4,12 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Transform } from 'class-transformer';
+import dayjs from 'dayjs';
 
 export class entityCommonClass {
   // @Excel({sort:8,header:"编号"})
@@ -15,18 +18,20 @@ export class entityCommonClass {
   @CreateDateColumn({
     name: 'create_time',
     type: 'timestamp',
-    select: false,
+    // select: false,
     comment: '创建时间',
     update: false,
   })
+  // @Transform(({ value }) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'))
   createTime: String;
 
   @UpdateDateColumn({
     name: 'update_time',
     type: 'timestamp',
-    select: false,
+    // select: false,
     comment: '更新时间',
   })
+  // @Transform(({ value }) => dayjs(value).format('YYYY-MM-DD HH:mm:ss'))
   updateTime: String | null;
 
   @DeleteDateColumn({
@@ -44,7 +49,7 @@ export class entityCommonClass {
     comment: '创建人',
     length: 30,
     default: null,
-    select: false,
+    // select: false,
     update: false,
   })
   createBy: string;
@@ -54,10 +59,11 @@ export class entityCommonClass {
     comment: '更新人',
     length: 30,
     default: null,
-    select: false,
+    // select: false,
   })
   updateBy: string;
 }
+
 export default class entityClass extends entityCommonClass {
   @Column({ comment: '权限id', type: 'bigint', nullable: true })
   deptId: string;

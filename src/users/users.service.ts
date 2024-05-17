@@ -34,8 +34,7 @@ export class UsersService {
   }
 
   async findAll(user?: User) {
-    let queryBuilde = this.DB.createQueryBuilder();
-    return queryBuilde.getMany();
+    return this.DB.createQueryBuilder().getMany();
   }
 
   async findList(params: Page & Partial<User>) {
@@ -50,6 +49,7 @@ export class UsersService {
     };
     return await this.DB.createQueryBuilder()
       .where(where)
+      .orderBy('create_time', 'DESC')
       .skip(skip)
       .take(take)
       .getManyAndCount();
