@@ -51,9 +51,9 @@ export class AuthController {
     //加密的接收cookie
     // console.log(req.signedCookies);
     //返回cookie
-    res.cookie('key', 'value');
+    res.cookie('key', 'value', { httpOnly: true });
     //返回加密的cookie
-    res.cookie('signedkey', 'signedvalue', { signed: true });
+    res.cookie('signedkey', 'signedvalue', { signed: true, httpOnly: true });
 
     //session
     session.visits = session.visits ? session.visits + 1 : 1;
@@ -65,6 +65,23 @@ export class AuthController {
     } else {
       return R.error({ msg: '验证码错误' });
     }
+  }
+
+  @Post('loginOut')
+  loginout(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+    @Session() session: Record<string, any>,
+  ) {
+    //删除Cookie
+    res.clearCookie('key');
+    res.clearCookie('signedkey');
+    //清空session
+    session.visits = undefined;
+    console.log(req.headers, 'req');
+    let authorization = req.headers['authorization'];
+    let token = authorization.split('  ')[1];
+    return R({ data: this.authService.loginout(token) });
   }
 
   @UseGuards(AuthGuard('jwt'))

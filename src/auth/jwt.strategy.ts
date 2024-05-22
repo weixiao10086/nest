@@ -31,7 +31,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     let token = req.headers['authorization'].split('  ').at(1);
     let redistoken = `token:${token}`;
     let isvalid = await this.redis.get(redistoken);
-    if (isvalid !== '1') {
+    if (isvalid == null) {
+      throw new UnauthorizedException('无效的token令牌');
+    } else if (isvalid === '0') {
+      throw new UnauthorizedException('该令牌已退出登录');
+    } else if (isvalid !== '1') {
       throw new UnauthorizedException('您已被强制下线，请重新登录');
     }
     let userobj = await this.usersService.findOne({

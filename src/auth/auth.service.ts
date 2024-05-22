@@ -39,13 +39,17 @@ export class AuthService {
     let token = this.jwtService.sign(payload);
     let redisKey = `token:${token}`;
     //redis保存token 1有效
-    this.redis.set(redisKey, 1);
+    this.redis.set(redisKey, '1');
     this.redis.expire(redisKey, this.tokentime);
     return {
       access_token: token,
     };
   }
-
+  loginout(token: string) {
+    let redisKey = `token:${token}`;
+    this.redis.set(redisKey, '0');
+    return '退出登录';
+  }
   async decode(token: any) {
     return this.jwtService.decode(token);
   }
