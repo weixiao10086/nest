@@ -6,6 +6,7 @@ export const dataAuth = (
   user?: User,
 ) => {
   let sql = manager.createQueryBuilder();
+  console.log(user, 'user');
   if (user.roles.length == 0) {
     return sql;
   }

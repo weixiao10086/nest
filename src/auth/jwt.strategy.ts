@@ -41,20 +41,23 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     let userobj = await this.usersService.findOne({
       username: payload.username,
     });
-    let routers: Array<any>;
+    let routers: Array<any> = [];
     if (userobj.id === '1') {
       routers = await this.routerService.findAll();
     } else {
       let roles = await this.rolesService.findrouters(
         userobj.roles?.map((item) => item.id),
       );
-      let set = roles.reduce((pre, item, index, arr) => {
+      let set = new Set();
+      routers = roles.reduce((pre, item, index, arr) => {
         item.routers.forEach((element) => {
-          pre.add(element.path);
+          if (!set.has(element.path)) {
+            pre.push(element);
+          }
+          set.add(element.path);
         });
         return pre;
-      }, new Set());
-      routers = [...set];
+      }, []);
     }
     return { ...userobj, password: undefined, routers };
   }

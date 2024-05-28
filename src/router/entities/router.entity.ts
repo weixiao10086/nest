@@ -32,7 +32,7 @@ export class Router extends entityClass {
   @Column({ comment: '組件地址', type: 'varchar', length: 255, nullable: true })
   component: string;
 
-  @Column({ comment: '路由元信息', type: 'json', nullable: true })
+  @Column({ comment: '路由元信息', type: 'simple-json', nullable: true })
   meta: Object;
 
   @ManyToMany(() => Role, (Role) => Role.routers)

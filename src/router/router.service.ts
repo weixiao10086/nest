@@ -6,6 +6,8 @@ import { Router } from './entities/router.entity';
 import { FindOptionsWhere, Like, Repository, TreeRepository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
 import { User } from '../users/entities/user.entity';
+import dataAuth from '../utils/dataauth';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class RouterService {
@@ -13,23 +15,30 @@ export class RouterService {
     //注入树实体
     @InjectRepository(Router)
     private DB: TreeRepository<Router>,
+    private readonly rolesService: RolesService,
   ) {}
+
   async authMenu(user: any) {
+    let arr = user.routers;
     console.log(user, 'user');
-    let tree = await this.DB.findTrees();
-    let router = user.routers;
-    let set: Set<string> = new Set(router.map((item) => item.path));
-    console.log(set, 'set');
-    let digui = (node) => {
-      if (node.children) {
-        for (let i = 0; i < node.children.length; i++) {
-          digui(node.children[i]);
+    let tree = [];
+    let map = new Map();
+    arr.forEach((item) => {
+      map.set(item.id, item);
+    });
+    arr.forEach((item) => {
+      let obj = map.get(item.parent);
+      if (obj !== undefined) {
+        if (obj.children) {
+          obj.children.push(item);
+        } else {
+          obj.children = [item];
         }
+      } else if (item.parent == null) {
+        tree.push(item);
       }
-      return;
-    };
-    digui(tree);
-    return { data: tree };
+    });
+    return tree;
   }
 
   async create(createDto: CreateRouterDto) {
@@ -39,6 +48,7 @@ export class RouterService {
   findTree() {
     return this.DB.findTrees();
   }
+
   findAll() {
     return this.DB.createQueryBuilder('router').getMany();
   }
