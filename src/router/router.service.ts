@@ -20,7 +20,6 @@ export class RouterService {
 
   async authMenu(user: any) {
     let arr = user.routers;
-    console.log(user, 'user');
     let tree = [];
     let map = new Map();
     arr.forEach((item) => {

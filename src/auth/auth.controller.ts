@@ -36,7 +36,8 @@ export class AuthController {
     res.send(captcha.data);
   }
 
-  @UseGuards(AuthGuard('local'))
+  //全局已注册，该处不需要了
+  // @UseGuards(AuthGuard('local'))
   @Post('login')
   @Public()
   async login(
@@ -84,7 +85,8 @@ export class AuthController {
     return R({ data: this.authService.loginout(token) });
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  //全局已注册，该处不需要了
+  // @UseGuards(AuthGuard('jwt'))
   @Get('userInfo')
   async getProfile(@Req() req) {
     return R({ data: req.user });

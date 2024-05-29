@@ -21,7 +21,6 @@ export class RolesService {
         return this.DB.save(createDto);
       })
       .catch((e) => {
-        // console.log(e);
         return e;
       });
   }
