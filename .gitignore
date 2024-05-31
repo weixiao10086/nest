@@ -1,9 +1,10 @@
 # compiled output
 /dist
+**/**/.zip
 /node_modules
 **/**/node_modules
 /src/utils/CRUD/备份
-/uploads
+/uploads/**
 # Logs
 logs
 *.log

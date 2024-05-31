@@ -25,6 +25,8 @@ import { DeptModule } from './dept/dept.module';
 import type { RedisClientOptions } from 'redis';
 import { RedisModule } from './redis/redis.module';
 import { ParamsModule } from './params/params.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 // const envFilePath = ['.env', '.env.dev', '.env.prod'];
 const envFilePath = `.env${
   process.env.NODE_ENV ? '.' + process.env.NODE_ENV : ''
@@ -32,6 +34,9 @@ const envFilePath = `.env${
 
 @Module({
   imports: [
+    // ServeStaticModule.forRoot({
+    //   rootPath: join(__dirname, '..', '/uploads'),
+    // }),
     ConfigModule.forRoot({
       //是否禁止加载环境变量
       // ignoreEnvFile: true,

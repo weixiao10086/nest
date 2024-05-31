@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import rateLimit from 'express-rate-limit';
 // import csurf from 'csurf';
-import helmet from 'helmet'
+import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { WsAdapter } from './websocket/ws.adapter';
@@ -13,6 +13,7 @@ import { OrmExceptionsFilter } from './utils/orm-exception.filter';
 import configuration from 'config/configuration';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from '@nestjs/common';
+import { join } from 'path';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService<typeof configuration>);
@@ -27,13 +28,13 @@ async function bootstrap() {
   //cors
   app.enableCors();
   //静态文件资源
-  app.useStaticAssets('uploads', { prefix: '/uploads' })
+  app.useStaticAssets('uploads', { prefix: '/uploads' });
   //限速
   app.use(
     rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
       max: 1000, // limit each IP to 100 requests per windowMs
-    })
+    }),
   );
   //通过适当地设置 HTTP 头，Helmet 可以帮助保护您的应用免受一些众所周知的 Web 漏洞的影响
   app.use(helmet());
@@ -48,7 +49,8 @@ async function bootstrap() {
       secret: 'my-secret',
       resave: false,
       saveUninitialized: false,
-    }))
+    }),
+  );
   // const httpAdapter = app.getHttpAdapter();
   // const adapterHost = app.get(HttpAdapterHost);
   app.useWebSocketAdapter(new WsAdapter(app));
@@ -56,11 +58,9 @@ async function bootstrap() {
   // app.useGlobalFilters(new OrmExceptionsFilter());
 
   // MVC(模型-视图=控制器)
-  app.useStaticAssets('public',
-    {
-      prefix: '/public',
-    }
-  );
+  app.useStaticAssets('public', {
+    prefix: '/public',
+  });
   app.setBaseViewsDir('views');
   app.setViewEngine('hbs');
   await app.listen(configService.get('APP_PORT'));

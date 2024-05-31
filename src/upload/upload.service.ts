@@ -25,7 +25,7 @@ export class UploadService {
             createBy: user.id,
             updateBy: user.id,
             type: item.mimetype,
-            name: item.originalname,
+            name: Buffer.from(item.originalname, 'latin1').toString('utf8'),
             ...item,
           };
         });
