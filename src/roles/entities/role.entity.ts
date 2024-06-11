@@ -1,4 +1,4 @@
-import entityClass from 'src/utils/entityClass';
+import entityClass, { entityCommonClass } from 'src/utils/entityClass';
 import { Excel } from 'src/excel/excel';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { Transform } from 'class-transformer';
@@ -6,7 +6,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Router } from 'src/router/entities/router.entity';
 
 @Entity()
-export class Role extends entityClass {
+export class Role extends entityCommonClass {
   @Column({ comment: '角色名称', type: 'varchar', length: 255 })
   name: string;
 

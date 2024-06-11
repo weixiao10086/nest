@@ -6,7 +6,6 @@ export const dataAuth = (
   user?: User,
 ) => {
   let sql = manager.createQueryBuilder();
-  console.log(user, 'user');
   if (user.roles.length == 0) {
     return sql;
   }
@@ -29,14 +28,14 @@ export const dataAuth = (
       sqlstring += ` ${
         sqlstring.length == 0 ? '' : 'OR'
       } deptId IN ( SELECT id_descendant FROM dept_closure WHERE id_ancestor = ${
-        item.deptId
+        user.deptId
       } )`;
       // sql.andWhere("deptId IN " +`( SELECT id_descendant FROM dept_closure WHERE id_ancestor=${item.deptId})`)
     } else if (item.powerkey === '4') {
       //本级数据
       // sql.andWhere({ deptId: item.deptId });
       sqlstring += ` ${sqlstring.length == 0 ? '' : 'OR'} deptId = ${
-        item.deptId
+        user.deptId
       }`;
     } else if (item.powerkey === '5') {
       //本人数据

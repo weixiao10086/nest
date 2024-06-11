@@ -8,6 +8,7 @@ import { RolesService } from '../roles/roles.service';
 import { Dept } from '../dept/entities/dept.entity';
 import entityClass from '../utils/entityClass';
 import { convertData } from '../utils/tool';
+import dataAuth from '../utils/dataauth';
 
 @Injectable()
 export class UsersService {
@@ -36,8 +37,11 @@ export class UsersService {
   async findAll(user?: User) {
     return this.DB.createQueryBuilder().getMany();
   }
+  async findAuthAll(user?: User) {
+    return dataAuth(this.DB, user).getMany();
+  }
 
-  async findList(params: Page & Partial<User>) {
+  async findList(params: Page & Partial<User>, user?: User) {
     const { skip, take } = page(params);
     const where: FindOptionsWhere<User> = {
       ...(params.id && { id: params.id }),
@@ -47,8 +51,8 @@ export class UsersService {
       ...(params.gender && { gender: params.gender }),
       ...(params.status && { status: params.status }),
     };
-    return await this.DB.createQueryBuilder()
-      .where(where)
+    return await dataAuth(this.DB, user)
+      .andWhere(where)
       .orderBy('create_time', 'DESC')
       .skip(skip)
       .take(take)
@@ -89,6 +93,4 @@ export class UsersService {
       .execute(); */
     /*  return this.DB.softRemove({id}); */
   }
-
-  // new class()
 }

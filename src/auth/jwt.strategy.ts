@@ -2,20 +2,15 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Inject, Injectable, Req, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from 'src/users/users.service';
-import { RolesService } from 'src/roles/roles.service';
-import { DeptService } from 'src/dept/dept.service';
-import { RouterService } from 'src/router/router.service';
 import { Request } from 'express';
 import Redis from 'ioredis';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configService: ConfigService,
-    private readonly usersService: UsersService,
-    private readonly rolesService: RolesService,
-    private readonly routerService: RouterService,
+    private readonly authService: AuthService,
     @Inject('REDIS') private redis: Redis,
   ) {
     super({
@@ -28,37 +23,36 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(req: Request, payload: any) {
-    let token = req.headers['authorization'].split('  ').at(1);
-    let redistoken = `token:${token}`;
-    let isvalid = await this.redis.get(redistoken);
-    if (isvalid == null) {
+    let token;
+    if (typeof req == 'string') {
+      token = req;
+    } else {
+      token = req.headers['authorization'].split('  ').at(1);
+    }
+    let redisToken = `token:${token}`;
+    let isvalid = await this.redis.get(redisToken);
+    if (isvalid === null) {
       throw new UnauthorizedException('无效的token令牌');
     } else if (isvalid === '0') {
       throw new UnauthorizedException('该令牌已退出登录');
-    } else if (isvalid !== '1') {
-      throw new UnauthorizedException('您已被强制下线，请重新登录');
     }
-    let userobj = await this.usersService.findOne({
-      username: payload.username,
-    });
-    let routers: Array<any> = [];
-    if (userobj.id === '1') {
-      routers = await this.routerService.findAll();
+    let user;
+    let redisUserInfoKey = `userInfo:${payload.username}`;
+    let redisUserInfo = await this.redis.get(redisUserInfoKey);
+    if (redisUserInfo !== null) {
+      try {
+        user = JSON.parse(redisUserInfo);
+      } catch (e) {
+        user = await this.authService.getUser(payload.username);
+        let ttl = await this.redis.ttl(redisUserInfoKey);
+        await this.redis.set(redisUserInfoKey, JSON.stringify(user));
+        this.redis.expire(redisUserInfoKey, ttl);
+      }
     } else {
-      let roles = await this.rolesService.findrouters(
-        userobj.roles?.map((item) => item.id),
-      );
-      let set = new Set();
-      routers = roles.reduce((pre, item, index, arr) => {
-        item.routers.forEach((element) => {
-          if (!set.has(element.path)) {
-            pre.push(element);
-          }
-          set.add(element.path);
-        });
-        return pre;
-      }, []);
+      user = await this.authService.getUser(payload.username);
+      await this.redis.set(redisUserInfoKey, JSON.stringify(user));
+      this.redis.expire(redisUserInfoKey, this.configService.get('JWT').time);
     }
-    return { ...userobj, password: undefined, routers };
+    return user;
   }
 }

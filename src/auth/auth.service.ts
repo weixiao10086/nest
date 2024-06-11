@@ -3,6 +3,8 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
+import { RouterService } from '../router/router.service';
+import { RolesService } from '../roles/roles.service';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +14,8 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly routerService: RouterService,
+    private readonly rolesService: RolesService,
     @Inject('REDIS') private redis: Redis,
   ) {
     this.tokentime = this.configService.get('JWT').time;
@@ -39,18 +43,42 @@ export class AuthService {
     let token = this.jwtService.sign(payload);
     let redisKey = `token:${token}`;
     //redis保存token 1有效
-    this.redis.set(redisKey, '1');
-    this.redis.expire(redisKey, this.tokentime);
+    await this.redis.set(redisKey, '1');
+    await this.redis.expire(redisKey, this.tokentime);
     return {
       access_token: token,
     };
   }
-  loginout(token: string) {
+  async loginout(token: string) {
     let redisKey = `token:${token}`;
+    let ttl = await this.redis.ttl(redisKey);
     this.redis.set(redisKey, '0');
+    this.redis.expire(redisKey, ttl);
     return '退出登录';
   }
-  async decode(token: any) {
+  decode(token: any) {
     return this.jwtService.decode(token);
+  }
+  async getUser(username: string) {
+    let userobj = await this.usersService.findOne({ username });
+    let routers: Array<any> = [];
+    if (userobj.id === '1') {
+      routers = await this.routerService.findAll();
+    } else {
+      let roles = await this.rolesService.findrouters(
+        userobj.roles?.map((item) => item.id),
+      );
+      let set = new Set();
+      routers = roles.reduce((pre, item, index, arr) => {
+        item.routers.forEach((element) => {
+          if (!set.has(element.path)) {
+            pre.push(element);
+          }
+          set.add(element.path);
+        });
+        return pre;
+      }, []);
+    }
+    return { ...userobj, password: undefined, routers };
   }
 }

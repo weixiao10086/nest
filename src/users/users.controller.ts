@@ -53,8 +53,8 @@ export class UsersController {
   }
 
   @Get('list')
-  findList(@Query() params) {
-    return R(this.usersService.findList(params), params);
+  findList(@Query() params, @User() user) {
+    return R(this.usersService.findList(params, user), params);
   }
 
   @Get('export-excel')
