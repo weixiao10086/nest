@@ -20,7 +20,7 @@ import { Repository } from 'typeorm';
 export class WsStartGateway {
   constructor(
     @InjectRepository(User)
-    private User: Repository<User>,
+    private UserDB: Repository<User>,
   ) {} // private readonly usersService:UsersService
 
   @WebSocketServer()
@@ -37,13 +37,45 @@ export class WsStartGateway {
     @MessageBody() data: string,
     @ConnectedSocket() client?: WebSocket,
   ) {
-    // console.log(this.usersService,'usersService');
-    console.log(client.user, 'client');
-    console.log(await dataAuth(this.User, client.user).getMany());
     let set: Set<WebSocket> = this.server.clients;
+    console.log(
+      `当前用户${client.user.username}-${client.user.id},推送全部用户`,
+    );
     for (const socket of set) {
+      //不包含自己
+      // if (socket.id == client.user.id) continue;
       socket.send(JSON.stringify({ event: 'all', data }));
     }
     return;
+  }
+  @SubscribeMessage('authAll')
+  async authAll(
+    @MessageBody() data: string,
+    @ConnectedSocket() client?: WebSocket,
+  ) {
+    let arr = await dataAuth(this.UserDB, client.user).getMany();
+    let authSet = new Set(arr.map((item) => item.id));
+    console.log(
+      `当前用户${client.user.username}-${client.user.id},可推送用户${Array.from(
+        authSet,
+      )}`,
+    );
+    //不包含自己
+    // authSet.delete(client.user.id)
+    let set: Set<WebSocket> = this.server.clients;
+    for (const socket of set) {
+      if (authSet.has(socket.user.id)) {
+        socket.send(JSON.stringify({ event: 'authAll', data }));
+      }
+    }
+    return;
+  }
+
+  @SubscribeMessage('users')
+  async users(
+    @MessageBody() data: string,
+    @ConnectedSocket() client?: WebSocket,
+  ) {
+    console.log(data);
   }
 }
