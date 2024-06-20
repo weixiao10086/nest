@@ -26,9 +26,15 @@ export class WsStartGateway {
   @WebSocketServer()
   server: WebSocket;
 
-  @SubscribeMessage('hello2')
+  @SubscribeMessage('hello')
   hello2(@MessageBody() data: string, @ConnectedSocket() client: WebSocket) {
-    client.send(JSON.stringify({ event: 'tmp', data: '这里是个临时信息' }));
+    client.send(
+      JSON.stringify({
+        event: 'tmp',
+        data: '我是服务端的消息',
+        id: Date.now().toString(36),
+      }),
+    );
     return true;
   }
 
@@ -53,7 +59,10 @@ export class WsStartGateway {
     @MessageBody() data: string,
     @ConnectedSocket() client?: WebSocket,
   ) {
-    let arr = await dataAuth(this.UserDB, client.user).getMany();
+    console.log(this.UserDB.target['name'], 'this.UserDB');
+    let arr = await dataAuth(this.UserDB, client.user)
+      .select(['User.id'])
+      .getMany();
     let authSet = new Set(arr.map((item) => item.id));
     console.log(
       `当前用户${client.user.username}-${client.user.id},可推送用户${Array.from(

@@ -27,6 +27,7 @@ import { RedisModule } from './redis/redis.module';
 import { ParamsModule } from './params/params.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { MinioModule } from './minio/minio.module';
 // const envFilePath = ['.env', '.env.dev', '.env.prod'];
 const envFilePath = `.env${
   process.env.NODE_ENV ? '.' + process.env.NODE_ENV : ''
@@ -110,6 +111,7 @@ const envFilePath = `.env${
     DeptModule,
     RedisModule,
     ParamsModule,
+    // MinioModule,
   ],
   controllers: [AppController],
   providers: [

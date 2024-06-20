@@ -22,6 +22,9 @@ export class User extends entityClass {
   @Column({ comment: '密码', type: 'varchar', length: 255 })
   password?: string;
 
+  @Column({ comment: '头像', type: 'varchar', length: 255, nullable: true })
+  avatar?: string;
+
   @Excel({ header: '性别' })
   @Column({ comment: '性别', type: 'char', nullable: true })
   gender?: number;
