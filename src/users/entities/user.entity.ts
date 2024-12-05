@@ -2,15 +2,9 @@ import { Exclude } from 'class-transformer';
 import { Dept } from 'src/dept/entities/dept.entity';
 import { Role } from 'src/roles/entities/role.entity';
 import entityClass from 'src/utils/entityClass';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-} from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { Excel } from '../../excel/excel';
+import { Router } from '../../router/entities/router.entity';
 
 @Entity()
 export class User extends entityClass {
@@ -25,7 +19,7 @@ export class User extends entityClass {
   @Column({ comment: '头像', type: 'varchar', length: 255, nullable: true })
   avatar?: string;
 
-  @Excel({ header: '性别' })
+  @Excel({ header: '性别', dict: 'gender' })
   @Column({ comment: '性别', type: 'char', nullable: true })
   gender?: number;
 
@@ -37,7 +31,7 @@ export class User extends entityClass {
   @Column({ comment: '邮箱', type: 'varchar', length: 30, nullable: true })
   email?: string;
 
-  @Excel({ header: '账号状态' })
+  @Excel({ header: '账号状态', dict: 'status' })
   @Column({
     comment: '账号状态',
     type: 'char',
@@ -58,4 +52,8 @@ export class User extends entityClass {
   })
   @JoinTable()
   roles?: Role[];
+}
+
+export interface UserInfo extends User {
+  routers: Array<Router>;
 }

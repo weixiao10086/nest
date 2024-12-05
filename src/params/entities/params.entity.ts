@@ -1,9 +1,9 @@
-import entityClass from 'src/utils/entityClass';
+import entityClass, { entityCommonClass } from 'src/utils/entityClass';
 import { Excel } from 'src/excel/excel';
 import { Column, Entity } from 'typeorm';
 
 @Entity()
-export class Params extends entityClass {
+export class Params extends entityCommonClass {
   @Excel({ header: '参数key', sort: 1 })
   @Column({ comment: '参数key', type: 'varchar', length: 255, unique: true })
   key: string;
@@ -17,9 +17,9 @@ export class Params extends entityClass {
   })
   value: string;
 
-  @Column({ comment: '类型', type: 'varchar', length: 255 })
+  @Column({ comment: '类型', type: 'varchar', length: 255, nullable: true })
   type: string;
 
-  @Column({ comment: '所属分组', type: 'varchar', length: 255 })
+  @Column({ comment: '所属分组', type: 'varchar', length: 255, nullable: true })
   group: string;
 }

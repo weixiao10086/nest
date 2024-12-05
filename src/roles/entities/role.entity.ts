@@ -6,10 +6,12 @@ import { User } from 'src/users/entities/user.entity';
 import { Router } from 'src/router/entities/router.entity';
 
 @Entity()
-export class Role extends entityCommonClass {
+export class Role extends entityClass {
+  @Excel({ header: '角色名称' })
   @Column({ comment: '角色名称', type: 'varchar', length: 255 })
   name: string;
 
+  @Excel({ header: '权限范围', dict: 'powerkey' })
   @Column({
     comment: '权限标识(1:全部数据,2:自定义数据,3:本级及子级,4:本级,5:本人数据)',
     type: 'enum',
@@ -25,6 +27,7 @@ export class Role extends entityCommonClass {
   })
   deptArr: string[];
 
+  @Excel({ header: '备注' })
   @Column({ comment: '备注', type: 'varchar', length: 255, nullable: true })
   bak: string;
 

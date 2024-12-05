@@ -3,6 +3,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import rateLimit from 'express-rate-limit';
+import { RedisStore } from 'rate-limit-redis';
+import RedisClient from 'ioredis';
 // import csurf from 'csurf';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -29,13 +31,22 @@ async function bootstrap() {
   //静态文件资源
   app.useStaticAssets('uploads', { prefix: '/uploads' });
   //限速
+  let redisClient = app.get('REDIS');
   app.use(
     rateLimit({
       windowMs: 15 * 60 * 1000, // 15 minutes
-      max: 1000, // limit each IP to 100 requests per windowMs
+      limit: 1000, // limit each IP to 100 requests per windowMs
+      message: '请求过多', //返回消息
+      statusCode: 429, //返回http状态码
+      keyGenerator: (req: any, res) => req.ip, //通过ip限制
+      //使用redis存储
+      store: new RedisStore({
+        sendCommand: (...args: string[]) => redisClient.call(...args),
+      }),
     }),
   );
   //通过适当地设置 HTTP 头，Helmet 可以帮助保护您的应用免受一些众所周知的 Web 漏洞的影响
+  //将设置响应头的csp字段https://juejin.cn/post/7386594813510811700
   app.use(helmet());
 
   //cookie

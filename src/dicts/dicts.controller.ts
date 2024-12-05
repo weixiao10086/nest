@@ -1,47 +1,71 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseInterceptors, Inject, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Req,
+  UseInterceptors,
+  Inject,
+  Res,
+} from '@nestjs/common';
 import { DictsService } from './dicts.service';
 import { CreateDictsDto } from './dto/create-dicts.dto';
 import { UpdateDictsDto } from './dto/update-dicts.dto';
 import R from 'src/utils/R';
 import { CacheTTL } from '@nestjs/cache-manager';
+import { User } from '../utils/user.decorator';
+import { UserInfo } from '../users/entities/user.entity';
+import { Roles } from '../roles/roles.decorator';
 
 @Controller('dicts')
 export class DictsController {
-  constructor(
-    private readonly DictsService: DictsService) { }
+  constructor(private readonly DictsService: DictsService) {}
 
-  @Post()
-  create(@Body() createDictsDto: CreateDictsDto | Array<CreateDictsDto>) {
+  @Post('add')
+  @Roles('dicts/add')
+  create(@Body() createDictsDto: CreateDictsDto,@User() user:UserInfo) {
+    createDictsDto.createBy = user.id;
     return R(this.DictsService.create(createDictsDto));
   }
 
   @CacheTTL(50000)
-  @Get()
+  @Get('all')
+  @Roles('dicts/all')
   async findAll() {
     return R(this.DictsService.findAll());
   }
 
   @Get('list')
-  findList(@Query() params) {
-    return R(this.DictsService.findList(params), params);
+  @Roles('dicts/list')
+  findList(@Query() query, @User() user) {
+    return R(this.DictsService.findList(query), query);
   }
 
   @Get('key/:key')
+  @Roles('dicts/list')
   findKey(@Param() param: any) {
     return R(this.DictsService.findKey(param?.key));
   }
-  @Get(':id')
+  @Get('info/:id')
+  @Roles('dicts/list')
   findOne(@Param('id') id: string) {
     return R(this.DictsService.findOne(id));
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateDictsDto) {
-    return R(this.DictsService.update(id, updateDto));
+  @Patch('update')
+  @Roles('dicts/update')
+  update(@Body() updateDto: UpdateDictsDto, @User() user: UserInfo) {
+    updateDto.updateBy = user.id;
+    return R(this.DictsService.update(updateDto));
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('remove')
+  @Roles('dicts/remove')
+  remove(@Body('id') id: string) {
     return R(this.DictsService.remove(id));
   }
 }

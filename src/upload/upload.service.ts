@@ -23,9 +23,9 @@ export class UploadService {
         createDto = createDto.map((item) => {
           return {
             createBy: user.id,
-            updateBy: user.id,
             type: item.mimetype,
-            name: Buffer.from(item.originalname, 'latin1').toString('utf8'),
+            // name: Buffer.from(item.originalname, 'latin1').toString('utf8'),
+            name: item.originalname,
             ...item,
           };
         });
@@ -41,13 +41,12 @@ export class UploadService {
     return this.DB.createQueryBuilder().getMany();
   }
 
-  async findList(params: Page & Uploads) {
-    const { skip, take } = page(params);
+  async findList(query: Partial<Uploads>&Page) {
+    const { skip, take } = page(query);
     const where: FindOptionsWhere<Uploads> = {
-      ...(params.id && { id: params.id }),
-      ...(params.name && { name: Like(`%${params.name}%`) }),
-      ...(params.type && { type: params.type }),
-      ...(params.path && { path: Like(`%${params.path}%`) }),
+      ...(query.name && { name: Like(`%${query.name}%`) }),
+      ...(query.type && { type: query.type }),
+      ...(query.path && { path: Like(`%${query.path}%`) }),
     };
     return await this.DB.createQueryBuilder()
       .where(where)
@@ -60,19 +59,23 @@ export class UploadService {
     return this.DB.createQueryBuilder().where({ id }).getOne();
   }
 
-  update(id: string, updateDto: UpdateUploadDto) {
-    return this.DB.update(id, updateDto);
+  update(updateDto: UpdateUploadDto) {
+    return this.DB.update(updateDto.id, updateDto);
   }
 
   async remove(id: string) {
+    console.log(id);
+    
     try {
       let obj = await this.findOne(id);
+      console.log(obj);
+      
       fs.unlinkSync(obj.path);
       return this.DB.softDelete(id);
     } catch (e) {
+      console.log(e);
+      
       return R.error({ data: e, msg: '删除失败,文件不存在' });
     }
-
-    // return this.DB.softDelete(id);
   }
 }

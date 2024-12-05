@@ -1,6 +1,7 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
+import { dtoCommonClass } from '../../utils/entityClass';
 
-export class CreateDictsDto {
-    @ApiProperty({ type: String, description: '字段1', default: 'Dicts' })
-    name: string;
+export class CreateDictsDto extends dtoCommonClass {
+  @ApiProperty({ type: String, description: '字段1', default: 'Dicts' })
+  name: string;
 }

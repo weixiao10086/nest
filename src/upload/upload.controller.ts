@@ -8,43 +8,76 @@ import {
   Delete,
   Query,
   UseInterceptors,
-  UploadedFile,
   UploadedFiles,
-  HttpCode,
+  Response,
+  StreamableFile,
 } from '@nestjs/common';
 import { UploadService } from './upload.service';
-import { CreateUploadDto } from './dto/create-upload.dto';
 import { UpdateUploadDto } from './dto/update-upload.dto';
 import R from 'src/utils/R';
 import { AnyFilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { User } from '../utils/user.decorator';
+import { NoCache } from '../cache/my-cache.interceptor';
+import { Page } from '../utils/page';
+import { Uploads } from './entities/upload.entity';
+import { ExcelService } from '../excel/excel.service';
+import { Roles } from '../roles/roles.decorator';
+import { UserInfo } from '../users/entities/user.entity';
+import { excelResponse } from '../excel/excel';
+import { Router } from '../router/entities/router.entity';
 
-@Controller('Upload')
+@Controller('upload')
 export class UploadController {
-  constructor(private readonly UploadService: UploadService) {}
+  constructor(
+    private readonly UploadService: UploadService,
+    private readonly excelService: ExcelService,
+  ) {}
 
-  @Get()
+  @Get('all')
+  @Roles('upload/all')
   findAll() {
     return R(this.UploadService.findAll());
   }
 
   @Get('list')
-  findList(@Query() params) {
-    return R(this.UploadService.findList(params), params);
+  @Roles('upload/list')
+  findList(@Query() query, @User() user) {
+    return R(this.UploadService.findList(query), query);
   }
 
-  @Get(':id')
+  @Get('export-excel')
+  @Roles('upload/export')
+  async exportExcel(
+    @Query() query,
+    @Response({ passthrough: true }) res,
+    @User() user: UserInfo,
+  ): Promise<StreamableFile | string> {
+    res.set(excelResponse('文件管理.xlsx'));
+    const data = await this.UploadService.findList(
+      { ... query,page: null, size: null },
+      // user,
+    );
+    if (data[1] === 0) return '内容为空';
+    let buffer = await this.excelService.exportExcel(data[0], Uploads);
+    return new StreamableFile(buffer);
+  }
+
+  @Get('info/:id')
+  @Roles('upload/list')
   findOne(@Param('id') id: string) {
     return R(this.UploadService.findOne(id));
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateUploadDto) {
-    return R(this.UploadService.update(id, updateDto));
+  @Patch('update')
+  @Roles('upload/update')
+  update(@Body() updateDto: UpdateUploadDto, @User() user: UserInfo) {
+    updateDto.updateBy = user.id;
+    return R(this.UploadService.update(updateDto));
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('remove')
+  @Roles('upload/remove')
+  remove(@Body('id') id: string) {
     return R(this.UploadService.remove(id));
   }
 

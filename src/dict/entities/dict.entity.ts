@@ -1,18 +1,11 @@
 import { IsNotEmpty } from 'class-validator';
 import { Dicts } from 'src/dicts/entities/dicts.entity';
-import entityClass from 'src/utils/entityClass';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToOne,
-  Unique,
-} from 'typeorm';
+import entityClass, { entityCommonClass } from 'src/utils/entityClass';
+import { Column, Entity, ManyToOne, Unique } from 'typeorm';
 
 @Entity()
 @Unique(['key', 'dicts']) //相同dicts下key唯一
-export class Dict extends entityClass {
+export class Dict extends entityCommonClass {
   @Column({ comment: '字典key', type: 'varchar', length: 255 })
   key: string;
 

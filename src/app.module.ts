@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -28,10 +28,12 @@ import { ParamsModule } from './params/params.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { MinioModule } from './minio/minio.module';
+import { MqttModule } from './mqtt/mqtt.module';
+import { LoggerMiddleware } from './logs/logger.middleware';
+import { LogsModule } from './logs/logs.module';
 // const envFilePath = ['.env', '.env.dev', '.env.prod'];
-const envFilePath = `.env${
-  process.env.NODE_ENV ? '.' + process.env.NODE_ENV : ''
-}`;
+const envFilePath = `.env${process.env.NODE_ENV ? '.' + process.env.NODE_ENV : ''
+  }`;
 
 @Module({
   imports: [
@@ -54,6 +56,7 @@ const envFilePath = `.env${
           isGlobal: true,
           //@ts-ignore
           store: () => {
+            //@ts-ignore
             return redisStore({
               host: Redis_config.host,
               ttl: Redis_config.ttl * 1000,
@@ -63,7 +66,7 @@ const envFilePath = `.env${
           },
         };
       },
-    }),
+    } as any),
     // CacheModule.register<RedisClientOptions>({
     //   isGlobal: true,
     //   //@ts-ignore
@@ -89,13 +92,13 @@ const envFilePath = `.env${
           // entities: [Info, Photo, Course,User],
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           //同步数据库
-          synchronize: true,
+          synchronize: process.env.NODE_ENV != 'prod' ? true : false,
           dateStrings: true,
           logging: true,
           logger: 'file',
         };
       },
-    }),
+    } as any),
     TemplateModule,
     AuthModule,
     UsersModule,
@@ -104,13 +107,14 @@ const envFilePath = `.env${
     RouterModule,
     DictsModule,
     DictModule,
-    //websocket
     WsModule,
     ExcelModule,
     RolesModule,
     DeptModule,
     RedisModule,
     ParamsModule,
+    MqttModule,
+    LogsModule,
     // MinioModule,
   ],
   controllers: [AppController],
@@ -134,4 +138,11 @@ const envFilePath = `.env${
     // },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .exclude('logs/(.*)')
+      .forRoutes('*');
+  }
+}

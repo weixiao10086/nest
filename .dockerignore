@@ -10,3 +10,4 @@ node_modules
 *.lock
 *.http
 uploads
+documentation

@@ -5,9 +5,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Router } from './entities/router.entity';
 import { FindOptionsWhere, Like, Repository, TreeRepository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
-import { User } from '../users/entities/user.entity';
+import { User, UserInfo } from '../users/entities/user.entity';
 import dataAuth from '../utils/dataauth';
 import { RolesService } from '../roles/roles.service';
+import { convertData } from '../utils/tool';
+import { Dept } from '../dept/entities/dept.entity';
 
 @Injectable()
 export class RouterService {
@@ -41,6 +43,9 @@ export class RouterService {
   }
 
   async create(createDto: CreateRouterDto) {
+    console.log(createDto);
+    // createDto.parent = convertData(createDto.parent, Router);
+    console.log(createDto);
     return this.DB.save(createDto);
   }
 
@@ -52,25 +57,26 @@ export class RouterService {
     return this.DB.createQueryBuilder('router').getMany();
   }
 
-  async findList(params: Page & Router) {
-    const { skip, take } = page(params);
+  async findList(query: Partial<Router>&Page) {
+    const { skip, take } = page(query);
     const where: FindOptionsWhere<Router> = {
-      ...(params.id && { id: params.id }),
-      ...(params.name && { name: Like(`%${params.name}%`) }),
+      ...(query.id && { id: query.id }),
+      ...(query.name && { name: Like(`%${query.name}%`) }),
     };
-    return await this.DB.createQueryBuilder()
-      .where(where, {})
+    return this.DB.createQueryBuilder()
+      .where(where)
       .skip(skip)
       .take(take)
       .getManyAndCount();
   }
 
   findOne(id: string) {
-    return this.DB.createQueryBuilder().where({ id, eager: true }).getOne();
+    return this.DB.createQueryBuilder().where({ id }).getOne();
   }
 
-  update(id: string, updateDto: UpdateRouterDto) {
-    return this.DB.save({ ...updateDto, id });
+  update(updateDto: UpdateRouterDto) {
+    updateDto.parent = convertData(updateDto.parent, Router);
+    return this.DB.save(updateDto);
   }
 
   remove(id: string) {

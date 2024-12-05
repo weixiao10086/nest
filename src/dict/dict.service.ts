@@ -17,16 +17,20 @@ export class DictService {
     return this.DB.createQueryBuilder().insert().values(createDto).execute();
   }
 
-  findAll() {
-    return this.DB.createQueryBuilder().getMany();
+  findAll(query: Partial<Dict>) {
+    return this.DB.createQueryBuilder()
+      .where({
+        ...(query.dicts && { dicts: query.dicts as any }),
+      })
+      .getMany();
   }
 
-  async findList(params: Page & Dict) {
-    const { skip, take } = page(params);
+  async findList(query: Partial<Dict>&Page) {
+    const { skip, take } = page(query);
     const where: FindOptionsWhere<Dict> = {
-      ...(params.id && { id: params.id }),
-      ...(params.key && { key: Like(`%${params.key}%`) }),
-      ...(params.dicts && { dicts: params.dicts as any }),
+      ...(query.key && { key: Like(`%${query.key}%`) }),
+      ...(query.value && { key: Like(`%${query.value}%`) }),
+      ...(query.dicts && { dicts: query.dicts as any }),
     };
     return await this.DB.createQueryBuilder()
       .where(where)
@@ -39,8 +43,8 @@ export class DictService {
     return this.DB.createQueryBuilder().where({ id }).getOne();
   }
 
-  update(id: string, updateDto: UpdateDictDto) {
-    return this.DB.update(id, updateDto);
+  update(updateDto: UpdateDictDto) {
+    return this.DB.update(updateDto.id, updateDto);
   }
 
   remove(id: string) {

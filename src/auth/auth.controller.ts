@@ -17,7 +17,7 @@ import { Request, Response } from 'express';
 import { NoCache } from 'src/cache/my-cache.interceptor';
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   //验证码
   @Get('code')
@@ -48,7 +48,6 @@ export class AuthController {
   ) {
     //接收cookie
     // console.log(req.cookies);
-
     //加密的接收cookie
     // console.log(req.signedCookies);
     //返回cookie
@@ -79,7 +78,7 @@ export class AuthController {
     res.clearCookie('signedkey');
     //清空session
     session.visits = undefined;
-    console.log(req.headers, 'req');
+    // console.log(req.headers, 'req');
     let authorization = req.headers['authorization'];
     let token = authorization.split('  ')[1];
     return R({ data: this.authService.loginout(token) });
@@ -88,7 +87,7 @@ export class AuthController {
   //全局已注册，该处不需要了
   // @UseGuards(AuthGuard('jwt'))
   @Get('userInfo')
-  async getProfile(@Req() req) {
+  async getUserInfo(@Req() req) {
     return R({ data: req.user });
   }
 }

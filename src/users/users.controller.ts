@@ -1,18 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
-  Delete,
-  UseInterceptors,
   ClassSerializerInterceptor,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
   Query,
-  Inject,
   Req,
   Response,
   StreamableFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,9 +21,9 @@ import { Roles } from 'src/roles/roles.decorator';
 import { NoCache } from 'src/cache/my-cache.interceptor';
 import { WsStartGateway } from 'src/websocket/ws.gateway';
 import { User } from 'src/utils/user.decorator';
-import { User as Userentity } from './entities/user.entity';
-import { Page } from '../utils/page';
+import { User as Userentity, UserInfo } from './entities/user.entity';
 import { ExcelService } from '../excel/excel.service';
+import { excelResponse } from '../excel/excel';
 
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -33,52 +32,41 @@ export class UsersController {
     private readonly usersService: UsersService,
     private readonly ws: WsStartGateway,
     private readonly excelService: ExcelService,
-  ) {}
+  ) { }
 
-  @Post()
-  @Roles('/add')
-  create(@Body() createUserDto: CreateUserDto, @User() user) {
+  @Post('add')
+  @Roles('users/add')
+  create(@Body() createUserDto: CreateUserDto, @User() user:UserInfo) {
     createUserDto.createBy = user.id;
+    createUserDto.deptId=user.deptId;
     return R(this.usersService.create(createUserDto));
   }
 
-  @Get()
-  // @NoCache()
-  async findAll(@Req() req) {
-    // console.log(req.sqlString, 'sqlString');
-    // console.log(this.ws.server.clients,'154');
-    // console.log(this.ws.all('111'), '154');
-    let obj = await R(this.usersService.findAll(req.user));
-    return obj;
+  @Get('all')
+  @Roles('users/all')
+  async findAll(@User() user: UserInfo) {
+    return await R(this.usersService.findAll(user));
   }
 
   @Get('list')
-  findList(@Query() params, @User() user) {
-    return R(this.usersService.findList(params, user), params);
+  @Roles('users/list')
+  findList(@Query() query, @User() user) {
+    return R(this.usersService.findList(query, user), query);
   }
 
   @Get('export-excel')
   @NoCache()
-  // @Roles('xxx/export')
+  @Roles('users/export')
   async exportExcel(
-    @Query() params: Page & Partial<Userentity>,
+    @Query() query: Partial<Userentity>,
     @Response({ passthrough: true }) res,
     @User() user,
   ): Promise<StreamableFile | string> {
-    const fileName = '导出.xlsx';
-    res.set({
-      'Content-Disposition': `attachment; filename=${encodeURIComponent(
-        fileName,
-      )}`,
-      'Content-Type':
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const data = await this.usersService.findList({
-      ...params,
-      page: null,
-      size: null,
-    });
-    console.log(data, 'data');
+    res.set(excelResponse('用户.xlsx'));
+    const data = await this.usersService.findList(
+      { ...query, page: null, size: null, },
+      user,
+    );
     if (data[1] === 0) {
       return '内容为空';
     }
@@ -86,18 +74,22 @@ export class UsersController {
     return new StreamableFile(buffer);
   }
 
-  @Get(':id')
+  @Get('info/:id')
+  @Roles('users/list')
   findOne(@Param('id') id: string) {
     return R(this.usersService.info({ id }));
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return R(this.usersService.update(id, updateUserDto));
+  @Patch('update')
+  @Roles('users/update')
+  update(@Body() updateUserDto: UpdateUserDto, @User() user) {
+    updateUserDto.updateBy = user.id;
+    return R(this.usersService.update(updateUserDto));
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('remove')
+  @Roles('users/remove')
+  remove(@Body('id') id: string) {
     return R(this.usersService.remove(id));
   }
 }

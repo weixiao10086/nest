@@ -22,5 +22,6 @@ import Redis from 'ioredis';
   exports: ['REDIS'],
 })
 export class RedisModule { }
+// 用法
 // import Redis from 'ioredis';
 //     @Inject('REDIS') private redis: Redis,

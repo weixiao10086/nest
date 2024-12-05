@@ -7,6 +7,8 @@ import { FindOptionsWhere, In, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
 import { convertData } from '../utils/tool';
 import { Router } from '../router/entities/router.entity';
+import { UserInfo } from '../users/entities/user.entity';
+import dataauth from '../utils/dataauth';
 @Injectable()
 export class RolesService {
   constructor(
@@ -29,13 +31,13 @@ export class RolesService {
     return this.DB.createQueryBuilder().getMany();
   }
 
-  async findList(params: Page & Role) {
-    const { skip, take } = page(params);
+  async findList(query: Partial<Role>&Page, user: UserInfo) {
+    const { skip, take } = page(query);
     const where: FindOptionsWhere<Role> = {
-      ...(params.id && { id: params.id }),
-      ...(params.name && { name: Like(`%${params.name}%`) }),
+      ...(query.id && { id: query.id }),
+      ...(query.name && { name: Like(`%${query.name}%`) }),
     };
-    return await this.DB.createQueryBuilder('Role')
+    return await dataauth(this.DB, user)
       .where(where)
       .skip(skip)
       .take(take)
@@ -48,7 +50,7 @@ export class RolesService {
     return obj;
   }
 
-  update(id: string, updateDto: any) {
+  update(updateDto: UpdateRolesDto) {
     updateDto.routers = convertData(updateDto.routers, Router);
     return this.DB.save(updateDto);
   }
@@ -56,7 +58,7 @@ export class RolesService {
   remove(id: string) {
     return this.DB.softDelete(id);
   }
-  findrouters(ids: Array<string>) {
+  findRouters(ids: Array<string>) {
     return this.DB.find({
       where: {
         // id: In(ids),
@@ -64,9 +66,5 @@ export class RolesService {
       },
       relations: ['routers'],
     });
-  }
-  async findIds(ids) {
-    // 用在新增使用者时候要回传Role[]
-    return await this.DB.find({ where: { id: In(ids) } });
   }
 }

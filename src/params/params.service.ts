@@ -7,7 +7,7 @@ import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
 import { Dept } from 'src/dept/entities/dept.entity';
 import dataAuth from 'src/utils/dataauth';
-import { User } from 'src/users/entities/user.entity';
+import { User, UserInfo } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class ParamsService {
@@ -20,18 +20,18 @@ export class ParamsService {
     return this.DB.createQueryBuilder().insert().values(createDto).execute();
   }
 
-  async findAll(user?: User) {
-    return dataAuth(this.DB, user).andWhere({}).getManyAndCount();
+  async findAll(user?: UserInfo) {
+    return await dataAuth(this.DB, user).andWhere({}).getMany();
   }
 
-  async findList(params: Page & Params, user: User) {
-    const { skip, take } = page(params);
+  async findList(query: Partial<Params>&Page) {
+    const { skip, take } = page(query);
     const where: FindOptionsWhere<Params> = {
-      ...(params.id && { id: params.id }),
-      ...(params.key && { key: Like(`%${params.key}%`) }),
-      ...(params.value && { value: Like(`%${params.value}%`) }),
+      ...(query.id && { id: query.id }),
+      ...(query.key && { key: Like(`%${query.key}%`) }),
+      ...(query.value && { value: Like(`%${query.value}%`) }),
     };
-    return await dataAuth(this.DB, user)
+    return this.DB.createQueryBuilder()
       .andWhere(where)
       .skip(skip)
       .take(take)
@@ -46,8 +46,8 @@ export class ParamsService {
     return this.DB.createQueryBuilder().where({ key }).getOne();
   }
 
-  update(id: string, updateDto: UpdateParamsDto) {
-    return this.DB.update(id, updateDto);
+  update(updateDto: UpdateParamsDto) {
+    return this.DB.update(updateDto.id, updateDto);
   }
 
   remove(id: string) {

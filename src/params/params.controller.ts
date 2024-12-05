@@ -21,51 +21,47 @@ import 'reflect-metadata';
 import { ExcelService } from 'src/excel/excel.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { User } from 'src/utils/user.decorator';
+import { excelResponse } from '../excel/excel';
+import { UserInfo } from '../users/entities/user.entity';
 
-@Controller('Params')
+@Controller('params')
 export class ParamsController {
   constructor(
     private readonly ParamsService: ParamsService,
     private readonly excelService: ExcelService,
-  ) {}
+  ) { }
 
-  @Post()
-  @Roles('Params/add')
-  create(@Body() createParamsDto: CreateParamsDto | Array<CreateParamsDto>) {
+  @Post('add')
+  @Roles('params/add')
+  create(@Body() createParamsDto: CreateParamsDto, @User() user: UserInfo) {
+    createParamsDto.updateBy = user.id;
     return R(this.ParamsService.create(createParamsDto));
   }
 
-  @Get()
-  @Roles('Params/all')
+  @Get('all')
+  @Roles('params/all')
   @NoCache()
   async findAll(@User() user) {
     return R(this.ParamsService.findAll(user));
   }
 
   @Get('list')
-  @Roles('Params/list')
+  @Roles('params/list')
   @NoCache()
-  findList(@Query() params, @User() user) {
-    return R(this.ParamsService.findList(params, user), params);
+  findList(@Query() query) {
+    return R(this.ParamsService.findList(query), query);
   }
 
   @Get('export-excel')
-  @NoCache()
-  // @Roles('Params/export')
+  @Roles('params/export')
   async exportExcel(
-    @Query() params: Page & Params,
+    @Query() query,
     @Response({ passthrough: true }) res,
-    @User() user,
+    @User() user: UserInfo,
   ): Promise<StreamableFile | string> {
-    const fileName = 'params.xlsx';
-    res.set({
-      'Content-Disposition': `attachment; filename=${fileName}`,
-      'Content-Type':
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
+    res.set(excelResponse('参数管理.xlsx'));
     const data = await this.ParamsService.findList(
-      { ...params, page: null, size: null },
-      user,
+      { ...query, page: null, size: null },
     );
     if (data[1] === 0) {
       return '内容为空';
@@ -74,27 +70,30 @@ export class ParamsController {
     return new StreamableFile(buffer);
   }
 
-  @Get('key')
-  @Roles('Params/list')
-  findKey(@Query('key') key: string) {
+  @Get('key/:key')
+  @Roles('params/list')
+  findKey(@Param('key') key: string) {
     return R(this.ParamsService.findKey(key));
   }
 
-  @Get(':id')
-  @Roles('Params/list')
+  @Get('info/:id')
+  @Roles('params/list')
   findOne(@Param('id') id: string) {
+    console.log(id, 'id');
+
     return R(this.ParamsService.findOne(id));
   }
 
-  @Patch(':id')
-  @Roles('Params/update')
-  update(@Param('id') id: string, @Body() updateDto: UpdateParamsDto) {
-    return R(this.ParamsService.update(id, updateDto));
+  @Patch('update')
+  @Roles('params/update')
+  update(@Body() updateDto: UpdateParamsDto, @User() user: UserInfo) {
+    updateDto.updateBy = user.id;
+    return R(this.ParamsService.update(updateDto));
   }
 
-  @Delete(':id')
-  @Roles('Params/delete')
-  remove(@Param('id') id: string) {
+  @Delete('remove')
+  @Roles('params/remove')
+  remove(@Body('id') id: string) {
     return R(this.ParamsService.remove(id));
   }
 }

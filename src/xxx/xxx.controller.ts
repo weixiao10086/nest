@@ -15,12 +15,13 @@ import { CreateXxxDto } from './dto/create-xxx.dto';
 import { UpdateXxxDto } from './dto/update-xxx.dto';
 import R from 'src/utils/R';
 import { NoCache } from 'src/cache/my-cache.interceptor';
-import { Page } from 'src/utils/page';
 import { Xxx } from './entities/xxx.entity';
 import 'reflect-metadata';
 import { ExcelService } from 'src/excel/excel.service';
 import { Roles } from 'src/roles/roles.decorator';
 import { User } from 'src/utils/user.decorator';
+import { excelResponse } from '../excel/excel';
+import { UserInfo } from '../users/entities/user.entity';
 
 @Controller('xxx')
 export class XxxController {
@@ -29,13 +30,15 @@ export class XxxController {
     private readonly excelService: ExcelService,
   ) { }
 
-  @Post()
+  @Post('add')
   @Roles('xxx/add')
-  create(@Body() createXxxDto: CreateXxxDto | Array<CreateXxxDto>) {
+  create(@Body() createXxxDto: CreateXxxDto, @User() user: UserInfo) {
+    createXxxDto.createBy = user.id;
+    createXxxDto.deptId=user.deptId;
     return R(this.xxxService.create(createXxxDto));
   }
 
-  @Get()
+  @Get('all')
   @Roles('xxx/all')
   @NoCache()
   async findAll(@User() user) {
@@ -45,46 +48,42 @@ export class XxxController {
   @Get('list')
   @Roles('xxx/list')
   @NoCache()
-  findList(@Query() params, @User() user) {
-    return R(this.xxxService.findList(params, user), params);
+  findList(@Query() query, @User() user) {
+    return R(this.xxxService.findList(query, user), query);
   }
 
   @Get('export-excel')
-  @NoCache()
-  // @Roles('xxx/export')
+  @Roles('xxx/export')
   async exportExcel(
-    @Query() params: Page & Xxx,
+    @Query() query,
     @Response({ passthrough: true }) res,
-    @User() user
+    @User() user: UserInfo,
   ): Promise<StreamableFile | string> {
-    const fileName = 'xxx.xlsx';
-    res.set({
-      'Content-Disposition': `attachment; filename=${fileName}`,
-      'Content-Type':
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    });
-    const data = await this.xxxService.findList({ ...params, page: null, size: null }, user);
-    if (data[1] === 0) {
-      return '内容为空'
-    }
-    let buffer = await this.excelService.exportExcel(data[0], Xxx)
+    res.set(excelResponse('xxx.xlsx'));
+    const data = await this.xxxService.findList(
+      { ...query, page: null, size: null },
+      user,
+    );
+    if (data[1] === 0) return '内容为空';
+    let buffer = await this.excelService.exportExcel(data[0], Xxx);
     return new StreamableFile(buffer);
   }
-  @Get(':id')
+  @Get('info/:id')
   @Roles('xxx/list')
   findOne(@Param('id') id: string) {
     return R(this.xxxService.findOne(id));
   }
 
-  @Patch(':id')
+  @Patch('update')
   @Roles('xxx/update')
-  update(@Param('id') id: string, @Body() updateDto: UpdateXxxDto) {
-    return R(this.xxxService.update(id, updateDto));
+  update(@Body() updateDto: UpdateXxxDto, @User() user) {
+    updateDto.updateBy = user.id;
+    return R(this.xxxService.update(updateDto));
   }
 
-  @Delete(':id')
-  @Roles('xxx/delete')
-  remove(@Param('id') id: string) {
+  @Delete('remove')
+  @Roles('xxx/remove')
+  remove(@Body('id') id: string) {
     return R(this.xxxService.remove(id));
   }
 }

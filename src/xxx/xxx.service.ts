@@ -5,21 +5,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Xxx } from './entities/xxx.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
-import { Dept } from 'src/dept/entities/dept.entity';
 import dataAuth from 'src/utils/dataauth';
-import { User } from 'src/users/entities/user.entity';
+import { UserInfo } from 'src/users/entities/user.entity';
 /* import { Reflector } from "@nestjs/core"; */
 
 @Injectable()
 export class XxxService {
   constructor(
     @InjectRepository(Xxx)
-    private DB: Repository<Xxx>,
-  ) /*树形
-     private DB: TreeRepository<Xxx> */
-  /*元数据
-     private reflector: Reflector */
-  {}
+    private DB: Repository<Xxx> /*//树形
+    private DB: TreeRepository<Xxx>
+    private reflector: Reflector,*/,
+  ) {}
 
   async create(createDto: CreateXxxDto | Array<CreateXxxDto>) {
     return this.DB.createQueryBuilder().insert().values(createDto).execute();
@@ -27,27 +24,30 @@ export class XxxService {
      return this.DB.save(createDto as CreateXxxDto); */
   }
 
-  async findAll(user?: User) {
+  async findAll(user?: UserInfo) {
     /* return this.DB.find(); */
-    // return this.DB.createQueryBuilder().getMany();
-    return dataAuth(this.DB, user).andWhere({}).getManyAndCount();
+    return this.DB.createQueryBuilder().getMany();
   }
 
-  async findList(params: Page & Xxx,user:User) {
+  async findList(query: Partial<Xxx>&Page, user: UserInfo) {
     /*  relations连表查询
       return this.DB.findAndCount({...page(params), relations: ["photos"]}); */
-    const { skip, take } = page(params);
+    const { skip, take } = page(query);
     const where: FindOptionsWhere<Xxx> = {
-      ...(params.id && { id: params.id }),
-      ...(params.ceshi && { ceshi: params.ceshi }),
-      ...(params.name && { name: Like(`%${params.name}%`) }),
+      ...(query.id && { id: query.id }),
+      ...(query.ceshi && { ceshi: query.ceshi }),
+      ...(query.name && { name: Like(`%${query.name}%`) }),
     };
     return await dataAuth(this.DB, user)
-      /*  连表 
-      // .innerJoinAndSelect("xxx.dicts", 'bieming')
-      // .leftJoinAndSelect("xxx.dicts", 'bieming') */
-      // .leftJoinAndSelect(Dept, 'dept', 'dept.id = article.createBy')
-      // .leftJoinAndMapOne("user.profilePhoto", "user.photos", "photo", "photo.isForProfile = TRUE")
+      /*.innerJoinAndSelect('xxx.dicts', 'bieming')
+      .leftJoinAndSelect('xxx.dicts', 'bieming')
+      .leftJoinAndSelect(Dept, 'dept', 'dept.id = article.createBy')
+      .leftJoinAndMapOne(
+        'user.profilePhoto',
+        'user.photos',
+        'photo',
+        'photo.isForProfile = TRUE',
+      )*/
       .andWhere(where)
       .skip(skip)
       .take(take)
@@ -59,8 +59,8 @@ export class XxxService {
     return this.DB.createQueryBuilder().where({ id }).getOne();
   }
 
-  update(id: string, updateDto: UpdateXxxDto) {
-    return this.DB.update(id, updateDto);
+  update(updateDto: UpdateXxxDto) {
+    return this.DB.update(updateDto.id, updateDto);
     /*  return this.DB.createQueryBuilder().update().set(updateDto)
        .where("id = :id", { id })
        .execute(); */

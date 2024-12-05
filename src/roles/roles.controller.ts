@@ -19,41 +19,73 @@ import { Page } from 'src/utils/page';
 import { Role } from './entities/role.entity';
 import 'reflect-metadata';
 import { ExcelService } from 'src/excel/excel.service';
+import { User } from '../utils/user.decorator';
+import { UserInfo } from '../users/entities/user.entity';
+import { NoCache } from '../cache/my-cache.interceptor';
+import { excelResponse } from '../excel/excel';
+import { Router } from '../router/entities/router.entity';
+import { Roles } from './roles.decorator';
 
-@Controller('Roles')
+@Controller('roles')
 export class RolesController {
   constructor(
     private readonly RolesService: RolesService,
     private readonly excelService: ExcelService,
   ) {}
 
-  @Post()
-  create(@Body() createRolesDto: Partial<Role>) {
+  @Post('add')
+  @Roles('roles/add')
+  create(@Body() createRolesDto: Partial<Role>,@User() user:UserInfo) {
+    createRolesDto.createBy=user.id;
+    createRolesDto.deptId=user.deptId;
     return R(this.RolesService.create(createRolesDto));
   }
 
-  @Get()
+  @Get('all')
+  @Roles('roles/all')
   async findAll(@Req() req) {
     return R(this.RolesService.findAll());
   }
 
   @Get('list')
-  findList(@Query() params) {
-    return R(this.RolesService.findList(params), params);
+  @Roles('roles/list')
+  findList(@Query() query, @User() user) {
+    return R(this.RolesService.findList(query, user), query);
   }
 
-  @Get(':id')
+  @Get('export-excel')
+  @Roles('roles/export')
+  async exportExcel(
+    @Query() query,
+    @Response({ passthrough: true }) res,
+    @User() user: UserInfo,
+  ): Promise<StreamableFile | string> {
+    res.set(excelResponse('角色.xlsx'));
+    const data = await this.RolesService.findList(
+      {...query, page: null, size: null },
+      user,
+    );
+    if (data[1] === 0) return '内容为空';
+    let buffer = await this.excelService.exportExcel(data[0], Role);
+    return new StreamableFile(buffer);
+  }
+
+  @Get('info/:id')
+  @Roles('roles/list')
   findOne(@Param('id') id: string) {
     return R(this.RolesService.findOne(id));
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateRolesDto) {
-    return R(this.RolesService.update(id, updateDto));
+  @Patch('update')
+  @Roles('roles/update')
+  update(@Body() updateDto: UpdateRolesDto, @User() user: UserInfo) {
+    updateDto.updateBy = user.id;
+    return R(this.RolesService.update(updateDto));
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('remove')
+  @Roles('roles/remove')
+  remove(@Body('id') id: string) {
     return R(this.RolesService.remove(id));
   }
 }

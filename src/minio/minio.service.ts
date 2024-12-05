@@ -28,23 +28,14 @@ export class MinioService {
     const fileName = `${filename}`;
     const fileBuffer = file.buffer;
 
-    return new Promise<any>((resolve) => {
-      this.minio.client.putObject(
+    return new Promise<any>(async (resolve) => {
+      let info = await this.minio.client.putObject(
         baseBucket,
         fileName,
         fileBuffer,
-        async (err) => {
-          if (err) {
-            console.log(err, 'err');
-            throw new HttpException(
-              'Error upload file',
-              HttpStatus.BAD_REQUEST,
-            );
-          }
-          // 上传成功回传文件信息
-          resolve('上传成功');
-        },
       );
+      console.log(info, 'info');
+      resolve('上传成功');
     });
   }
 
@@ -96,4 +87,8 @@ export class MinioService {
           reject(error);
         });
     });
+
+  getInfo(name) {
+    return this.minio.client.getObject(this.baseBucket, name);
+  }
 }

@@ -1,42 +1,63 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Req, UseInterceptors, Inject, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  Req,
+  UseInterceptors,
+  Inject,
+  Res,
+} from '@nestjs/common';
 import { DictService } from './dict.service';
 import { CreateDictDto } from './dto/create-dict.dto';
 import { UpdateDictDto } from './dto/update-dict.dto';
 import R from 'src/utils/R';
+import { User } from '../utils/user.decorator';
+import { UserInfo } from '../users/entities/user.entity';
+import { Roles } from '../roles/roles.decorator';
 
-@Controller('Dict')
+@Controller('dict')
 export class DictController {
-  constructor(
-    private readonly DictService: DictService) { }
+  constructor(private readonly DictService: DictService) {}
 
-  @Post()
+  @Post('add')
+  @Roles('dict/add')
   create(@Body() createDictDto: CreateDictDto | Array<CreateDictDto>) {
     return R(this.DictService.create(createDictDto));
   }
 
-  @Get()
-  async findAll(@Req() req) {
-    return R(this.DictService.findAll());
+  @Get('all')
+  @Roles('dict/all')
+  async findAll(@Query() query) {
+    return R(this.DictService.findAll(query));
   }
 
   @Get('list')
-  findList(@Query() params) {
-    return R(this.DictService.findList(params), params);
+  @Roles('dict/list')
+  findList(@Query() query, @User() user) {
+    return R(this.DictService.findList(query), query);
   }
 
-
-  @Get(':id')
+  @Get('info/:id')
+  @Roles('dict/list')
   findOne(@Param('id') id: string) {
     return R(this.DictService.findOne(id));
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDto: UpdateDictDto) {
-    return R(this.DictService.update(id, updateDto));
+  @Patch('update')
+  @Roles('dict/update')
+  update(@Body() updateDto: UpdateDictDto, @User() user: UserInfo) {
+    updateDto.updateBy = user.id;
+    return R(this.DictService.update(updateDto));
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete('remove')
+  @Roles('dict/remove')
+  remove(@Body('id') id: string) {
     return R(this.DictService.remove(id));
   }
 }

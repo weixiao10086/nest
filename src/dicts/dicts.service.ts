@@ -5,48 +5,60 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Dicts } from './entities/dicts.entity';
 import { FindOptionsWhere, Like, Repository } from 'typeorm';
 import { Page, page } from 'src/utils/page';
+import Redis from 'ioredis';
+
 @Injectable()
 export class DictsService {
   constructor(
     @InjectRepository(Dicts)
     private DB: Repository<Dicts>,
+    @Inject('REDIS') private redis: Redis,
   ) {}
 
   async create(createDto: CreateDictsDto | Array<CreateDictsDto>) {
-    return this.DB.createQueryBuilder().insert()
-      .values(createDto)
-      .execute();
+    return this.DB.createQueryBuilder().insert().values(createDto).execute();
   }
 
   findAll() {
-    return this.DB.find({ relations: ["dicts"] });
+    return this.DB.find({ relations: ['dicts'] });
   }
 
-  async findList(params: Page & Dicts) {
-    const { skip, take } = page(params)
+  async findList(query: Partial<Dicts>&Page) {
+    const { skip, take } = page(query);
     const where: FindOptionsWhere<Dicts> = {
-      ...(params.id && { id: params.id }),
-      ...(params.name && { name: Like(`%${params.name}%`) }),
-    }
-    return await this.DB.createQueryBuilder("dicts")
+      ...(query.id && { id: query.id }),
+      ...(query.name && { name: Like(`%${query.name}%`) }),
+    };
+    return await this.DB.createQueryBuilder('dicts')
       // .innerJoinAndSelect("dicts.dicts", 'bieming')
       // .leftJoinAndSelect("dicts.dicts", 'bieming')
       .where(where)
       .skip(skip)
       .take(take)
-      .getManyAndCount()
-
+      .getManyAndCount();
   }
 
   findOne(id: string) {
-    return this.DB.createQueryBuilder().where({ id }).getOne()
-  }
-  findKey(key: string) {
-    return this.DB.findOne({ where: { key }, "relations": ['dicts'] })
+    return this.DB.createQueryBuilder('dicts')
+      .where({ id })
+      .innerJoinAndSelect('dicts.dicts', 'bieming')
+      .getOne();
   }
 
-  update(id: string, updateDto: UpdateDictsDto) {
-    return this.DB.update(id, updateDto);
+  async findKey(key: string) {
+    let json = await this.redis.get(`dicts-${key}`);
+    if (json != undefined) {
+      return JSON.parse(json);
+    } else {
+      let obj = await this.DB.findOne({ where: { key }, relations: ['dicts'] });
+      this.redis.set(`dicts-${key}`, JSON.stringify(obj));
+      return obj;
+    }
+  }
+
+  update(updateDto: UpdateDictsDto) {
+    console.log(updateDto, 'updateDto');
+    return this.DB.update(updateDto.id, updateDto);
   }
 
   remove(id: string) {

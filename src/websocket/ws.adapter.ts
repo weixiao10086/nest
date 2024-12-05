@@ -12,6 +12,7 @@ import { HttpAdapterHost } from '@nestjs/core';
 import { HttpArgumentsHost } from '@nestjs/common/interfaces';
 import { AuthService } from '../auth/auth.service';
 import { JwtStrategy } from '../auth/jwt.strategy';
+import { UserInfo } from '../users/entities/user.entity';
 
 export class WsAdapter implements WebSocketAdapter {
   authService: AuthService;
@@ -39,10 +40,10 @@ export class WsAdapter implements WebSocketAdapter {
       try {
         //验证token
         let payload = this.authService.decode(token);
-        let user: any = await this.jwtStrategy.validate(token, payload);
-        user.routers && delete user.routers;
-        socket.id = Math.random();
-        socket.user = user;
+        let user: UserInfo = await this.jwtStrategy.validate(token, payload);
+        // user.routers && delete user.routers;
+        socket['id'] = Math.random();
+        socket['user'] = user;
         callback(socket);
       } catch (error) {
         socket.send('登录过期');
@@ -58,8 +59,13 @@ export class WsAdapter implements WebSocketAdapter {
     process: (data: any) => Observable<any>,
   ) {
     client.send('连接成功');
+    this.bindMessageHandler(client, `{"event":"onlineNum"}`, handlers, process);
     client.on('message', (data) => {
-      this.bindMessageHandler(client, data.toString('utf8'), handlers, process);
+      this.bindMessageHandler(client, data, handlers, process);
+    });
+    client.once('close', () => {
+      console.log(client['id'], '断开连接');
+      this.bindMessageHandler(client, `{"event":"onlineNum"}`, handlers, process);
     });
     // fromEvent(client, 'message')
     //   .pipe(
@@ -83,7 +89,7 @@ export class WsAdapter implements WebSocketAdapter {
     try {
       message = JSON.parse(data);
     } catch (error) {
-      console.log('ws解析json出错', error);
+      console.log('ws解析json出错', message);
       return;
     }
     const messageHandler = handlers.find((handler) => {
@@ -92,13 +98,6 @@ export class WsAdapter implements WebSocketAdapter {
     if (messageHandler) {
       return process(messageHandler.callback(message.data));
     }
-  }
-
-  //断开连接
-  bindClientDisconnect(server, callback) {
-    server.on('close', (res, a, b) => {
-      console.log(server.id, '断开连接');
-    });
   }
 
   //关闭

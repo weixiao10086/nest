@@ -5,6 +5,7 @@ import Redis from 'ioredis';
 import { ConfigService } from '@nestjs/config';
 import { RouterService } from '../router/router.service';
 import { RolesService } from '../roles/roles.service';
+import { UserInfo } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -45,6 +46,7 @@ export class AuthService {
     //redis保存token 1有效
     await this.redis.set(redisKey, '1');
     await this.redis.expire(redisKey, this.tokentime);
+    await this.redis.del(`userInfo:${payload.username}`)
     return {
       access_token: token,
     };
@@ -59,13 +61,13 @@ export class AuthService {
   decode(token: any) {
     return this.jwtService.decode(token);
   }
-  async getUser(username: string) {
+  async getUser(username: string): Promise<UserInfo> {
     let userobj = await this.usersService.findOne({ username });
     let routers: Array<any> = [];
     if (userobj.id === '1') {
       routers = await this.routerService.findAll();
     } else {
-      let roles = await this.rolesService.findrouters(
+      let roles = await this.rolesService.findRouters(
         userobj.roles?.map((item) => item.id),
       );
       let set = new Set();

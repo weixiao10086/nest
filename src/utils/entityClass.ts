@@ -12,7 +12,6 @@ import { Transform } from 'class-transformer';
 import dayjs from 'dayjs';
 
 export class entityCommonClass {
-  // @Excel({sort:8,header:"编号"})
   @PrimaryGeneratedColumn({ comment: 'id', type: 'bigint' })
   id: string;
   @CreateDateColumn({
@@ -65,12 +64,17 @@ export class entityCommonClass {
 }
 
 export default class entityClass extends entityCommonClass {
-  @Column({ comment: '权限id', type: 'bigint', nullable: true })
+  @Column({
+    comment: '权限id', type: 'bigint', nullable: true,
+    //不可修改
+    update: false,
+  })
   deptId: string;
 }
 
 export class dtoCommonClass {
-  createBy: string;
-
-  updateBy: string;
+  id?: string;
+  createBy?: string;
+  updateBy?: string;
+  deptId?: string;
 }

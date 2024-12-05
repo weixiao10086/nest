@@ -5,6 +5,7 @@
 **/**/node_modules
 /src/utils/CRUD/备份
 /uploads/**
+documentation
 # Logs
 logs
 *.log
