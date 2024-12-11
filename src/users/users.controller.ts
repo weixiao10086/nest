@@ -24,7 +24,9 @@ import { User } from 'src/utils/user.decorator';
 import { User as Userentity, UserInfo } from './entities/user.entity';
 import { ExcelService } from '../excel/excel.service';
 import { excelResponse } from '../excel/excel';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('用户')
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
@@ -36,20 +38,23 @@ export class UsersController {
 
   @Post('add')
   @Roles('users/add')
-  create(@Body() createUserDto: CreateUserDto, @User() user:UserInfo) {
+  @ApiOperation({ summary: '添加' })
+  create(@Body() createUserDto: CreateUserDto, @User() user: UserInfo) {
     createUserDto.createBy = user.id;
-    createUserDto.deptId=user.deptId;
+    createUserDto.deptId = user.deptId;
     return R(this.usersService.create(createUserDto));
   }
 
   @Get('all')
   @Roles('users/all')
+  @ApiOperation({ summary: '全部' })
   async findAll(@User() user: UserInfo) {
     return await R(this.usersService.findAll(user));
   }
 
   @Get('list')
   @Roles('users/list')
+  @ApiOperation({ summary: '列表' })
   findList(@Query() query, @User() user) {
     return R(this.usersService.findList(query, user), query);
   }
@@ -57,6 +62,7 @@ export class UsersController {
   @Get('export-excel')
   @NoCache()
   @Roles('users/export')
+  @ApiOperation({ summary: '导出' })
   async exportExcel(
     @Query() query: Partial<Userentity>,
     @Response({ passthrough: true }) res,
@@ -76,12 +82,14 @@ export class UsersController {
 
   @Get('info/:id')
   @Roles('users/list')
+  @ApiOperation({ summary: '详情信息' })
   findOne(@Param('id') id: string) {
     return R(this.usersService.info({ id }));
   }
 
   @Patch('update')
   @Roles('users/update')
+  @ApiOperation({ summary: '更新' })
   update(@Body() updateUserDto: UpdateUserDto, @User() user) {
     updateUserDto.updateBy = user.id;
     return R(this.usersService.update(updateUserDto));
@@ -89,6 +97,7 @@ export class UsersController {
 
   @Delete('remove')
   @Roles('users/remove')
+  @ApiOperation({ summary: '删除' })
   remove(@Body('id') id: string) {
     return R(this.usersService.remove(id));
   }

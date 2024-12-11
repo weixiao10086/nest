@@ -25,7 +25,9 @@ import { NoCache } from '../cache/my-cache.interceptor';
 import { excelResponse } from '../excel/excel';
 import { Router } from '../router/entities/router.entity';
 import { Roles } from './roles.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('角色')
 @Controller('roles')
 export class RolesController {
   constructor(

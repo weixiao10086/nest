@@ -25,7 +25,9 @@ import { Roles } from '../roles/roles.decorator';
 import { UserInfo } from '../users/entities/user.entity';
 import { excelResponse } from '../excel/excel';
 import { Router } from '../router/entities/router.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('文件oss')
 @Controller('upload')
 export class UploadController {
   constructor(

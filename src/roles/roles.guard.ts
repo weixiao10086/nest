@@ -21,14 +21,6 @@ export class RolesGuard implements CanActivate {
       user.routers.some((item) => {
         item.path === requiredRoles;
       });
-    // if (isauth) {
-    //   //有接口权限
-    //   console.log(`${user.username}有${requiredRoles}权限`);
-    // } else {
-    //   //无接口权限
-    //   console.log('你没有该权限');
-    // }
     return isauth;
-    // return requiredRoles.some((role) => user.roles?.includes(role));
   }
 }

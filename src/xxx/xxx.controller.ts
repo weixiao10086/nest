@@ -22,7 +22,9 @@ import { Roles } from 'src/roles/roles.decorator';
 import { User } from 'src/utils/user.decorator';
 import { excelResponse } from '../excel/excel';
 import { UserInfo } from '../users/entities/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('xxx')
 @Controller('xxx')
 export class XxxController {
   constructor(

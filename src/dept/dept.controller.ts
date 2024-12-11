@@ -24,7 +24,9 @@ import { User } from '../utils/user.decorator';
 import { Roles } from '../roles/roles.decorator';
 import { excelResponse } from '../excel/excel';
 import { UserInfo } from 'src/users/entities/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('部门')
 @Controller('dept')
 export class DeptController {
   constructor(

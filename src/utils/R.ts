@@ -46,7 +46,7 @@ const R = async (
     msg = '成功',
     time = dayjs().format('YYYY-MM-DD HH:mm:ss'),
   } = obj;
-  let Robj = { success, code, msg, time, data: await data };
+  let Robj = { success, code, msg, time, data };
   if (params !== undefined) {
     Robj.data = {
       list: Robj.data[0],

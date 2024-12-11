@@ -20,7 +20,9 @@ import { CacheTTL } from '@nestjs/cache-manager';
 import { User } from '../utils/user.decorator';
 import { UserInfo } from '../users/entities/user.entity';
 import { Roles } from '../roles/roles.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('字典')
 @Controller('dicts')
 export class DictsController {
   constructor(private readonly DictsService: DictsService) {}

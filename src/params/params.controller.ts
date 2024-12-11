@@ -23,7 +23,9 @@ import { Roles } from 'src/roles/roles.decorator';
 import { User } from 'src/utils/user.decorator';
 import { excelResponse } from '../excel/excel';
 import { UserInfo } from '../users/entities/user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('参数')
 @Controller('params')
 export class ParamsController {
   constructor(

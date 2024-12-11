@@ -19,7 +19,9 @@ import R from 'src/utils/R';
 import { User } from '../utils/user.decorator';
 import { UserInfo } from '../users/entities/user.entity';
 import { Roles } from '../roles/roles.decorator';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('字典项')
 @Controller('dict')
 export class DictController {
   constructor(private readonly DictService: DictService) {}

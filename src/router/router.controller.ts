@@ -25,7 +25,9 @@ import { excelResponse } from '../excel/excel';
 import { Xxx } from '../xxx/entities/xxx.entity';
 import { ExcelService } from '../excel/excel.service';
 import { Router } from './entities/router.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('路由')
 @Controller('router')
 export class RouterController {
   constructor(

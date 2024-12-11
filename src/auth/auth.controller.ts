@@ -15,6 +15,8 @@ import { Public } from './JwtAuthGuard';
 import svgCaptcha from 'svg-captcha';
 import { Request, Response } from 'express';
 import { NoCache } from 'src/cache/my-cache.interceptor';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+@ApiTags('登录&用户信息')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
@@ -23,6 +25,7 @@ export class AuthController {
   @Get('code')
   @Public()
   @NoCache()
+  @ApiOperation({ summary: '验证码' })
   createCaptcha(@Session() session: Record<string, any>, @Res() res) {
     const captcha = svgCaptcha.create({
       size: 4, //生成几个验证码
@@ -36,10 +39,11 @@ export class AuthController {
     res.send(captcha.data);
   }
 
-  //全局已注册，该处不需要了
-  // @UseGuards(AuthGuard('local'))
   @Post('login')
   @Public()
+  @UseGuards(AuthGuard('local'))
+  // @UseGuards(LocalAuthGuard)
+  @ApiOperation({ summary: '登录' })
   async login(
     @Body() user,
     @Req() req: Request,
@@ -57,10 +61,14 @@ export class AuthController {
 
     //session
     session.visits = session.visits ? session.visits + 1 : 1;
+    if (user.code == undefined) {
+      return R.error({ msg: '验证码不能为空' });
+    }
     if (
       user?.code === '8888' ||
       session.code?.toLocaleLowerCase() === user?.code?.toLocaleLowerCase()
     ) {
+      session.code = undefined
       return R(this.authService.login(user));
     } else {
       return R.error({ msg: '验证码错误' });
@@ -68,6 +76,7 @@ export class AuthController {
   }
 
   @Post('loginOut')
+  @ApiOperation({ summary: '退出登录' })
   loginout(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
@@ -86,7 +95,9 @@ export class AuthController {
 
   //全局已注册，该处不需要了
   // @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(JwtAuthGuard)
   @Get('userInfo')
+  @ApiOperation({ summary: '用户信息' })
   async getUserInfo(@Req() req) {
     return R({ data: req.user });
   }

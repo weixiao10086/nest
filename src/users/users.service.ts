@@ -12,7 +12,7 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private DB: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createDto: any) {
     //  (树形新增必须用这个)
@@ -22,7 +22,6 @@ export class UsersService {
         return this.DB.save(createDto);
       })
       .catch((e) => {
-        // console.log(e);
         return e;
       });
   }
@@ -34,7 +33,7 @@ export class UsersService {
     return await dataAuth(this.DB, user).getMany();
   }
 
-  async findList(query: Partial<User>&Page, user?: UserInfo) {
+  async findList(query: Partial<User> & Page, user?: UserInfo) {
     const { skip, take } = page(query);
     const where: FindOptionsWhere<User> = {
       ...(query.id && { id: query.id }),

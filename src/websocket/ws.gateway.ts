@@ -23,6 +23,7 @@ import { Roles } from '../roles/roles.decorator';
 })
 @UseGuards(RolesGuard)
 export class WsStartGateway {
+  timer=null;
   constructor(
     @InjectRepository(User)
     private UserDB: Repository<User>,
@@ -42,7 +43,6 @@ export class WsStartGateway {
     );
     return true;
   }
-  timer=null;
 
   @SubscribeMessage('onlineNum')
   @Roles('websocket/onlineNum')

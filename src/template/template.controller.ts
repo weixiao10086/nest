@@ -1,7 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Request, All, Query } from '@nestjs/common';
 import { TemplateService } from './template.service';
 import { TemplateDto } from './dto/template.dto';
+import { ApiTags } from '@nestjs/swagger';
 const qs = require('qs')
+@ApiTags('模板')
 @Controller('template')
 export class TemplateController {
   constructor(private readonly templateService: TemplateService) { }
