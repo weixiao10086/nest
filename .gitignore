@@ -7,7 +7,6 @@
 /uploads/**
 documentation
 # Logs
-logs
 *.log
 *.tar
 npm-debug.log*

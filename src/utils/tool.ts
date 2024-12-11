@@ -1,3 +1,10 @@
+//工具函数
+
+
+// 转换数据格式
+// {                               {
+//   dept:{id:1}       <======>       dept:1
+// }                               }
 export const convertData = (
   data: Object[] | Object | string[] | string,
   NewClass: any,

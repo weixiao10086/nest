@@ -139,6 +139,7 @@ const envFilePath = `.env${process.env.NODE_ENV ? '.' + process.env.NODE_ENV : '
   ],
 })
 export class AppModule implements NestModule {
+  //全局中间件-日志相关
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)

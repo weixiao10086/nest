@@ -1,3 +1,4 @@
+//数据权限
 import { EntityManager, In, Repository } from 'typeorm';
 import entityClass from './entityClass';
 import { UserInfo } from 'src/users/entities/user.entity';

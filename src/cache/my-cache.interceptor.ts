@@ -5,6 +5,7 @@ import { SetMetadata } from '@nestjs/common';
 // @NoCache()装饰器用于跳过缓存
 export const NoCache = () => SetMetadata('ignoreCaching', true);
 
+//拦截器--缓存
 export class MyCacheInterceptor extends CacheInterceptor {
     protected isRequestCacheable(context: ExecutionContext): boolean {
         const http = context.switchToHttp();

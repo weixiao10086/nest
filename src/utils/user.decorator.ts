@@ -1,3 +1,4 @@
+//自定义装饰器获取user
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { NoCache } from 'src/cache/my-cache.interceptor';
 import { UserInfo } from '../users/entities/user.entity';

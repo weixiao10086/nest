@@ -7,6 +7,7 @@ export class AppController {
     private readonly appService: AppService,
   ) { }
 
+  //mvc
   @Public()
   @Get()
   @Render('index')
