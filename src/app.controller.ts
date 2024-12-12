@@ -1,5 +1,5 @@
 import { Controller, Get, Render } from '@nestjs/common';
-import { Public } from './auth/JwtAuthGuard';
+import { Public } from './auth/AuthGuard';
 import { AppService } from './app.service';
 @Controller()
 export class AppController {

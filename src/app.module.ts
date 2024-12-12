@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from 'config/configuration';
-import { JwtAuthGuard } from './auth/JwtAuthGuard';
+import { JwtAuthGuard } from './auth/AuthGuard';
 import { XxxModule } from './xxx/xxx.module';
 import { UploadModule } from './upload/upload.module';
 import { RouterModule } from './router/router.module';

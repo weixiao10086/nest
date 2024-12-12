@@ -25,13 +25,5 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         return super.canActivate(context);
     }
 }
-// @Injectable()
-// export class LocalAuthGuard extends AuthGuard('local') {
-//     constructor(private reflector: Reflector) {
-//         super();
-//     }
-//     canActivate(context: ExecutionContext) {
-//         console.log('----------------------');   
-//         return super.canActivate(context);
-//     }
-// }
+@Injectable()
+export class LocalAuthGuard extends AuthGuard('local') {}

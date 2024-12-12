@@ -11,11 +11,13 @@ import {
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import R from 'src/utils/R';
-import { Public } from './JwtAuthGuard';
+import { LocalAuthGuard, Public } from './AuthGuard';
 import svgCaptcha from 'svg-captcha';
 import { Request, Response } from 'express';
 import { NoCache } from 'src/cache/my-cache.interceptor';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from 'src/utils/user.decorator';
+import { UserInfo } from 'src/users/entities/user.entity';
 @ApiTags('登录&用户信息')
 @Controller('auth')
 export class AuthController {
@@ -41,12 +43,11 @@ export class AuthController {
 
   @Post('login')
   @Public()
-  @UseGuards(AuthGuard('local'))
-  // @UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard)// @UseGuards(AuthGuard('local'))
   @ApiOperation({ summary: '登录' })
   async login(
-    @Body() user,
-    @Req() req: Request,
+    @Body('code') code,
+    @User() user: UserInfo,
     @Res({ passthrough: true }) res: Response,
     @Session() session: Record<string, any>,
   ) {
@@ -58,17 +59,12 @@ export class AuthController {
     res.cookie('key', 'value', { httpOnly: true });
     //返回加密的cookie
     res.cookie('signedkey', 'signedvalue', { signed: true, httpOnly: true });
-
     //session
     session.visits = session.visits ? session.visits + 1 : 1;
-    if (user.code == undefined) {
+    if (code == undefined) {
       return R.error({ msg: '验证码不能为空' });
-    }
-    if (
-      user?.code === '8888' ||
-      session.code?.toLocaleLowerCase() === user?.code?.toLocaleLowerCase()
-    ) {
-      session.code = undefined
+    } else if (code === '8888' || session.code?.toLocaleLowerCase() === code?.toLocaleLowerCase()) {
+      session.code = undefined;
       return R(this.authService.login(user));
     } else {
       return R.error({ msg: '验证码错误' });
@@ -89,7 +85,7 @@ export class AuthController {
     session.visits = undefined;
     // console.log(req.headers, 'req');
     let authorization = req.headers['authorization'];
-    let token = authorization.split('  ')[1];
+    let token = authorization.split('  ').at(1);
     return R({ data: this.authService.loginout(token) });
   }
 
@@ -98,7 +94,7 @@ export class AuthController {
   // @UseGuards(JwtAuthGuard)
   @Get('userInfo')
   @ApiOperation({ summary: '用户信息' })
-  async getUserInfo(@Req() req) {
-    return R({ data: req.user });
+  async getUserInfo(@User() user: UserInfo) {
+    return R({ data: user });
   }
 }
